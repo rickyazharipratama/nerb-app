@@ -59,6 +59,10 @@ target 'Runner' do
     pod p[:name], :path => File.join(symlink, 'ios')
   }
   pod 'Firebase/Core'
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Storage'
+
 end
 
 post_install do |installer|

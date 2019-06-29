@@ -2,3 +2,8 @@ build
 pubspeck.lock
 .packages
 .vscode
+ios/pods
+ios/.symlinks
+ios/podfile.lock
+ios/Flutter
+android/app/bin
