@@ -9,5 +9,9 @@ class FontSizeHelper{
     return 16 * scale;
   }
 
+  static double titleMenu({double scale}){
+    return 12 * scale;
+  }
+
 
 }

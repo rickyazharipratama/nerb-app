@@ -6,4 +6,11 @@ class Names{
      en = json['en'] != null ? json['en'].toString() : "";
      id = json['id'] != null ? json['id'].toString() : "";
   }
+
+  Map<String,dynamic> getMap(){
+    return <String,dynamic>{
+      'en' : en,
+      'id' : id
+    };
+  }
 }
