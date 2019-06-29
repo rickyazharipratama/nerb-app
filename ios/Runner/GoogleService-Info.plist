@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>252320902495-hnp5ct3cipeqjslo8cog7p85clbmt0io.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.252320902495-hnp5ct3cipeqjslo8cog7p85clbmt0io</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCIvgEEvsR1oaDPDcuoQ_KfqjU9JOV9HRU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>252320902495</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.teamCoret.nerb</string>
+	<key>PROJECT_ID</key>
+	<string>nerbeeapp-8f6cb</string>
+	<key>STORAGE_BUCKET</key>
+	<string>nerbeeapp-8f6cb.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:252320902495:ios:7d7c9de018cb4590</string>
+	<key>DATABASE_URL</key>
+	<string>https://nerbeeapp-8f6cb.firebaseio.com</string>
+</dict>
+</plist>
