@@ -7,7 +7,10 @@ class ShimmerPlaceNearYou extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    print(width);
     return Container(
+      height: 200,
       child: Shimmer.fromColors(
         baseColor: ColorCollections.shimmerBaseColor,
         highlightColor: ColorCollections.shimmerHighlightColor,
@@ -15,7 +18,8 @@ class ShimmerPlaceNearYou extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [1,2,3].map((_){
-            return ShimmerItemPlaceNearYou();
+              return ShimmerItemPlaceNearYou(
+              );
           }).toList(),
         ),
       ),

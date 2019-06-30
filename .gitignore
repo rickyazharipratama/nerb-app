@@ -8,3 +8,4 @@ ios/Flutter
 android/app/bin
 .flutter-plugins
 pubspec.lock
+android/.gradle

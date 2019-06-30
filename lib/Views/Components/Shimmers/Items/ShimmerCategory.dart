@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 class ShimmerCategory extends StatelessWidget {
   
+  final double width;
+  final double marginRight;
+
+  ShimmerCategory({this.width, this.marginRight});
+
   @override
   Widget build(BuildContext context) {
     return Container(

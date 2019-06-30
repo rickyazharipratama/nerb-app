@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 
-class ShimmerItemPlaceNearYou extends StatelessWidget {
+class ShimmerDynamicBox extends StatelessWidget {
 
-  final double width;
+  final double height;
   final double marginRight;
+  final double marginleft;
 
-  ShimmerItemPlaceNearYou({this.width : 150, this.marginRight : 10});
-
+  ShimmerDynamicBox({this.height, this.marginleft,this.marginRight});
+  
   @override
   Widget build(BuildContext context) {
     return new Container(
-      margin:  EdgeInsets.only(left: 10, right: marginRight),
-      width: width,
-      height: 200,
+      margin:  EdgeInsets.only(left: marginleft, right: marginRight),
+      height: height,
       decoration: BoxDecoration(
         color: ColorCollections.bgPrimary,
         borderRadius: BorderRadius.circular(5)
       ),
     );
   }
-
 }

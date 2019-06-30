@@ -61,6 +61,7 @@ class _FavoriteState extends State<Favorite> {
                       }
                       return PlaceItem(
                         place: fav,
+                        callback: (){},
                       );
                     }).toList(),
                   ),
@@ -99,9 +100,14 @@ class _FavoriteState extends State<Favorite> {
       for(String fav in savedFavorites){
         tmpFavorites.add(PlaceModel.fromStore(json.decode(fav)));
       }
+      updateFavorites(
+        items: tmpFavorites
+      );
     }else{
       Firestore.instance.collection(ConstantCollections.FIRESTORE_DEFAULT_FAVORITE).snapshots().listen((document){
         for(DocumentSnapshot doc in document.documents){
+          print(doc.documentID);
+          print(doc.data.toString());
           tmpFavorites.add(PlaceModel.fromFireStore(doc.documentID, doc.data));
         }
         List<String> toSaved = new List();
@@ -112,8 +118,12 @@ class _FavoriteState extends State<Favorite> {
           key: ConstantCollections.PREF_MY_FAVORITE,
           value: toSaved
         );
+        updateFavorites(items: tmpFavorites);
       });
     }
+  }
+
+  updateFavorites({List<PlaceModel> items}){
     if(mounted){
       setState(() {
         if(favorites == null){
@@ -121,10 +131,9 @@ class _FavoriteState extends State<Favorite> {
         }else{
           favorites.clear();
         }
-        for(int i= 0; i < 8; i++){
-          if(i <= tmpFavorites.length-1){
-            favorites.add(tmpFavorites[i]);
-          }else{
+        favorites.addAll(items);
+        if(favorites.length < 8){
+          for(int i = favorites.length; i <=8;i++){
             favorites.add(PlaceModel.emptyPlace());
           }
         }

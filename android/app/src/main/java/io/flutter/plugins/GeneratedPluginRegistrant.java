@@ -5,6 +5,7 @@ import io.flutter.plugins.firebase.cloudfirestore.CloudFirestorePlugin;
 import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import io.flutter.plugins.firebase.storage.FirebaseStoragePlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 import com.tekartik.sqflite.SqflitePlugin;
 
 /**
@@ -19,6 +20,7 @@ public final class GeneratedPluginRegistrant {
     FirebaseCorePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.core.FirebaseCorePlugin"));
     FirebaseStoragePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.storage.FirebaseStoragePlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
+    SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
     SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));
   }
 
