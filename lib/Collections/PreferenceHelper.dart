@@ -4,8 +4,7 @@ class PreferenceHelper{
 
   SharedPreferences _pref;
 
-  PreferenceHelper(){
-  }
+  PreferenceHelper();
 
   static PreferenceHelper instance = PreferenceHelper();
   

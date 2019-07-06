@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nerb/Views/Pages/LandingPage.dart';
+import 'Views/Pages/Splash.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LandingPage(),
+      home: Splash(),
     );
   }
 }

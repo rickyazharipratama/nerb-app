@@ -27,12 +27,16 @@ class PlaceModel{
     id= ConstantCollections.EMPTY_FAVORITE;
   }
 
+  PlaceModel.forOperator(){
+    id = ConstantCollections.OPERATOR_FAVORITE;
+  }
+
   Map<String,dynamic> getMap(){
     return <String,dynamic>{
       'id':id,
       'forSearch':forSearch,
       'materialIcon':materialIcon,
-      'name' : name.getMap()
+      'name' : name != null ? name.getMap() : null
     };
   }
 

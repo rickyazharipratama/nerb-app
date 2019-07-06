@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
@@ -42,7 +43,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
 
           viewState == 0?
             Container(
-              height: 200,
+              height: 230,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: nearbyPlace.nearbyPlaces.map((place){
@@ -59,10 +60,13 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   }
 
 
-  initiateData(){
+  initiateData() async{
+    Location loc = Location();
+    LocationData  dt = await loc.getLocation();
+    
     PlaceController.instance.getNearbyPlace(
       callback: this,
-      location: "-6.300641,106.814095",
+      location: dt.latitude.toString()+","+dt.longitude.toString(),
       radius: "800"
     );
   }

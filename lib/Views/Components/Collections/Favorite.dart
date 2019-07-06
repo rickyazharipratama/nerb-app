@@ -2,10 +2,12 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/AddFavoritesItem.dart';
+import 'package:nerb/Views/Components/Collections/Items/EditPlaceItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimerFavorite.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
@@ -21,6 +23,8 @@ class _FavoriteState extends State<Favorite> {
 
   List<PlaceModel> favorites = new List();
   int viewState = 1;
+
+  bool isEditMode = false;
 
   @override
   void initState() {
@@ -59,10 +63,16 @@ class _FavoriteState extends State<Favorite> {
                           callback: showPlaceList,
                         );
                       }
-                      return PlaceItem(
-                        place: fav,
-                        callback: (){},
-                      );
+                      if(isEditMode){
+                        return EditPlaceItem(
+                          onDeleteClick: onDeletePlaceClicked,
+                          place: fav,
+                        );
+                      }else{
+                        return PlaceItem(
+                          place: fav,
+                        );
+                      }
                     }).toList(),
                   ),
 
@@ -70,17 +80,48 @@ class _FavoriteState extends State<Favorite> {
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: favorites.getRange(4, 8).map((fav){
+                    children: favorites.getRange(4, favorites.length).map((fav){
                       
                       if(fav.id == ConstantCollections.EMPTY_FAVORITE){
                         return AddFavoritesItem(
                           callback: showPlaceList,
                         );
+                      }else if(fav.id == ConstantCollections.OPERATOR_FAVORITE){
+                        return InkWell(
+                          onTap: isEditMode ? turnOffEditMode : turnOnEditMode,
+                          borderRadius: BorderRadius.circular(25),
+                          splashColor: ColorCollections.shimmerHighlightColor,
+                          highlightColor: ColorCollections.shimmerBaseColor,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isEditMode ? Colors.red : ColorCollections.baseGrayColor,
+                                width: 1,
+                              ),
+                              shape: BoxShape.circle
+                            ),
+                            child: Center(
+                              child: Icon(
+                                isEditMode ? Icons.close : Icons.edit,
+                                color: isEditMode ? Colors.red : ColorCollections.titleColor,
+                                size: 25,
+                              ),
+                            )
+                          ),
+                        );
                       }
-                      return PlaceItem(
-                        place: fav,
-                      );
-
+                      if(isEditMode){
+                        return EditPlaceItem(
+                          onDeleteClick: onDeletePlaceClicked,
+                          place: fav,
+                        );
+                      }else{
+                        return PlaceItem(
+                          place: fav,
+                        );
+                      }
                     }).toList(),
                   )
                 ],
@@ -132,9 +173,23 @@ class _FavoriteState extends State<Favorite> {
           favorites.clear();
         }
         favorites.addAll(items);
-        if(favorites.length < 8){
-          for(int i = favorites.length; i <=8;i++){
-            favorites.add(PlaceModel.emptyPlace());
+        print("before length : "+ favorites.length.toString());
+        if(favorites.length < 7){
+          for(int i = favorites.length; i < 8;i++){
+            if(i == 7){
+              favorites.add(PlaceModel.forOperator());
+            }else{
+              favorites.add(PlaceModel.emptyPlace());
+            }
+          }
+        }else if(favorites.length > 8){
+          List<PlaceModel> tmp = List()..addAll(favorites.getRange(0, 7));
+          favorites.clear();
+          favorites.addAll(tmp);
+          favorites.add(PlaceModel.forOperator());
+        }else{
+          if(favorites.last.id != ConstantCollections.OPERATOR_FAVORITE){
+            favorites.last.id = ConstantCollections.OPERATOR_FAVORITE;
           }
         }
         viewState = 0;
@@ -142,7 +197,44 @@ class _FavoriteState extends State<Favorite> {
     }
   }
 
-  showPlaceList(){
+  onDeletePlaceClicked(data){
+    int idx = favorites.indexOf(data);
+    if(idx >=0 && idx < favorites.length){
+      if(mounted){
+        setState(() {
+          favorites[idx] = PlaceModel.emptyPlace();
+          List<String> saved = List();
+          favorites.forEach((place){
+            saved.add(json.encode(place.getMap()));
+          });
+          PreferenceHelper.instance.setStringListValue(
+            key: ConstantCollections.PREF_MY_FAVORITE,
+            value: saved
+          );
+        });
+      }
+    }
+  }
 
+  turnOnEditMode(){
+    if(mounted){
+      setState(() {
+        isEditMode = true;
+      });
+    }
+  }
+
+  turnOffEditMode(){
+    if(mounted){
+      setState(() {
+        isEditMode = false;
+      });
+    }
+  }
+
+  showPlaceList(){
+    if(!isEditMode){
+
+    }
   }
 }

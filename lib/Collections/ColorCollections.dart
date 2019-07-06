@@ -5,10 +5,14 @@ class ColorCollections{
   //bg
   static final Color bgPrimary = Colors.white;
   static final Color wrapCategoryIcon = Color(0xaaffffff);
+  static final Color blenBrokenImage = Color(0xcc808080);
+
+  static final Color baseGrayColor = Color(0xffe3e3e3);
   
   //shimmer
   static final Color shimmerHighlightColor = Color(0xFFd9d9d9);
   static final Color shimmerBaseColor = Color(0xFFf3f3f3);
+
 
   //text
   static final Color titleColor = Color(0xFF666666);

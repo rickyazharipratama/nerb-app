@@ -19,6 +19,7 @@ class PlaceItem extends StatelessWidget {
       highlightColor: ColorCollections.shimmerBaseColor,
       child: Container(
         width: 60,
+        height: 80,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -30,7 +31,7 @@ class PlaceItem extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: ColorCollections.shimmerBaseColor
+                  color: ColorCollections.baseGrayColor
                 ),
                 color: Colors.transparent,
               ),
@@ -49,6 +50,7 @@ class PlaceItem extends StatelessWidget {
                 place.name.en,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
+                maxLines: 1,
                 style: TextStyle(
                   color: ColorCollections.titleColor,
                   fontWeight: FontWeight.w500,
