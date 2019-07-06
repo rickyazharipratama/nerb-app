@@ -1,0 +1,181 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Models/FirestoreCategory.dart';
+import 'package:nerb/Models/PlaceModel.dart';
+import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
+import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
+import 'package:nerb/Views/Components/misc/Separator.dart';
+
+class PlacesListByCategoryModal extends StatefulWidget {
+  @override
+  _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
+}
+
+class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
+
+
+  List<FirestoreCategory> categories;
+  List<PlaceModel> places;
+
+  int viewState = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    initiateData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){},
+      child: Material(
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children : <Widget>[
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Text(
+                    "Places",
+                    style: TextStyle(
+                      color: ColorCollections.titleColor,
+                      fontSize: FontSizeHelper.titleSectionSize(scale: MediaQuery.of(context).textScaleFactor),
+                      fontWeight: FontWeight.w700
+                    ),
+                  ),),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 10,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            
+            Separator(),
+
+            Expanded(
+              child:  viewState == 0 ? ListView(
+                children: categories.map((item){
+                  return Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 5),
+                          child: Text(
+                            item.name.en,
+                            style: TextStyle(
+                              color: ColorCollections.titleColor,
+                              fontWeight: FontWeight.w500,
+                              fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor)
+                            ),
+                          )
+                        ),
+
+                        Padding(
+                          padding : const EdgeInsets.only(top: 10, bottom: 10),
+                          child : places.where((plc) => plc.categories.contains(item.id)) != null ?
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.start,
+                              runSpacing: 15,
+                              spacing: 10,
+                              children: places.where((plc)=> plc.categories.contains(item.id)).map((place){
+                                return PlaceItem(
+                                  callback: onTappedPlaceItem,
+                                  place: place,
+                                );
+                              }).toList()
+                            )
+                          : Container()
+                        ),
+                      ],
+                    ),
+                  );
+                }).toList(),
+              ) : Container(),
+            )
+          ]
+        ),
+      ),
+    );
+  }
+  
+  initiateData(){
+    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY).snapshots().listen(retrieveCategory);
+  }
+
+  retrieveCategory(QuerySnapshot data){
+    List<FirestoreCategory> tmpCategories = List();
+      for(DocumentSnapshot doc in data.documents){
+        tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
+      }
+      if(categories == null){
+        categories = List<FirestoreCategory>();
+      } else{
+        categories.clear();
+      }
+      categories.addAll(tmpCategories);
+      if(places != null){
+
+        if(mounted){
+          setState(() {
+            print(places.length);
+            viewState = 0;
+          });
+        }
+      }
+    Firestore.instance.collection(ConstantCollections.FIRESTORE_PLACE).snapshots().listen(retrievePlace);
+  }
+
+  retrievePlace(QuerySnapshot data){
+    List<PlaceModel> tmp = List();
+    for(DocumentSnapshot doc in data.documents){
+      tmp.add(PlaceModel.fromFireStore(doc.documentID,doc.data));
+    }
+    if(places == null){
+      places = List();
+    }else{
+      places.clear();
+    }
+    places.addAll(tmp);
+    if(categories != null){
+      if(mounted){
+        setState(() {
+          viewState = 0;
+        });
+      }
+    }
+  }
+
+  onTappedPlaceItem(item){
+    Navigator.of(context, rootNavigator: true).pop(item);  
+  }
+}

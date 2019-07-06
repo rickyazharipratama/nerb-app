@@ -52,7 +52,7 @@ class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProvider
         child: Stack(
           children: <Widget>[
             Positioned.fill(
-              child: PlaceItem(place: widget.place, callback: (){},),
+              child: PlaceItem(place: widget.place, callback: (place){},),
             ),
             Positioned(
               top: 0,
@@ -83,5 +83,11 @@ class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProvider
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    super.dispose();
   }
 }

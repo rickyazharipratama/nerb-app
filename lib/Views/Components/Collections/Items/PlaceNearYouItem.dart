@@ -70,12 +70,10 @@ class PlaceNearYouItem extends StatelessWidget {
 
                               Positioned.fill(
                                 child: Center(
-                                  child: Image.asset("assets/ic_broken_image.png",
-                                    width: 45,
-                                    height: 45,
-                                    fit: BoxFit.contain,
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    size: 45,
                                     color: ColorCollections.blenBrokenImage,
-                                    colorBlendMode: BlendMode.srcIn,
                                   )
                                 ),
                               )

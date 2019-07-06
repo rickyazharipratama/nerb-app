@@ -11,6 +11,7 @@ import 'package:nerb/Views/Components/Collections/Items/EditPlaceItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimerFavorite.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
+import 'package:nerb/Views/Modals/PlacesListByCategoryModal.dart';
 
 import 'Items/PlaceItem.dart';
 
@@ -58,9 +59,10 @@ class _FavoriteState extends State<Favorite> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: favorites.getRange(0, 4).map((fav){
-                      if(fav.id == ConstantCollections.EMPTY_FAVORITE){
+                      if(fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE)){
                         return AddFavoritesItem(
                           callback: showPlaceList,
+                          place: fav,
                         );
                       }
                       if(isEditMode){
@@ -82,9 +84,10 @@ class _FavoriteState extends State<Favorite> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: favorites.getRange(4, favorites.length).map((fav){
                       
-                      if(fav.id == ConstantCollections.EMPTY_FAVORITE){
+                      if(fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE)){
                         return AddFavoritesItem(
                           callback: showPlaceList,
+                          place: fav,
                         );
                       }else if(fav.id == ConstantCollections.OPERATOR_FAVORITE){
                         return InkWell(
@@ -151,14 +154,6 @@ class _FavoriteState extends State<Favorite> {
           print(doc.data.toString());
           tmpFavorites.add(PlaceModel.fromFireStore(doc.documentID, doc.data));
         }
-        List<String> toSaved = new List();
-        for(PlaceModel fav in tmpFavorites){
-          toSaved.add(json.encode(fav.getMap()));
-        }
-        PreferenceHelper.instance.setStringListValue(
-          key: ConstantCollections.PREF_MY_FAVORITE,
-          value: toSaved
-        );
         updateFavorites(items: tmpFavorites);
       });
     }
@@ -179,7 +174,7 @@ class _FavoriteState extends State<Favorite> {
             if(i == 7){
               favorites.add(PlaceModel.forOperator());
             }else{
-              favorites.add(PlaceModel.emptyPlace());
+              favorites.add(PlaceModel.emptyPlace(prefix: i.toString()));
             }
           }
         }else if(favorites.length > 8){
@@ -192,6 +187,7 @@ class _FavoriteState extends State<Favorite> {
             favorites.last.id = ConstantCollections.OPERATOR_FAVORITE;
           }
         }
+        savingToStore();
         viewState = 0;
       });
     }
@@ -202,18 +198,22 @@ class _FavoriteState extends State<Favorite> {
     if(idx >=0 && idx < favorites.length){
       if(mounted){
         setState(() {
-          favorites[idx] = PlaceModel.emptyPlace();
-          List<String> saved = List();
-          favorites.forEach((place){
-            saved.add(json.encode(place.getMap()));
-          });
-          PreferenceHelper.instance.setStringListValue(
-            key: ConstantCollections.PREF_MY_FAVORITE,
-            value: saved
-          );
+          favorites[idx] = PlaceModel.emptyPlace(prefix: DateTime.now().millisecondsSinceEpoch.toString());
+          savingToStore();
         });
       }
     }
+  }
+
+  savingToStore(){
+    List<String> saved = List();
+    favorites.forEach((place){
+      saved.add(json.encode(place.getMap()));
+    });
+    PreferenceHelper.instance.setStringListValue(
+      key: ConstantCollections.PREF_MY_FAVORITE,
+      value: saved
+    );
   }
 
   turnOnEditMode(){
@@ -232,9 +232,25 @@ class _FavoriteState extends State<Favorite> {
     }
   }
 
-  showPlaceList(){
+  showPlaceList(trigger) async{
     if(!isEditMode){
-
+       PlaceModel item = await showModalBottomSheet(
+         builder: (context)=>PlacesListByCategoryModal(),
+         context: context
+       );
+       if(item != null){
+         if(favorites.where((place)=> place.forSearch == item.forSearch).length > 0){
+           // found same item
+         }else{
+            int idx = favorites.indexOf(trigger);
+            if(mounted){
+              setState(() {
+                favorites[idx] = item;
+                savingToStore();
+              });
+            }
+         }
+       }
     }
   }
 }

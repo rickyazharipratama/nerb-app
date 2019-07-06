@@ -6,6 +6,7 @@ class PlaceModel{
   
   String forSearch;
   String materialIcon;
+  List<String> categories;
   Names name;
   String id;
 
@@ -13,6 +14,12 @@ class PlaceModel{
     this.id = id;
     forSearch = data['forSearch'] != null ? data['forSearch'] : null ;
     materialIcon = data['materialIcon'] != null ? data['materialIcon'] : null;
+    if(data['categories'] != null){
+      categories = List();
+      data['categories'].forEach((category){
+        categories.add(category.toString());
+      });
+    }
     name = data['name'] != null ? Names.fromJson(data['name']) : null;
   }
 
@@ -20,11 +27,17 @@ class PlaceModel{
     id = data['id'] != null ? data['id'] : null;
     forSearch = data['forSearch'] != null ? data['forSearch'] : null ;
     materialIcon = data['materialIcon'] != null ? data['materialIcon'] : null;
+    if(data['categories'] != null){
+      categories = List();
+      data['categories'].forEach((category){
+        categories.add(category.toString());
+      });
+    }
     name = data['name'] != null ? Names.fromJson(data['name']) : null;
   }
 
-  PlaceModel.emptyPlace(){
-    id= ConstantCollections.EMPTY_FAVORITE;
+  PlaceModel.emptyPlace({String prefix}){
+    id= ConstantCollections.EMPTY_FAVORITE + prefix;
   }
 
   PlaceModel.forOperator(){
@@ -36,6 +49,7 @@ class PlaceModel{
       'id':id,
       'forSearch':forSearch,
       'materialIcon':materialIcon,
+      'categories' : categories != null ? categories : null,
       'name' : name != null ? name.getMap() : null
     };
   }

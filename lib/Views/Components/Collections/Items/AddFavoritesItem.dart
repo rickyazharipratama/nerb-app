@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:dashed_container/dashed_container.dart';
+import 'package:nerb/Models/PlaceModel.dart';
 
 class AddFavoritesItem extends StatelessWidget {
 
-  final VoidCallback callback;
-  AddFavoritesItem({this.callback});
+  final ValueChanged callback;
+  final PlaceModel place;
+  AddFavoritesItem({this.callback, this.place});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: callback,
-      highlightColor: ColorCollections.shimmerHighlightColor,
-      splashColor: ColorCollections.shimmerBaseColor,
+      onTap: (){
+        callback(place);
+      },
+      highlightColor: ColorCollections.shimmerBaseColor,
+      splashColor: ColorCollections.shimmerHighlightColor,
       child: DashedContainer(
         borderRadius: 5,
         dashedLength: 5,

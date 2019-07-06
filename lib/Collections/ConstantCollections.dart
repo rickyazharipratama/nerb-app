@@ -10,7 +10,7 @@ class ConstantCollections{
 
 //firestore
   static const String FIRESTORE_CATEGORY = "category";
-  static const String FIRESTORE_PLACE = "place";
+  static const String FIRESTORE_PLACE = "Place";
   static const String FIRESTORE_DEFAULT_FAVORITE = "defaultFavorites";
 
 //preferences

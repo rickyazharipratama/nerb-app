@@ -6,7 +6,7 @@ import 'package:nerb/Models/PlaceModel.dart';
 class PlaceItem extends StatelessWidget {
 
   final PlaceModel place;
-  final VoidCallback callback;
+  final ValueChanged callback;
 
   PlaceItem({this.place, this.callback});
 
@@ -14,7 +14,9 @@ class PlaceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: callback,
+      onTap: (){
+        callback(place);
+      },
       splashColor: ColorCollections.shimmerHighlightColor,
       highlightColor: ColorCollections.shimmerBaseColor,
       child: Container(
