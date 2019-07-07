@@ -6,7 +6,7 @@ import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
-import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
+import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
 
 class PlacesListByCategoryModal extends StatefulWidget {
@@ -21,6 +21,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
   List<PlaceModel> places;
 
   int viewState = 1;
+  bool isLoadError = false;
 
   @override
   void initState() {
@@ -114,13 +115,15 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                                 );
                               }).toList()
                             )
-                          : Container()
+                          : Container(
+                            height: 150,
+                          )
                         ),
                       ],
                     ),
                   );
                 }).toList(),
-              ) : Container(),
+              ) : ShimmerListPlace(),
             )
           ]
         ),
@@ -129,49 +132,68 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
   }
   
   initiateData(){
-    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY).snapshots().listen(retrieveCategory);
+    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
+      .snapshots()
+      .listen(retrieveCategory)
+      .onError(onLoadError);
   }
 
   retrieveCategory(QuerySnapshot data){
-    List<FirestoreCategory> tmpCategories = List();
-      for(DocumentSnapshot doc in data.documents){
-        tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
-      }
-      if(categories == null){
-        categories = List<FirestoreCategory>();
-      } else{
-        categories.clear();
-      }
-      categories.addAll(tmpCategories);
-      if(places != null){
+    if(!isLoadError){
+      List<FirestoreCategory> tmpCategories = List();
+        for(DocumentSnapshot doc in data.documents){
+          tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
+        }
+        if(categories == null){
+          categories = List<FirestoreCategory>();
+        } else{
+          categories.clear();
+        }
+        categories.addAll(tmpCategories);
+        if(places != null){
 
+          if(mounted){
+            setState(() {
+              print(places.length);
+              viewState = 0;
+            });
+          }
+        }
+      Firestore.instance.collection(ConstantCollections.FIRESTORE_PLACE)
+        .snapshots()
+        .listen(retrievePlace)
+        .onError(onLoadError);
+    }
+  }
+
+  retrievePlace(QuerySnapshot data){
+    if(!isLoadError){
+      List<PlaceModel> tmp = List();
+      for(DocumentSnapshot doc in data.documents){
+        tmp.add(PlaceModel.fromFireStore(doc.documentID,doc.data));
+      }
+      if(places == null){
+        places = List();
+      }else{
+        places.clear();
+      }
+      places.addAll(tmp);
+      if(categories != null){
         if(mounted){
           setState(() {
-            print(places.length);
             viewState = 0;
           });
         }
       }
-    Firestore.instance.collection(ConstantCollections.FIRESTORE_PLACE).snapshots().listen(retrievePlace);
+    }
   }
 
-  retrievePlace(QuerySnapshot data){
-    List<PlaceModel> tmp = List();
-    for(DocumentSnapshot doc in data.documents){
-      tmp.add(PlaceModel.fromFireStore(doc.documentID,doc.data));
-    }
-    if(places == null){
-      places = List();
-    }else{
-      places.clear();
-    }
-    places.addAll(tmp);
-    if(categories != null){
-      if(mounted){
-        setState(() {
-          viewState = 0;
-        });
-      }
+  onLoadError(error){
+    if(mounted){
+      setState(() {
+        viewState = 1;
+        isLoadError = true;
+      });
     }
   }
 

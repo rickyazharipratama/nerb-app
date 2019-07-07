@@ -11,6 +11,7 @@ import 'package:nerb/Views/Components/Collections/Items/EditPlaceItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimerFavorite.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
+import 'package:nerb/Views/Modals/ErrorModal.dart';
 import 'package:nerb/Views/Modals/PlacesListByCategoryModal.dart';
 
 import 'Items/PlaceItem.dart';
@@ -217,10 +218,23 @@ class _FavoriteState extends State<Favorite> {
   }
 
   turnOnEditMode(){
-    if(mounted){
-      setState(() {
-        isEditMode = true;
-      });
+    int diff = favorites.length - favorites.where((place) => place.id.startsWith(ConstantCollections.EMPTY_FAVORITE)).length;
+    if(diff > 1){
+      print(diff);
+      print("masih masuk");
+      if(mounted){
+        setState(() {
+          isEditMode = true;
+        });
+      }
+    }else{
+      showModalBottomSheet(
+        context: context,
+        builder: (_) => ErrorModal(
+          title: "Ups...!",
+          desc: "Your favorites places is empty.",
+        )
+      );
     }
   }
 
@@ -240,7 +254,13 @@ class _FavoriteState extends State<Favorite> {
        );
        if(item != null){
          if(favorites.where((place)=> place.forSearch == item.forSearch).length > 0){
-           // found same item
+           showModalBottomSheet(
+             context: context,
+             builder: (_) =>ErrorModal(
+               title: "Ups...!",
+               desc : "The Place is already exists in your favorites."
+             )
+           );
          }else{
             int idx = favorites.indexOf(trigger);
             if(mounted){

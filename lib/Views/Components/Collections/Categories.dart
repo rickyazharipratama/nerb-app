@@ -15,6 +15,7 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
 
   int viewState = 1;
+  bool isError = false;
   List<FirestoreCategory> categories;
   @override
   void initState() {
@@ -60,26 +61,43 @@ class _CategoriesState extends State<Categories> {
       }
     
       void initializationData() {
-        Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY).snapshots().listen(onRetrieveCategory);
+        Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
+          .snapshots()
+          .listen(onRetrieveCategory)
+          .onError(onRetrieveError);
       }
 
-      onRetrieveCategory(QuerySnapshot data){
-        List<FirestoreCategory> tmpCategories = new List();
-        for(DocumentSnapshot doc in data.documents){
-          print(doc.documentID);
-          print(doc.data.toString());
-          tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
-        }
+      onRetrieveError(error){
+        print("retrieve error");
         if(mounted){
           setState(() {
-            if(categories == null){
-              categories = List<FirestoreCategory>();
-            } else{
-              categories.clear();
-            }
-            categories.addAll(tmpCategories);
-            viewState = 0;
+            viewState = 1;
+            isError = true;
           });
+        }
+      }
+
+
+      onRetrieveCategory(QuerySnapshot data){
+        print("retrieveCategory");
+        if(!isError){
+          List<FirestoreCategory> tmpCategories = new List();
+          for(DocumentSnapshot doc in data.documents){
+            print(doc.documentID);
+            print(doc.data.toString());
+            tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
+          }
+          if(mounted){
+            setState(() {
+              if(categories == null){
+                categories = List<FirestoreCategory>();
+              } else{
+                categories.clear();
+              }
+              categories.addAll(tmpCategories);
+              viewState = 0;
+            });
+          }
         }
       }
 }
