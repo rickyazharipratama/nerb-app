@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 
 class PlaceItem extends StatelessWidget {
 
   final PlaceModel place;
+  final String language;
   final ValueChanged callback;
 
-  PlaceItem({this.place, this.callback});
+  PlaceItem({this.place, this.callback, this.language}) : assert(language != null);
 
 
   @override
@@ -20,8 +22,8 @@ class PlaceItem extends StatelessWidget {
       splashColor: ColorCollections.shimmerHighlightColor,
       highlightColor: ColorCollections.shimmerBaseColor,
       child: Container(
-        width: 60,
-        height: 80,
+        width: 65,
+        height: 90,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,17 +48,24 @@ class PlaceItem extends StatelessWidget {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                place.name.en,
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                  color: ColorCollections.titleColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 5,
+                  bottom: 5,
+                  left: 2,
+                  right: 2
+                ),
+                child: Text(
+                  language != ConstantCollections.LANGUAGE_ID ? place.name.id: place.name.en,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: ColorCollections.titleColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
+                  ),
                 ),
               ),
             )

@@ -5,14 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
+import 'package:nerb/Collections/StringHelper.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerPlaceNearYou.dart';
+import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class PlacesNearYou extends StatefulWidget {
+
+  final String language;
+  PlacesNearYou({this.language}): assert(language != null);
+
   @override
   _PlacesNearYouState createState() => new _PlacesNearYouState();
 }
@@ -22,6 +31,9 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   int viewState = 1;
   bool isLoadError = false;
   NearbyPlaceResponse nearbyPlace;
+
+  String errorTitle;
+  String errorDesc;
 
   @override
   void initState() {
@@ -40,23 +52,23 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.only(left: 10, bottom: 2, right: 10),
-            child: SectionTitle.withText(
-              value: "Places Near You"
-            ),
+              child: SectionTitle.withText(
+                value: StringHelper.instance.getCollections[widget.language]['titlePlacesNearYou']
+              ),
           ),
 
           viewState == 0?
-            Container(
-              height: 230,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: nearbyPlace.nearbyPlaces.map((place){
-                  return PlaceNearYouItem(
-                    place: place,
-                  );
-                }).toList(),
-              ),
-            )
+          Container(
+            height: 230,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: nearbyPlace.nearbyPlaces.map((place){
+                return PlaceNearYouItem(
+                  place: place,
+                );
+              }).toList(),
+            ),
+          )
           : Container(
             height: 200,
             child: Stack(
@@ -67,87 +79,21 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                 ),
 
                 isLoadError ?
-                  Material(
-                    color: ColorCollections.wrapCategoryIcon,
-                    child: ClipRect(
-                    child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 3,
-                      sigmaY: 3
-                    ),
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        color: ColorCollections.wrapperCategory,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget>[
-
-                                  Text(
-                                    "Ups..!",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor),
-                                      fontWeight: FontWeight.w500
-                                    ),
-                                  ),
-
-                                  Expanded(
-                                    child: Text("Ipsum dolor amet ipsum dolor amet ipsum dolor amet",
-                                      style: TextStyle(
-                                        color: ColorCollections.titleWhite,
-                                        fontWeight: FontWeight.w300,
-                                        fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor)
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding : const EdgeInsets.only(left: 5, right: 10),
-                              child: InkWell(
-                                onTap: (){
-                                  if(mounted){
-                                    setState(() {
-                                      isLoadError = false;
-                                      initiateData();
-                                    });
-                                  }
-                                },
-                                borderRadius: BorderRadius.circular(5),
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: ColorCollections.titleColor,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    "Retry",
-                                    style: TextStyle(
-                                      color: ColorCollections.titleWhite,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: FontSizeHelper.titleMenu(scale : MediaQuery.of(context).textScaleFactor),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                  )
+                  WrapperError(
+                    buttonText: StringHelper.instance.getCollections[widget.language]['btnRetry'],
+                    title: errorTitle,
+                    desc: errorDesc,
+                    height: 120,
+                    callback: (){
+                      if(mounted){
+                        setState(() {
+                          isLoadError = false;
+                          initiateData();
+                        });
+                      }
+                    },
                   )
                 : Container()
-
               ],
             ),
           )
@@ -160,17 +106,30 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   initiateData() async{
     Location loc = Location();
     LocationData  dt = await loc.getLocation();
-    
+    int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
     PlaceController.instance.getNearbyPlace(
       callback: this,
       location: dt.latitude.toString()+","+dt.longitude.toString(),
-      radius: "800"
+      language: widget.language,
+      radius: radius.toString()
     );
   }
 
   @override
   onFailureWithResponse(Response res) {
-    return null;
+    if(mounted){
+      setState(() {
+        isLoadError = true;
+        errorTitle = CommonHelper.instance.getTitleErrorByCode(
+          code: res.statusCode,
+          lang: widget.language
+        );
+        errorDesc = CommonHelper.instance.getDescErrorByCode(
+          code: res.statusCode,
+          lang: widget.language
+        );
+      });
+    }
   }
 
   @override
@@ -178,6 +137,14 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     if(mounted){
       setState((){
         isLoadError = true;
+        errorTitle = CommonHelper.instance.getTitleErrorByStatus(
+          lang: widget.language,
+          status: data['status']
+        );
+        errorDesc = CommonHelper.instance.getDescErrorByStatus(
+          lang: widget.language,
+          status: data['status']
+        );
       });
     }
   }
@@ -195,8 +162,18 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
 
   @override
   onfailure() {
-    print("error");
-    return null;
+    if(mounted){
+      setState(() {
+        isLoadError = true;
+        errorTitle = CommonHelper.instance.getTitleErrorByCode(
+          code: 500,
+          lang: widget.language
+        );
+        errorDesc = CommonHelper.instance.getDescErrorByCode(
+          code: 500,
+          lang: widget.language
+        );
+      });
+    }
   }
-
 }

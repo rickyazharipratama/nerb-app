@@ -23,8 +23,8 @@ class AddFavoritesItem extends StatelessWidget {
         strokeWidth: 2,
         dashColor: ColorCollections.baseGrayColor,
         child: SizedBox(
-          height: 70,
-          width: 60,
+          height: 80,
+          width: 65,
           child: Center(
             child: Icon(
               Icons.add_circle_outline,

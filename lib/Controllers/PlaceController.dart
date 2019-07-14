@@ -9,13 +9,14 @@ class PlaceController{
 
   static PlaceController instance = PlaceController();
 
-  getNearbyPlace({String type, String location, String radius, String pageToken, RequestResponseCallback callback}){
-    print("start request");
+  getNearbyPlace({String type, String location, String radius, String pageToken, RequestResponseCallback callback, String language}){
+
     NetworkHelper.instance.requestGet(
       path: APICollections.instance.apiNearbyPlace(
         location: location,
         pageToken: pageToken,
         radius: radius,
+        language: language,
         type: type
       )
     ).then((res){
@@ -39,7 +40,5 @@ class PlaceController{
     .catchError((err){
       callback.onfailure();
     });
-
   }
-
 }

@@ -5,12 +5,13 @@ class APICollections{
 
   static APICollections instance = APICollections();
 
-  String apiNearbyPlace({String type , String pageToken, String location, String radius}){
+  String apiNearbyPlace({String type , String pageToken, String location, String radius, String language}){
     return "/place/nearbysearch/json?key="
       +_apiKey
       +(type != null ?"&type="+type : "")
       +"&location="+location
       +"&radius="+radius
+      +(language != null ? "&language="+language : "")
       +(pageToken != null ? "&pagetoken="+pageToken : "");
   }
 

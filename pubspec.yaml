@@ -31,6 +31,7 @@ dependencies:
   dashed_container: ^1.0.1
   dio: ^2.1.7
   location: ^2.3.5
+  simple_animations: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +65,8 @@ flutter:
    - assets/placeholder_shopping.png
    - assets/placeholder_school.png
    - assets/placeholder_lodging.png
-
+   - assets/ic_id.png
+   - assets/ic_usa.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

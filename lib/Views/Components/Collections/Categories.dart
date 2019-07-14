@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/StringHelper.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Views/Components/Collections/Items/CategoryItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerCategories.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class Categories extends StatefulWidget {
+  
+  final String language;
+
+  Categories({this.language}) : assert(language != null);
   @override
   _CategoriesState createState() => new _CategoriesState();
 }
@@ -17,87 +24,118 @@ class _CategoriesState extends State<Categories> {
   int viewState = 1;
   bool isError = false;
   List<FirestoreCategory> categories;
+
   @override
   void initState() {
     super.initState();
     initializationData();
   }
     
-      @override
-      Widget build(BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.only(top: 10, bottom: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              
-              Padding(
-                padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
-                child: SectionTitle.withText(
-                  value: "Categories"
-                ),
-              ),
-    
-              viewState == 0?
-                Container(
-                  height: 115,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: categories.map((category){
-                      print("called");
-                      return CategoryItem(
-                        category: category
-                      );
-                    }).toList(),
-                  )
-                )
-              : ShimmerCategories()
-    
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          
+          Padding(
+            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+            child: SectionTitle.withText(
+              value: StringHelper.instance.getCollections[widget.language]['titleCategories']
+            ),
           ),
-        );
-      }
+
+          viewState == 0?
+            Container(
+              height: 115,
+              child:  ListView(
+                scrollDirection: Axis.horizontal,
+                children: categories.map((category){
+                  return CategoryItem(
+                    language: widget.language,
+                    category: category
+                  );
+                }).toList(),
+              ),
+            )
+          : Container(
+            height: 115,
+            child: Stack(
+              children: <Widget>[
+
+                Positioned.fill(
+                  child: ShimmerCategories(),
+                ),
+
+                isError ?
+                  WrapperError(
+                    height: 100,
+                    buttonText: StringHelper.instance.getCollections[widget.language]['btnRetry'],
+                    callback: (){
+                      if(mounted){
+                        setState(() {
+                          isError = false;
+                        });
+                      }
+                    },
+                    title: CommonHelper.instance.getTitleErrorByCode(
+                      code: 500,
+                      lang: widget.language
+                    ),
+                    desc: CommonHelper.instance.getDescErrorByCode(
+                      code: 500,
+                      lang: widget.language
+                    ),
+                  )
+                :Container()
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
     
-      void initializationData() {
-        Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
-          .snapshots()
-          .listen(onRetrieveCategory)
-          .onError(onRetrieveError);
+  void initializationData() {
+    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
+      .snapshots()
+      .listen(onRetrieveCategory)
+      .onError(onRetrieveError);
+  }
+
+  onRetrieveError(error){
+    if(mounted){
+      setState(() {
+        viewState = 1;
+        isError = true;
+      });
+    }
+  }
+
+
+  onRetrieveCategory(QuerySnapshot data){
+    if(!isError){
+      List<FirestoreCategory> tmpCategories = new List();
+      for(DocumentSnapshot doc in data.documents){
+        print(doc.documentID);
+        print(doc.data.toString());
+        tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
       }
-
-      onRetrieveError(error){
-        print("retrieve error");
-        if(mounted){
-          setState(() {
-            viewState = 1;
-            isError = true;
-          });
-        }
-      }
-
-
-      onRetrieveCategory(QuerySnapshot data){
-        print("retrieveCategory");
-        if(!isError){
-          List<FirestoreCategory> tmpCategories = new List();
-          for(DocumentSnapshot doc in data.documents){
-            print(doc.documentID);
-            print(doc.data.toString());
-            tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
+      if(mounted){
+        setState(() {
+          if(categories == null){
+            categories = List<FirestoreCategory>();
+          } else{
+            categories.clear();
           }
-          if(mounted){
-            setState(() {
-              if(categories == null){
-                categories = List<FirestoreCategory>();
-              } else{
-                categories.clear();
-              }
-              categories.addAll(tmpCategories);
-              viewState = 0;
-            });
-          }
-        }
+          categories.addAll(tmpCategories);
+          categories.sort((a,b)=> widget.language == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
+          viewState = 0;
+        });
       }
+    }
+  }
 }

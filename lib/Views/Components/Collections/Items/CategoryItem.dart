@@ -10,8 +10,9 @@ import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 class CategoryItem extends StatefulWidget {
 
   final FirestoreCategory category;
+  final String language;
 
-  CategoryItem({this.category});
+  CategoryItem({this.category, this.language});
 
   @override
   _CategoryItemState createState() => new _CategoryItemState();
@@ -39,7 +40,7 @@ class _CategoryItemState extends State<CategoryItem> {
         tag: widget.category.id,
         child: Material(
           borderRadius: BorderRadius.circular(5),
-          color: ColorCollections.shimmerBaseColor,
+          color: ColorCollections.placeholderCategory,
           elevation: 2,
           shadowColor: ColorCollections.shimmerHighlightColor,
           child: Stack(
@@ -99,7 +100,7 @@ class _CategoryItemState extends State<CategoryItem> {
                child: Padding(
                  padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
                  child: Text(
-                   widget.category.name.en,
+                   widget.language == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
                    textAlign: TextAlign.left,
                    style: TextStyle(
                      color: ColorCollections.titleWhite,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Collections/StringHelper.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
@@ -10,6 +11,10 @@ import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
 
 class PlacesListByCategoryModal extends StatefulWidget {
+
+  final String language;
+  PlacesListByCategoryModal({this.language}) : assert(language != null);
+
   @override
   _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
 }
@@ -46,7 +51,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
               child: Row(
                 children: <Widget>[
                   Expanded(child: Text(
-                    "Places",
+                    StringHelper.instance.getCollections[widget.language]['labelPlaces'],
                     style: TextStyle(
                       color: ColorCollections.titleColor,
                       fontSize: FontSizeHelper.titleSectionSize(scale: MediaQuery.of(context).textScaleFactor),
@@ -92,7 +97,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
-                            item.name.en,
+                            widget.language == ConstantCollections.LANGUAGE_ID ? item.name.id : item.name.en,
                             style: TextStyle(
                               color: ColorCollections.titleColor,
                               fontWeight: FontWeight.w500,
@@ -111,6 +116,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                               children: places.where((plc)=> plc.categories.contains(item.id)).map((place){
                                 return PlaceItem(
                                   callback: onTappedPlaceItem,
+                                  language: widget.language,
                                   place: place,
                                 );
                               }).toList()
