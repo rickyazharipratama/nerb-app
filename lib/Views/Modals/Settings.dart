@@ -47,7 +47,7 @@ class _SettingsState extends State<Settings> {
           ),
 
           Radius(
-            language: widget.language,
+            language: this.lang
           ),
 
           Language(
