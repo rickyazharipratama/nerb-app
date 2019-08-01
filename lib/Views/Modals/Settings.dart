@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/NerbApp.dart';
 import 'package:nerb/Views/Components/misc/Language.dart';
 import 'package:nerb/Views/Components/misc/Radius.dart';
+import 'package:nerb/Views/Components/misc/SettingSwitcher.dart';
 
 class Settings extends StatefulWidget {
 
@@ -16,69 +17,87 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
 
+  bool isDarkTheme = false;
+
   @override
   void initState() {
     super.initState();
+    initiateData();
+  }
+
+  initiateData() async{
+    bool isTheme = await PreferenceHelper.instance.isHaveVal(key: ConstantCollections.PREF_IS_DARK_THEME);
+    if(mounted){
+      setState(() {
+        isDarkTheme = isTheme;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: Text(
-              UserLanguage.of(context).label('setting'),
-              softWrap: true,
-              maxLines: 1,
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: ColorCollections.shimmerHighlightColor,
-                fontSize: FontSizeHelper.titleSectionSize(scale: MediaQuery.of(context).textScaleFactor),
-                fontWeight: FontWeight.w500
+    return Material(
+      color: Theme.of(context).backgroundColor,
+      child: ListView(
+        children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Text(
+                UserLanguage.of(context).label('setting'),
+                softWrap: true,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).primaryTextTheme.title
               ),
             ),
-          ),
 
-          Radius(),
+            Radius(),
 
-          Language(),
+            Language(),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 5),
-            child: Text(
-              UserLanguage.of(context).label('about'),
-              softWrap: true,
-              maxLines: 1,
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: ColorCollections.shimmerHighlightColor,
-                fontSize: FontSizeHelper.titleSectionSize(scale: MediaQuery.of(context).textScaleFactor),
-                fontWeight: FontWeight.w500
+            SettingSwitcher(
+              callback: changingTheme,
+              title: UserLanguage.of(context).label("theme"),
+              desc: UserLanguage.of(context).desc("themeSetting"),
+              isVal: MediaQuery.of(context).platformBrightness == Brightness.dark ? true : isDarkTheme,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 5),
+              child: Text(
+                UserLanguage.of(context).label('about'),
+                softWrap: true,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).primaryTextTheme.title
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-            child: Text(
-              UserLanguage.of(context).label('version')+" "+ConstantCollections.VERSION,
-              softWrap: true,
-              maxLines: 1,
-              textAlign: TextAlign.right,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: ColorCollections.descColor,
-                fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
-                fontWeight: FontWeight.w500
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Text(
+                UserLanguage.of(context).label('version')+" "+ConstantCollections.VERSION,
+                softWrap: true,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).primaryTextTheme.subhead
               ),
             ),
-          ),
-
-      ],
+        ],
+      ),
     );
   }
+
+  changingTheme(isVal){
+    if(mounted){
+      setState(() {
+        isDarkTheme = isVal;
+        NerbApp.of(context).changingTheme(isVal);
+      });
+    }
+  }
+
 }

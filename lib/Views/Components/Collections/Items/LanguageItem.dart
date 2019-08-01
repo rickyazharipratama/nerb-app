@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
-import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
 
 class LanguageItem extends StatelessWidget {
 
@@ -27,11 +26,11 @@ class LanguageItem extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         decoration: language == selected ? BoxDecoration(
           border: Border.all(
-            color: ColorCollections.shimmerBaseColor,
+            color: Theme.of(context).highlightColor,
             width: 1  
           ),
           borderRadius: BorderRadius.circular(5),
-          color: language == selected ? ColorCollections.shimmerBaseColor : Colors.transparent,
+          color: language == selected ? Theme.of(context).highlightColor: Colors.transparent,
         ): BoxDecoration(),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -51,13 +50,9 @@ class LanguageItem extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 2, right: 2),
                 child: Text(
-                  UserLanguage.of(context).label("language"),
+                  language  == ConstantCollections.LANGUAGE_ID? "Bahasa" : "Language",
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: ColorCollections.titleColor,
-                    fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
-                    fontWeight: FontWeight.w500
-                  ),
+                  style: Theme.of(context).primaryTextTheme.body1
                 ),
               ),
             )

@@ -48,7 +48,7 @@ class _FavoriteState extends State<Favorite> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
-              padding: const EdgeInsets.only(bottom: 2),
+              padding: const EdgeInsets.only(bottom: 7),
               child: SectionTitle.withText(
                 value: UserLanguage.of(context).title("favorite"),
               ),
@@ -102,15 +102,16 @@ class _FavoriteState extends State<Favorite> {
                                 height: 50,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: isEditMode ? Colors.red : ColorCollections.baseGrayColor,
+                                    color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
                                     width: 1,
                                   ),
+                                  color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
                                   shape: BoxShape.circle
                                 ),
                                 child: Center(
                                   child: Icon(
                                     isEditMode ? Icons.close : Icons.edit,
-                                    color: isEditMode ? Colors.red : ColorCollections.titleColor,
+                                    color: Theme.of(context).buttonColor,
                                     size: 25,
                                   ),
                                 )

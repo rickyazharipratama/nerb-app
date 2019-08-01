@@ -6,7 +6,8 @@
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
-        "languageSetting":"Atur bahasa yang lebih kamu sukai dalam menggunakan aplikasi ini."
+        "languageSetting":"Atur bahasa yang lebih kamu sukai dalam menggunakan aplikasi ini.",
+        "themeSetting":"Kamu bisa mengatur tema yang diinginkan selama menggunakan aplikasi ini. Hal yang perlu diperhatikan, menggunakan tema gelap dapat mengurangi konsumsi baterai handphone."
     },
     "label":{
         "places":"Tempat",
@@ -14,7 +15,8 @@
         "about":"Tentang",
         "radius":"Radius",
         "language":"Bahasa",
-        "version":"Versi"
+        "version":"Versi",
+        "theme":"Tema"
     },
     "button":{
         "retry":"Coba Lagi"

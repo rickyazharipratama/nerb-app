@@ -6,7 +6,8 @@
     },
     "desc":{
         "radiusSetting":"You can set the range of places you want to find from your current location.",
-        "languageSetting":"Set the language that you prefer to use this application."
+        "languageSetting":"Set the language that you prefer to use this application.",
+        "themeSetting":"You can set preferable theme during using this application.Thing that need to be considered, using dark theme can reduce your cellphone batteries consumption."
     },
     "label":{
         "places":"Places",
@@ -14,7 +15,8 @@
         "about":"About",
         "radius":"Radius",
         "language":"Language",
-        "version":"Version"
+        "version":"Version",
+        "theme":"Theme"
     },
     "button":{
         "retry":"Retry"

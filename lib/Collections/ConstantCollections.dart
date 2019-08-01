@@ -21,6 +21,7 @@ static const int DEFAULT_RADIUS = 500;
   static const String PREF_MY_FAVORITE = 'prefMyFavorite';
   static const String PREF_LANGUAGE = "prefLanguage";
   static const String PREF_RADIUS = "prefRadius";
+  static const String PREF_IS_DARK_THEME = "isDarkTheme";
 
 
 //FLAG

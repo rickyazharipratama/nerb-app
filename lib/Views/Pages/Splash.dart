@@ -24,7 +24,7 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     CommonHelper.instance.forcePortraitOrientation();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
         child: Hero(
           tag: "nerbeeLogo",

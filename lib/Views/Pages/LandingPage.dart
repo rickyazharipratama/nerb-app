@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Views/Components/Collections/Categories.dart';
 import 'package:nerb/Views/Components/Collections/Favorite.dart';
@@ -42,7 +41,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
         actions: <Widget>[
@@ -73,7 +72,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
                 child: AnimatedIcon(
                   icon: AnimatedIcons.menu_close,
                   progress: anim,
-                  color: Color.lerp(ColorCollections.titleColor,Colors.red,anim.value),
+                  color: Color.lerp(Theme.of(context).buttonColor,Colors.red,anim.value),
                   size: 25,
                 ),
               ),
@@ -82,7 +81,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
         ],
       ),
-      backgroundColor: ColorCollections.bgPrimary,
+      backgroundColor: Theme.of(context).backgroundColor,
       body:  Builder(
         builder: (childContext){
           parentContext = childContext;

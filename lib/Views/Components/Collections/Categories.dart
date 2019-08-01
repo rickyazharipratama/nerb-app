@@ -40,7 +40,7 @@ class _CategoriesState extends State<Categories> {
         children: <Widget>[
           
           Padding(
-            padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
+            padding: const EdgeInsets.only(bottom: 7, left: 10, right: 10),
             child: SectionTitle.withText(
               value: UserLanguage.of(context).title("categories")
             ),

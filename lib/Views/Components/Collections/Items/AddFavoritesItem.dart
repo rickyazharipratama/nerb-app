@@ -21,14 +21,14 @@ class AddFavoritesItem extends StatelessWidget {
         borderRadius: 5,
         dashedLength: 5,
         strokeWidth: 2,
-        dashColor: ColorCollections.baseGrayColor,
+        dashColor: Theme.of(context).buttonColor,
         child: SizedBox(
           height: 80,
           width: 65,
           child: Center(
             child: Icon(
               Icons.add_circle_outline,
-              color: ColorCollections.baseGrayColor,
+              color: Theme.of(context).buttonColor,
               size: 30,
             ),
           ),

@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/PlaceModel.dart';
@@ -37,7 +35,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
     return GestureDetector(
       onTap: (){},
       child: Material(
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -45,16 +43,12 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
           children : <Widget>[
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
               child: Row(
                 children: <Widget>[
                   Expanded(child: Text(
                     UserLanguage.of(context).label('places'),
-                    style: TextStyle(
-                      color: ColorCollections.titleColor,
-                      fontSize: FontSizeHelper.titleSectionSize(scale: MediaQuery.of(context).textScaleFactor),
-                      fontWeight: FontWeight.w700
-                    ),
+                    style: Theme.of(context).primaryTextTheme.title
                   ),),
                   GestureDetector(
                     onTap: (){
@@ -93,14 +87,10 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                       children: <Widget>[
                         
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
+                          padding: const EdgeInsets.only(top: 10,bottom: 5),
                           child: Text(
                             UserLanguage.of(context).locale.languageCode == ConstantCollections.LANGUAGE_ID ? item.name.id : item.name.en,
-                            style: TextStyle(
-                              color: ColorCollections.titleColor,
-                              fontWeight: FontWeight.w500,
-                              fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor)
-                            ),
+                            style: Theme.of(context).primaryTextTheme.subtitle
                           )
                         ),
 

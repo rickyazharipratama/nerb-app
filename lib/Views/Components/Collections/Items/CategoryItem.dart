@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -40,7 +39,7 @@ class _CategoryItemState extends State<CategoryItem> {
         tag: widget.category.id,
         child: Material(
           borderRadius: BorderRadius.circular(5),
-          color: ColorCollections.placeholderCategory,
+          color: Theme.of(context).highlightColor,
           elevation: 2,
           shadowColor: ColorCollections.shimmerHighlightColor,
           child: Stack(
@@ -102,11 +101,7 @@ class _CategoryItemState extends State<CategoryItem> {
                  child: Text(
                    UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
                    textAlign: TextAlign.left,
-                   style: TextStyle(
-                     color: ColorCollections.titleWhite,
-                     fontWeight: FontWeight.w500,
-                     fontSize: FontSizeHelper.titleList(scale : MediaQuery.of(context).textScaleFactor)
-                   ),
+                   style: Theme.of(context).primaryTextTheme.subhead
                  ),
                ),
              )

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 
@@ -35,15 +34,15 @@ class PlaceItem extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: ColorCollections.baseGrayColor
+                  color: Theme.of(context).highlightColor
                 ),
-                color: Colors.transparent,
+                color: Theme.of(context).highlightColor,
               ),
               child: Center(
                 child: Icon(
                   IconData(int.parse(place.materialIcon),fontFamily: "MaterialIcons"),
-                  color: ColorCollections.titleColor,
-                  size: 30,
+                  color: Theme.of(context).buttonColor,
+                  size: 25,
                 ),
               ),
             ),
@@ -61,11 +60,7 @@ class PlaceItem extends StatelessWidget {
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
-                  style: TextStyle(
-                    color: ColorCollections.titleColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
-                  ),
+                  style: Theme.of(context).primaryTextTheme.body1
                 ),
               ),
             )

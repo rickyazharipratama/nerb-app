@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 
@@ -20,7 +19,7 @@ class PlaceNearYouItem extends StatelessWidget {
       height: 230,
       margin: const EdgeInsets.only(left : 10, right : 10),
       child : Material(
-        color: ColorCollections.shimmerBaseColor,
+        color: Theme.of(context).highlightColor,
         borderRadius: BorderRadius.circular(5),
         elevation: 2,
         shadowColor: ColorCollections.shimmerHighlightColor,
@@ -142,11 +141,7 @@ class PlaceNearYouItem extends StatelessWidget {
                     place.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor),
-                      fontWeight: FontWeight.w500,
-                      color: ColorCollections.titleWhite
-                    ),
+                    style: Theme.of(context).primaryTextTheme.subhead
                   ),
                 ),
               )

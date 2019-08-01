@@ -46,7 +46,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 10, bottom: 2, right: 10),
+            padding: const EdgeInsets.only(left: 10, bottom: 7, right: 10),
               child: SectionTitle.withText(
                 value: UserLanguage.of(context).title('placesNearYou')
               ),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/NerbApp.dart';
@@ -28,7 +26,7 @@ class _LanguageState extends State<Language> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,22 +35,14 @@ class _LanguageState extends State<Language> {
             UserLanguage.of(context).label('language'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: ColorCollections.titleColor,
-              fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor),
-              fontWeight: FontWeight.w500
-            ),
+            style: Theme.of(context).primaryTextTheme.subtitle
           ),
 
           Padding(
             padding: const EdgeInsets.only(top: 5 ,bottom: 10),
             child: Text(
               UserLanguage.of(context).desc("languageSetting"),
-              style: TextStyle(
-                color: ColorCollections.descColor,
-                fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
-                fontWeight: FontWeight.w300
-              ),
+              style: Theme.of(context).primaryTextTheme.body1
             ),
           ),
 

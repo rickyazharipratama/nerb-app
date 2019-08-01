@@ -26,6 +26,11 @@ class PreferenceHelper{
      await _pref.setStringList(key, value);
   }
 
+  setBoolValue({String key, bool val}) async{
+    _pref = await SharedPreferences.getInstance();
+    await _pref.setBool(key, val);
+  }
+
 
   Future<int> getIntValue({String key}) async{
     _pref = await SharedPreferences.getInstance();
@@ -46,5 +51,14 @@ class PreferenceHelper{
        return _pref.getStringList(key);
      }
      return List();
+  }
+
+  Future<bool> isHaveVal({String key}) async{
+    _pref = await SharedPreferences.getInstance();
+    bool val = _pref.getBool(key);
+    if(val == null){
+      return false;
+    }
+    return val;
   }
 }
