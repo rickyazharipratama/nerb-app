@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Views/Components/Collections/Categories.dart';
 import 'package:nerb/Views/Components/Collections/Favorite.dart';
 import 'package:nerb/Views/Components/Collections/PlacesNearYou.dart';
@@ -15,7 +13,6 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin{
 
-  String language = "en";
   AnimationController animController;
   Animation anim;
   bool isSettingActive = false;
@@ -36,24 +33,8 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         });
       }
     });
-    initiateData();
   }
 
-  initiateData() async{
-    String tmpLang = await PreferenceHelper.instance.getStringValue(key: ConstantCollections.PREF_LANGUAGE);
-    if(tmpLang == null){
-      tmpLang = language;
-      PreferenceHelper.instance.setStringValue(
-        key: ConstantCollections.PREF_LANGUAGE,
-        value: tmpLang
-      );
-    }
-    if(mounted){
-      setState(() {
-        language = tmpLang;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +88,10 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
           parentContext = childContext;
           return ListView(
             children: <Widget>[
-              Favorite(
-                language: language,
-              ),
+              Favorite(),
               Padding(padding: const EdgeInsets.all(5),),
-              Categories(
-                language: language,
-              ),
-              PlacesNearYou(
-                language: language,
-              )
+              Categories(),
+              PlacesNearYou()
             ],
           );
         }
@@ -128,9 +103,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     showBottomSheet(
       context: parentContext,
       builder: (context){
-        return Settings(
-          language: language,
-        );
+        return Settings();
       },
       backgroundColor: Colors.white,
       elevation: 0,

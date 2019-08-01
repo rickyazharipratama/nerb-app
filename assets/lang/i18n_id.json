@@ -1,0 +1,32 @@
+{
+    "title":{
+        "favorite":"Paling Sering Digunakan",
+        "categories":"Kategori",
+        "placesNearYou":"Tempat Didekat Kamu"
+    },
+    "desc":{
+        "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
+        "languageSetting":"Atur bahasa yang lebih kamu sukai dalam menggunakan aplikasi ini."
+    },
+    "label":{
+        "places":"Tempat",
+        "setting":"Pengaturan",
+        "about":"Tentang",
+        "radius":"Radius",
+        "language":"Bahasa",
+        "version":"Versi"
+    },
+    "button":{
+        "retry":"Coba Lagi"
+    },
+    "errorTitle":{
+        "favoriteIsEmpty":"Tempat Populer Kosong",
+        "placeIsAlreadyExist":"Tipe Tempat Sudah Ada",
+        "general":"Ups!"
+    },
+    "errorDesc":{
+        "favoriteIsEmpty":"Kamu dapat melakukan pembaruan tempat populer bila telah memiliki satu atau beberapa tempat populer didalam daftar tipe tempat populer kamu. Silahkan tambahkan tempat populer kamu terlebih dahulu.",
+        "placeIsAlreadyExist":"Tipe tempat yang kamu pilih sudah ada di dalam daftar tipe tempat populer kamu.",
+        "general":"Sepertinya kamu tidak bisa mendapatkan informasi dengan benar. Silahkan coba lagi dalam beberapa saat."
+    }
+}

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/AddFavoritesItem.dart';
 import 'package:nerb/Views/Components/Collections/Items/EditPlaceItem.dart';
@@ -18,9 +18,8 @@ import 'package:nerb/Views/Modals/PlacesListByCategoryModal.dart';
 import 'Items/PlaceItem.dart';
 
 class Favorite extends StatefulWidget {
-  
-  final String language;
-  Favorite({this.language}) : assert(language != null);
+
+  Favorite();
 
   @override
   _FavoriteState createState() => new _FavoriteState();
@@ -51,7 +50,7 @@ class _FavoriteState extends State<Favorite> {
           Padding(
               padding: const EdgeInsets.only(bottom: 2),
               child: SectionTitle.withText(
-                value: StringHelper.instance.getCollections[widget.language]['titleFavorite']
+                value: UserLanguage.of(context).title("favorite"),
               ),
             ),
 
@@ -65,7 +64,6 @@ class _FavoriteState extends State<Favorite> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: favorites.getRange(0, 4).map((fav){
-                      
                       return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ?
                           AddFavoritesItem(
                             callback: showPlaceList,
@@ -74,12 +72,10 @@ class _FavoriteState extends State<Favorite> {
                           : isEditMode ?
                               EditPlaceItem(
                                 onDeleteClick: onDeletePlaceClicked,
-                                language: widget.language,
                                 place: fav,
                               )
                             : PlaceItem(
                               place: fav,
-                              language: widget.language,
                             );
                     }).toList(),
                   ),
@@ -123,12 +119,10 @@ class _FavoriteState extends State<Favorite> {
                             : isEditMode ?
                               EditPlaceItem(
                                 onDeleteClick: onDeletePlaceClicked,
-                                language: widget.language,
                                 place: fav,
                               )
                               : PlaceItem(
                                   place: fav,
-                                  language: widget.language,
                                 );
                     }).toList(),
                   )
@@ -233,8 +227,8 @@ class _FavoriteState extends State<Favorite> {
       showModalBottomSheet(
         context: context,
         builder: (_) => ErrorModal(
-          title: StringHelper.instance.getCollections[widget.language]['titleErrFavoriteIsEmpty'],
-          desc: StringHelper.instance.getCollections[widget.language]['descErrFavoriteIsEmpty'],
+          title: UserLanguage.of(context).errorTitle("favoriteIsEmpty"),
+          desc: UserLanguage.of(context).errorDesc("favoriteIsEmpty"),
         )
       );
     }
@@ -252,7 +246,6 @@ class _FavoriteState extends State<Favorite> {
     if(!isEditMode){
        PlaceModel item = await showModalBottomSheet(
          builder: (context)=>PlacesListByCategoryModal(
-           language: widget.language
          ),
          context: context
        );
@@ -261,8 +254,8 @@ class _FavoriteState extends State<Favorite> {
            showModalBottomSheet(
              context: context,
              builder: (_) => ErrorModal(
-               title: StringHelper.instance.getCollections[widget.language]['titlePlaceIsAlreadyExist'],
-               desc : StringHelper.instance.getCollections[widget.language]['descErrPlaceIsAlreadyExist']
+               title: UserLanguage.of(context).errorTitle("placeIsAlreadyExist"),
+               desc : UserLanguage.of(context).errorDesc("placeIsAlreadyExist")
              )
            );
          }else{

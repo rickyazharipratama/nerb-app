@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 
 class LanguageItem extends StatelessWidget {
 
@@ -51,7 +51,7 @@ class LanguageItem extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 2, right: 2),
                 child: Text(
-                  StringHelper.instance.getCollections[language]['labelLanguage'],
+                  UserLanguage.of(context).label("language"),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: ColorCollections.titleColor,

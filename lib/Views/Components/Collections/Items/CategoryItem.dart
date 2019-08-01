@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,9 +11,8 @@ import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 class CategoryItem extends StatefulWidget {
 
   final FirestoreCategory category;
-  final String language;
 
-  CategoryItem({this.category, this.language});
+  CategoryItem({this.category});
 
   @override
   _CategoryItemState createState() => new _CategoryItemState();
@@ -100,7 +100,7 @@ class _CategoryItemState extends State<CategoryItem> {
                child: Padding(
                  padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
                  child: Text(
-                   widget.language == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
+                   UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
                    textAlign: TextAlign.left,
                    style: TextStyle(
                      color: ColorCollections.titleWhite,

@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 
 class PlaceItem extends StatelessWidget {
 
   final PlaceModel place;
-  final String language;
   final ValueChanged callback;
 
-  PlaceItem({this.place, this.callback, this.language}) : assert(language != null);
+  PlaceItem({this.place, this.callback});
 
 
   @override
@@ -57,7 +57,7 @@ class PlaceItem extends StatelessWidget {
                   right: 2
                 ),
                 child: Text(
-                  language != ConstantCollections.LANGUAGE_ID ? place.name.id: place.name.en,
+                  UserLanguage.of(context).currentLanguage != ConstantCollections.LANGUAGE_ID ? place.name.id: place.name.en,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

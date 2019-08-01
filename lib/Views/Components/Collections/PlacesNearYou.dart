@@ -1,15 +1,11 @@
-import 'dart:ui';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
@@ -19,8 +15,7 @@ import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class PlacesNearYou extends StatefulWidget {
 
-  final String language;
-  PlacesNearYou({this.language}): assert(language != null);
+  PlacesNearYou();
 
   @override
   _PlacesNearYouState createState() => new _PlacesNearYouState();
@@ -53,7 +48,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
           Padding(
             padding: const EdgeInsets.only(left: 10, bottom: 2, right: 10),
               child: SectionTitle.withText(
-                value: StringHelper.instance.getCollections[widget.language]['titlePlacesNearYou']
+                value: UserLanguage.of(context).title('placesNearYou')
               ),
           ),
 
@@ -80,7 +75,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
 
                 isLoadError ?
                   WrapperError(
-                    buttonText: StringHelper.instance.getCollections[widget.language]['btnRetry'],
+                    buttonText: UserLanguage.of(context).button("retry"),
                     title: errorTitle,
                     desc: errorDesc,
                     height: 120,
@@ -110,7 +105,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     PlaceController.instance.getNearbyPlace(
       callback: this,
       location: dt.latitude.toString()+","+dt.longitude.toString(),
-      language: widget.language,
+      language: UserLanguage.of(context).currentLanguage,
       radius: radius.toString()
     );
   }
@@ -122,11 +117,11 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         isLoadError = true;
         errorTitle = CommonHelper.instance.getTitleErrorByCode(
           code: res.statusCode,
-          lang: widget.language
+          context: context
         );
         errorDesc = CommonHelper.instance.getDescErrorByCode(
           code: res.statusCode,
-          lang: widget.language
+          context: context
         );
       });
     }
@@ -138,12 +133,12 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
       setState((){
         isLoadError = true;
         errorTitle = CommonHelper.instance.getTitleErrorByStatus(
-          lang: widget.language,
-          status: data['status']
+          status: data['status'],
+          context: context
         );
         errorDesc = CommonHelper.instance.getDescErrorByStatus(
-          lang: widget.language,
-          status: data['status']
+          status: data['status'],
+          context: context
         );
       });
     }
@@ -167,11 +162,11 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         isLoadError = true;
         errorTitle = CommonHelper.instance.getTitleErrorByCode(
           code: 500,
-          lang: widget.language
+          context: context
         );
         errorDesc = CommonHelper.instance.getDescErrorByCode(
           code: 500,
-          lang: widget.language
+          context: context
         );
       });
     }

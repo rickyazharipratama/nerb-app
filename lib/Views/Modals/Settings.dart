@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Views/Components/misc/Language.dart';
 import 'package:nerb/Views/Components/misc/Radius.dart';
 
 class Settings extends StatefulWidget {
-  final String language;
 
-  Settings({@required this.language});
+  Settings();
 
   @override
   _SettingsState createState() => new _SettingsState();
@@ -17,12 +16,9 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
 
-  String lang;
-
   @override
   void initState() {
     super.initState();
-    this.lang = widget.language;
   }
 
   @override
@@ -33,7 +29,7 @@ class _SettingsState extends State<Settings> {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Text(
-              StringHelper.instance.getCollections[this.lang]['labelSetting'].toUpperCase(),
+              UserLanguage.of(context).label('setting'),
               softWrap: true,
               maxLines: 1,
               textAlign: TextAlign.right,
@@ -46,25 +42,14 @@ class _SettingsState extends State<Settings> {
             ),
           ),
 
-          Radius(
-            language: this.lang
-          ),
+          Radius(),
 
-          Language(
-            language: this.lang,
-            callback: (language){
-                if(mounted){
-                  setState(() {
-                    this.lang = language;
-                  });
-                }
-            },
-          ),
+          Language(),
 
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 20, 10, 5),
             child: Text(
-              StringHelper.instance.getCollections[this.lang]['labelAbout'].toUpperCase(),
+              UserLanguage.of(context).label('about'),
               softWrap: true,
               maxLines: 1,
               textAlign: TextAlign.right,
@@ -80,7 +65,7 @@ class _SettingsState extends State<Settings> {
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
             child: Text(
-              StringHelper.instance.getCollections[this.lang]['labelVersion'] + " "+ConstantCollections.VERSION,
+              UserLanguage.of(context).label('version')+" "+ConstantCollections.VERSION,
               softWrap: true,
               maxLines: 1,
               textAlign: TextAlign.right,

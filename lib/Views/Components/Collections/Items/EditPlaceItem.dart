@@ -5,10 +5,9 @@ import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 class EditPlaceItem extends StatefulWidget {
 
   final PlaceModel place;
-  final String language;
   final ValueChanged onDeleteClick;
 
-  EditPlaceItem({this.place, this.language,this.onDeleteClick});
+  EditPlaceItem({this.place,this.onDeleteClick});
 
   @override
   _EditPlaceItemState createState() => new _EditPlaceItemState();
@@ -53,7 +52,7 @@ class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProvider
         child: Stack(
           children: <Widget>[
             Positioned.fill(
-              child: PlaceItem(place: widget.place, callback: (place){}, language: widget.language),
+              child: PlaceItem(place: widget.place, callback: (place){}),
             ),
             Positioned(
               top: 0,

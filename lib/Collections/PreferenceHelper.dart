@@ -8,6 +8,8 @@ class PreferenceHelper{
 
   static PreferenceHelper instance = PreferenceHelper();
   
+  Future<SharedPreferences> of = SharedPreferences.getInstance();
+
 
   setIntValue({String key, int value}) async{
     _pref = await SharedPreferences.getInstance();

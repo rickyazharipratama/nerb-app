@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
-import 'Views/Pages/Splash.dart';
+import 'package:nerb/NerbApp.dart';
 
 void main() async{
 
@@ -24,19 +24,5 @@ void main() async{
     );
   }
   
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Nerb',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Splash(),
-    );
-  }
+  runApp(NerbApp(language: lang));
 }

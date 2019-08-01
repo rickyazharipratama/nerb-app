@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 
 class CommonHelper{
 
@@ -33,44 +34,43 @@ class CommonHelper{
 
   getTitleErrorByStatus({
     @required String status,
-    @required String lang
+    @required BuildContext context
   }){
     if(status == ConstantCollections.RESPONSE_TIMEOUT){
-      return StringHelper.instance.getCollections[lang]['errTitleGeneral'];
+      return UserLanguage.of(context).errorTitle("general");
     }else if(status == ConstantCollections.RESPONSE_INVALID_REQUEST){
-      return StringHelper.instance.getCollections[lang]['errTitleGeneral'];
+      return UserLanguage.of(context).errorTitle("general");
     }else if(status == ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR){
-      return StringHelper.instance.getCollections[lang]['errTitleGeneral'];
+      return UserLanguage.of(context).errorTitle("general");
     }
-    return StringHelper.instance.getCollections[lang]['errTitleGeneral'];
+    return UserLanguage.of(context).errorTitle("general");
   }
 
   getDescErrorByStatus({
     @required String status,
-    @required String lang
+    @required BuildContext context
   }){
     if(status == ConstantCollections.RESPONSE_TIMEOUT){
-      return StringHelper.instance.getCollections[lang]['errDesceGeneral'];
+      return UserLanguage.of(context).errorDesc("general");
     }else if(status == ConstantCollections.RESPONSE_INVALID_REQUEST){
-      return StringHelper.instance.getCollections[lang]['errDescGeneral'];
+      return UserLanguage.of(context).errorDesc("general");
     }else if(status == ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR){
-      return StringHelper.instance.getCollections[lang]['errDescGeneral'];
+      return UserLanguage.of(context).errorDesc("general");
     }
-    return StringHelper.instance.getCollections[lang]['errDescGeneral'];
+    return UserLanguage.of(context).errorDesc("general");
   }
 
   getTitleErrorByCode({
     @required int code,
-    @required String lang
+    @required BuildContext context
   }){
-    return StringHelper.instance.getCollections[lang]['errTitleGeneral'];
+    return UserLanguage.of(context).errorTitle("general");
   }
 
   getDescErrorByCode({
     @required int code,
-    @required String lang
+    @required BuildContext context
   }){
-    return StringHelper.instance.getCollections[lang]['errDescGeneral'];
+    return UserLanguage.of(context).errorDesc("general");
   }
-
 }

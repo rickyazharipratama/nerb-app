@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Views/Components/Collections/Items/CategoryItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
@@ -11,10 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class Categories extends StatefulWidget {
-  
-  final String language;
 
-  Categories({this.language}) : assert(language != null);
+  Categories();
   @override
   _CategoriesState createState() => new _CategoriesState();
 }
@@ -44,7 +42,7 @@ class _CategoriesState extends State<Categories> {
           Padding(
             padding: const EdgeInsets.only(bottom: 2, left: 10, right: 10),
             child: SectionTitle.withText(
-              value: StringHelper.instance.getCollections[widget.language]['titleCategories']
+              value: UserLanguage.of(context).title("categories")
             ),
           ),
 
@@ -55,7 +53,6 @@ class _CategoriesState extends State<Categories> {
                 scrollDirection: Axis.horizontal,
                 children: categories.map((category){
                   return CategoryItem(
-                    language: widget.language,
                     category: category
                   );
                 }).toList(),
@@ -73,7 +70,7 @@ class _CategoriesState extends State<Categories> {
                 isError ?
                   WrapperError(
                     height: 100,
-                    buttonText: StringHelper.instance.getCollections[widget.language]['btnRetry'],
+                    buttonText: UserLanguage.of(context).button("retry"),
                     callback: (){
                       if(mounted){
                         setState(() {
@@ -83,11 +80,11 @@ class _CategoriesState extends State<Categories> {
                     },
                     title: CommonHelper.instance.getTitleErrorByCode(
                       code: 500,
-                      lang: widget.language
+                      context: context
                     ),
                     desc: CommonHelper.instance.getDescErrorByCode(
                       code: 500,
-                      lang: widget.language
+                      context: context
                     ),
                   )
                 :Container()
@@ -132,7 +129,7 @@ class _CategoriesState extends State<Categories> {
             categories.clear();
           }
           categories.addAll(tmpCategories);
-          categories.sort((a,b)=> widget.language == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
+          categories.sort((a,b)=> UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
           viewState = 0;
         });
       }

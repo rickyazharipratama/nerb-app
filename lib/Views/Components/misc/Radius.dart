@@ -3,13 +3,11 @@ import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 
 class Radius extends StatefulWidget {
 
-  final String language;
-
-  Radius({@required this.language});
+  Radius();
   
   @override
   _RadiusState createState() => new _RadiusState();
@@ -44,7 +42,7 @@ class _RadiusState extends State<Radius> {
         children: <Widget>[
 
           Text(
-            StringHelper.instance.getCollections[widget.language]['labelRadius'],
+            UserLanguage.of(context).label('radius'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -57,7 +55,7 @@ class _RadiusState extends State<Radius> {
           Padding(
             padding: const EdgeInsets.only(top: 5 ,bottom: 10),
             child: Text(
-              StringHelper.instance.getCollections[widget.language]['descRadiusSetting'],
+              UserLanguage.of(context).desc("radiusSetting"),
               style: TextStyle(
                 color: ColorCollections.descColor,
                 fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),

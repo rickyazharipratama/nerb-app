@@ -1,0 +1,32 @@
+{
+    "title":{
+        "favorite":"Most Recently Used",
+        "categories":"Categories",
+        "placesNearYou":"Places Near You"
+    },
+    "desc":{
+        "radiusSetting":"You can set the range of places you want to find from your current location.",
+        "languageSetting":"Set the language that you prefer to use this application."
+    },
+    "label":{
+        "places":"Places",
+        "setting":"Settings",
+        "about":"About",
+        "radius":"Radius",
+        "language":"Language",
+        "version":"Version"
+    },
+    "button":{
+        "retry":"Retry"
+    },
+    "errorTitle":{
+        "favoriteIsEmpty":"Favorite Place Is Empty",
+        "placeIsAlreadyExist":"Place Is Already Exist",
+        "general":"Ups!"
+    },
+    "errorDesc":{
+        "favoriteIsEmpty":"You can update popular places if you have one or several popular places on your list. Please add your popular place first.",
+        "placeIsAlreadyExist":"The type of place you choose is already in your popular list.",
+        "general":"It seems you can not get information properly. Please try again in a few moment."
+    }
+}

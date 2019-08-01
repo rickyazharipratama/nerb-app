@@ -3,15 +3,13 @@ import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
-import 'package:nerb/Collections/StringHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/NerbApp.dart';
 import 'package:nerb/Views/Components/Collections/Items/LanguageItem.dart';
 
 class Language extends StatefulWidget {
 
-  final String language;
-  final ValueChanged<String> callback;
-
-  Language({@required this.language, @required this.callback});
+  Language();
 
   @override
   _LanguageState createState() => new _LanguageState();
@@ -19,13 +17,11 @@ class Language extends StatefulWidget {
 
 class _LanguageState extends State<Language> {
 
-  String language;
   List<String> langs = [ConstantCollections.LANGUAGE_EN, ConstantCollections.LANGUAGE_ID];
   List<String> images = ["assets/ic_usa.png","assets/ic_id.png"];
   @override
   void initState() {
     super.initState();
-    this.language = widget.language;
     
   }
 
@@ -38,7 +34,7 @@ class _LanguageState extends State<Language> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            StringHelper.instance.getCollections[widget.language]['labelLanguage'],
+            UserLanguage.of(context).label('language'),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -51,7 +47,7 @@ class _LanguageState extends State<Language> {
           Padding(
             padding: const EdgeInsets.only(top: 5 ,bottom: 10),
             child: Text(
-              StringHelper.instance.getCollections[widget.language]['descLanguageSetting'],
+              UserLanguage.of(context).desc("languageSetting"),
               style: TextStyle(
                 color: ColorCollections.descColor,
                 fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
@@ -67,7 +63,7 @@ class _LanguageState extends State<Language> {
               return LanguageItem(
                 image: images[langs.indexOf(lg)],
                 language: lg,
-                selected: this.language,
+                selected: UserLanguage.of(context).currentLanguage,
                 callback: onSelectedLanguage,
               );
             }).toList()
@@ -81,12 +77,11 @@ class _LanguageState extends State<Language> {
   onSelectedLanguage(lg){
     if(mounted){
       setState(() {
-        this.language = lg;
         PreferenceHelper.instance.setStringValue(
           key: ConstantCollections.PREF_LANGUAGE,
           value: lg
         );
-        widget.callback(lg);
+        NerbApp.of(context).onLocaleChanged(Locale(lg));
       });
     }
   }
