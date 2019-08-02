@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Views/Components/misc/NerbPushAppBar.dart';
 
 class BasePushPage extends StatelessWidget {
@@ -11,6 +12,7 @@ class BasePushPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70),

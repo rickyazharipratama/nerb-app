@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbTheme.dart';
@@ -42,8 +43,20 @@ class _NerbAppState extends State<NerbApp> {
     }
   }
 
+  setStyleStatusAndNavigation(){
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: isUsedDarkTheme ? Brightness.dark : Brightness.light,
+      statusBarColor: isUsedDarkTheme ? Colors.transparent : Color(0x55000000),
+      statusBarIconBrightness: isUsedDarkTheme ? Brightness.light : Brightness.dark,
+      systemNavigationBarColor: isUsedDarkTheme ? Color(0xff252525) : Color(0xfffefefe),
+      systemNavigationBarIconBrightness: isUsedDarkTheme? Brightness.light : Brightness.dark
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    
+    setStyleStatusAndNavigation();
     return ulDelegate != null ?
     MaterialApp(
       locale: ulDelegate.locale,
@@ -70,6 +83,7 @@ class _NerbAppState extends State<NerbApp> {
     if(mounted){
       setState(() {
         isUsedDarkTheme = isDarkTHeme;
+        setStyleStatusAndNavigation();
       });
     }
   }

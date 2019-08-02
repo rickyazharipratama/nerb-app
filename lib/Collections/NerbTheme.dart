@@ -9,6 +9,7 @@ class NerbTheme{
   NerbTheme(){
     lightTheme =  ThemeData(
       brightness: Brightness.light,
+      primaryColor: Colors.black,
       backgroundColor: Color(0xfffefefe),
       cursorColor: Color(0xff101017),
       errorColor: Color(0xffca1818),
@@ -49,7 +50,8 @@ class NerbTheme{
       buttonColor: Color(0xFF666666),
       highlightColor: Color(0xfff3f3f3),
       canvasColor: Color(0x77ffffff),
-      dialogBackgroundColor: Color(0xaa000000)
+      dialogBackgroundColor: Color(0xaa000000),
+      
 
     );
 
