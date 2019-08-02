@@ -35,11 +35,22 @@ class NerbTheme{
           fontSize: 13,
           color: Color(0xff585858),
           fontWeight: FontWeight.w300
+        ),
+        display1: TextStyle(
+          fontSize: 19,
+          color: Colors.red,
+          fontWeight: FontWeight.w500
+        ),
+        display2: TextStyle(
+          fontSize: 13,
+          color: Color(0xfff8f8f8),
+          fontWeight: FontWeight.w300
         )
       ),
       buttonColor: Color(0xFF666666),
       highlightColor: Color(0xfff3f3f3),
-      
+      canvasColor: Color(0x77ffffff),
+      dialogBackgroundColor: Color(0xaa000000)
 
     );
 
@@ -70,10 +81,22 @@ class NerbTheme{
           fontSize: 13,
           color: Color(0xfff8f8f8),
           fontWeight: FontWeight.w300
+        ),
+        display1: TextStyle(
+          fontSize: 19,
+          color: Colors.red,
+          fontWeight: FontWeight.w500
+        ),
+        display2: TextStyle(
+          fontSize: 13,
+          color: Color(0xff585858),
+          fontWeight: FontWeight.w300
         )
       ),
       buttonColor: Color(0xffc6c6c6),
-      highlightColor: Color(0xff454545)
+      highlightColor: Color(0xff454545),
+      canvasColor: Color(0x77000000),
+      dialogBackgroundColor: Color(0xaaffffff)
     );
   }
 

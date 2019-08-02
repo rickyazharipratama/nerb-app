@@ -37,7 +37,4 @@ static const int DEFAULT_RADIUS = 500;
   static const String RESPONSE_INVALID_REQUEST = "INVALID_REQUEST";
   static const String RESPONSE_INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
   static const String RESPONSE_TIMEOUT = "TIMEOUT";
-
-
-
 }

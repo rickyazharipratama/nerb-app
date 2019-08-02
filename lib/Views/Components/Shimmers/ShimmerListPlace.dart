@@ -9,7 +9,7 @@ class ShimmerListPlace extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       child: Shimmer.fromColors(
-        baseColor: ColorCollections.shimmerBaseColor,
+        baseColor: Theme.of(context).highlightColor,
         highlightColor: ColorCollections.shimmerHighlightColor,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

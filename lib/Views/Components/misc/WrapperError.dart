@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
-import 'package:nerb/Collections/FontSizeHelper.dart';
 
 class WrapperError extends StatelessWidget {
   final String title;
@@ -22,7 +20,7 @@ class WrapperError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: ColorCollections.wrapCategoryIcon,
+      color: Theme.of(context).canvasColor,
       child: ClipRect(
         child: BackdropFilter(
           filter: ImageFilter.blur(
@@ -31,9 +29,9 @@ class WrapperError extends StatelessWidget {
           ),
           child: Center(
             child: Container(
+              height: height,
               padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-              color: ColorCollections.wrapperCategory,
-              height: this.height,
+              color: Theme.of(context).dialogBackgroundColor,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -42,11 +40,7 @@ class WrapperError extends StatelessWidget {
 
                   Text(
                     this.title,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: FontSizeHelper.titleList(scale: MediaQuery.of(context).textScaleFactor),
-                      fontWeight: FontWeight.w500
-                    ),
+                    style: Theme.of(context).primaryTextTheme.display1
                   ),
 
                   Expanded(
@@ -57,11 +51,7 @@ class WrapperError extends StatelessWidget {
                       ),
                       child: Text(
                         this.desc,
-                        style: TextStyle(
-                          color: ColorCollections.titleWhite,
-                          fontWeight: FontWeight.w300,
-                          fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor)
-                        ),
+                        style: Theme.of(context).primaryTextTheme.display2
                       ),
                     ),
                   ),
@@ -73,16 +63,12 @@ class WrapperError extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
                         decoration: BoxDecoration(
-                          color: ColorCollections.titleColor,
+                          color: Theme.of(context).buttonColor,
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Text(
                           this.buttonText,
-                          style: TextStyle(
-                            color: ColorCollections.titleWhite,
-                            fontWeight: FontWeight.w500,
-                            fontSize: FontSizeHelper.titleMenu(scale : MediaQuery.of(context).textScaleFactor),
-                          ),
+                          style: Theme.of(context).primaryTextTheme.display2
                         ),
                       ),
                     ),

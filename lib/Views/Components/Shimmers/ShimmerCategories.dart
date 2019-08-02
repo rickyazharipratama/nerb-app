@@ -12,7 +12,7 @@ class ShimmerCategories extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return  Container(
         child: Shimmer.fromColors(
-          baseColor: ColorCollections.shimmerBaseColor,
+          baseColor: Theme.of(context).highlightColor,
           highlightColor: ColorCollections.shimmerHighlightColor,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -21,8 +21,8 @@ class LanguageItem extends StatelessWidget {
       },
       borderRadius: BorderRadius.circular(5),
       child: Container(
-        width: 75,
-        height: 80,
+        width: 80,
+        height: 90,
         padding: const EdgeInsets.all(5),
         decoration: language == selected ? BoxDecoration(
           border: Border.all(

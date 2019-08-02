@@ -12,7 +12,7 @@ class ShimmerPlaceNearYou extends StatelessWidget {
     return Container(
       height: 200,
       child: Shimmer.fromColors(
-        baseColor: ColorCollections.shimmerBaseColor,
+        baseColor: Theme.of(context).highlightColor,
         highlightColor: ColorCollections.shimmerHighlightColor,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,

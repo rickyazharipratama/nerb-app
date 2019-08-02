@@ -10,7 +10,7 @@ class ShimmerFavorite extends StatelessWidget {
     return new Container(
       child: Shimmer.fromColors(
         highlightColor: ColorCollections.shimmerHighlightColor,
-        baseColor: ColorCollections.shimmerBaseColor,
+        baseColor: Theme.of(context).highlightColor,
         child: Column(
           children: <Widget>[
             Row(

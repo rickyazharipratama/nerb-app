@@ -25,10 +25,12 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
 
   int viewState = 1;
   bool isLoadError = false;
+  int errorCode = 500;
+  String errorStatus;
   NearbyPlaceResponse nearbyPlace;
 
-  String errorTitle;
-  String errorDesc;
+
+  RequestResponseState responseState;
 
   @override
   void initState() {
@@ -76,9 +78,38 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                 isLoadError ?
                   WrapperError(
                     buttonText: UserLanguage.of(context).button("retry"),
-                    title: errorTitle,
-                    desc: errorDesc,
-                    height: 120,
+                    title: responseState == RequestResponseState.onSuccessResponseFailed?
+                      CommonHelper.instance.getTitleErrorByStatus(
+                        context: context,
+                        status: errorStatus
+                      )
+                      : responseState == RequestResponseState.onFailureWithResponse
+                        || responseState == RequestResponseState.onfailure?
+                        CommonHelper.instance.getTitleErrorByCode(
+                          context: context,
+                          code: errorCode
+                        )
+                        : CommonHelper.instance.getTitleErrorByCode(
+                          context: context,
+                          code: errorCode
+                        )
+                    ,
+                    desc: responseState == RequestResponseState.onSuccessResponseFailed?
+                      CommonHelper.instance.getDescErrorByStatus(
+                        context: context,
+                        status: errorStatus
+                      )
+                      : responseState == RequestResponseState.onFailureWithResponse
+                        || responseState == RequestResponseState.onfailure ?
+                        CommonHelper.instance.getDescErrorByCode(
+                          context: context,
+                          code: errorCode
+                        )
+                        : CommonHelper.instance.getDescErrorByCode(
+                          context: context,
+                          code: errorCode
+                        ),
+                    height: 140,
                     callback: (){
                       if(mounted){
                         setState(() {
@@ -115,14 +146,16 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     if(mounted){
       setState(() {
         isLoadError = true;
-        errorTitle = CommonHelper.instance.getTitleErrorByCode(
-          code: res.statusCode,
-          context: context
-        );
-        errorDesc = CommonHelper.instance.getDescErrorByCode(
-          code: res.statusCode,
-          context: context
-        );
+        responseState = RequestResponseState.onFailureWithResponse;
+        errorCode = res.statusCode;
+        // errorTitle = CommonHelper.instance.getTitleErrorByCode(
+        //   code: res.statusCode,
+        //   context: context
+        // );
+        // errorDesc = CommonHelper.instance.getDescErrorByCode(
+        //   code: res.statusCode,
+        //   context: context
+        // );
       });
     }
   }
@@ -132,14 +165,16 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     if(mounted){
       setState((){
         isLoadError = true;
-        errorTitle = CommonHelper.instance.getTitleErrorByStatus(
-          status: data['status'],
-          context: context
-        );
-        errorDesc = CommonHelper.instance.getDescErrorByStatus(
-          status: data['status'],
-          context: context
-        );
+        responseState = RequestResponseState.onSuccessResponseFailed;
+        errorStatus = data['status'];
+        // errorTitle = CommonHelper.instance.getTitleErrorByStatus(
+        //   status: data['status'],
+        //   context: context
+        // );
+        // errorDesc = CommonHelper.instance.getDescErrorByStatus(
+        //   status: data['status'],
+        //   context: context
+        // );
       });
     }
   }
@@ -151,6 +186,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     if(mounted){
       setState(() {
         viewState = 0;
+        responseState = RequestResponseState.onSuccessResponseSuccess;
       });
     }
   }
@@ -160,14 +196,8 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     if(mounted){
       setState(() {
         isLoadError = true;
-        errorTitle = CommonHelper.instance.getTitleErrorByCode(
-          code: 500,
-          context: context
-        );
-        errorDesc = CommonHelper.instance.getDescErrorByCode(
-          code: 500,
-          context: context
-        );
+        errorCode = 500;
+        responseState = RequestResponseState.onfailure;
       });
     }
   }

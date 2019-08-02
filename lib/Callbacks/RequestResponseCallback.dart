@@ -3,6 +3,8 @@
 
 import 'package:dio/dio.dart';
 
+enum RequestResponseState{onSuccessResponseSuccess, onSuccessResponseFailed, onFailureWithResponse, onfailure}
+
 abstract class RequestResponseCallback{
 
   onSuccessResponseSuccess(Map<String,dynamic> data);
@@ -12,4 +14,5 @@ abstract class RequestResponseCallback{
   onFailureWithResponse(Response res);
 
   onfailure();
+
 }

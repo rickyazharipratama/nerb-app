@@ -33,12 +33,12 @@ class _CategoryItemState extends State<CategoryItem> {
   Widget build(BuildContext context) {
     return Container(
       width: 220,
-      height: 113,
+      height: 115,
       margin: const EdgeInsets.only(left: 10, right: 10),
       child: Hero(
         tag: widget.category.id,
         child: Material(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(2),
           color: Theme.of(context).highlightColor,
           elevation: 2,
           shadowColor: ColorCollections.shimmerHighlightColor,
