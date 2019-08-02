@@ -2,12 +2,21 @@
     "title":{
         "favorite":"Paling Sering Digunakan",
         "categories":"Kategori",
-        "placesNearYou":"Tempat Didekat Kamu"
+        "placesNearYou":"Tempat Didekat Kamu",
+        "privacyPolicy":"Kebijakan Privasi",
+        "termCondition":"Syarat & Ketentuan",
+        "thirdPartySoftware":"Perangkat Lunak Pihak Ketiga",
+        "credits":"Kredit"
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
         "languageSetting":"Atur bahasa yang lebih kamu sukai dalam menggunakan aplikasi ini.",
-        "themeSetting":"Kamu bisa mengatur tema yang diinginkan selama menggunakan aplikasi ini. Hal yang perlu diperhatikan, menggunakan tema gelap dapat mengurangi konsumsi baterai handphone."
+        "themeSetting":"Kamu bisa mengatur tema yang diinginkan selama menggunakan aplikasi ini. Hal yang perlu diperhatikan, menggunakan tema gelap dapat mengurangi konsumsi baterai handphone.",
+        "appAbout":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "privacyPolicy":"Kebijakan penting untuk kita.",
+        "termCondition":"Hal-hal yang mungkin perlu kamu ketahui.",
+        "thirdPartySoftware":"Perangkat lunak yang mendukung dalam pengembangan aplikasi ini.",
+        "credits":"Temui pencipta konten-kontent di dalam aplikasi ini."
     },
     "label":{
         "places":"Tempat",

@@ -7,7 +7,6 @@ class NerbTheme{
 
 
   NerbTheme(){
-
     lightTheme =  ThemeData(
       brightness: Brightness.light,
       backgroundColor: Color(0xfffefefe),

@@ -2,12 +2,21 @@
     "title":{
         "favorite":"Most Recently Used",
         "categories":"Categories",
-        "placesNearYou":"Places Near You"
+        "placesNearYou":"Places Near You",
+        "privacyPolicy":"Privacy Policy",
+        "termCondition":"Terms & Conditions",
+        "thirdPartySoftware":"Third Party Software",
+        "credits":"Credits"
     },
     "desc":{
         "radiusSetting":"You can set the range of places you want to find from your current location.",
         "languageSetting":"Set the language that you prefer to use this application.",
-        "themeSetting":"You can set preferable theme during using this application.Thing that need to be considered, using dark theme can reduce your cellphone batteries consumption."
+        "themeSetting":"You can set preferable theme during using this application.Thing that need to be considered, using dark theme can reduce your cellphone batteries consumption.",
+        "appAbout":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "privacyPolicy":"Important policy for us.",
+        "termCondition":"The things you might to know",
+        "thirdPartySoftware":"Softwares that supports application development.",
+        "credits":"Meet the authors of contents in this application."
     },
     "label":{
         "places":"Places",

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as prefix0;
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/NerbApp.dart';
+import 'package:nerb/Views/Components/Buttons/SettingButton.dart';
 import 'package:nerb/Views/Components/misc/Language.dart';
 import 'package:nerb/Views/Components/misc/Radius.dart';
 import 'package:nerb/Views/Components/misc/SettingSwitcher.dart';
+import 'package:nerb/Views/Pages/WebPage.dart';
 
 class Settings extends StatefulWidget {
 
@@ -86,6 +90,47 @@ class _SettingsState extends State<Settings> {
                 style: Theme.of(context).primaryTextTheme.subhead
               ),
             ),
+
+            Padding(
+              padding: const prefix0.EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Text(
+                UserLanguage.of(context).desc("appAbout"),
+                softWrap: true,
+                style: Theme.of(context).primaryTextTheme.body1,
+              ),
+            ),
+
+            SettingButton(
+              title: UserLanguage.of(context).title("privacyPolicy"),
+              desc: UserLanguage.of(context).desc("privacyPolicy"),
+              callback: (){
+                NerbNavigator.instance.push(context,
+                  child: WebPage(
+                    title: UserLanguage.of(context).title("privacyPolicy"),
+                    url: "https://flutter.dev/",
+                  )
+                );
+              },
+            ),
+
+            SettingButton(
+              title: UserLanguage.of(context).title("termCondition"),
+              desc: UserLanguage.of(context).desc("termCondition"),
+              callback: (){},
+            ),
+
+            SettingButton(
+              title: UserLanguage.of(context).title("thirdPartySoftware"),
+              desc: UserLanguage.of(context).desc("thirdPartySoftware"),
+              callback: (){},
+            ),
+
+            SettingButton(
+              title: UserLanguage.of(context).title("credits"),
+              desc: UserLanguage.of(context).desc("credits"),
+              callback: (){},
+            )
+
         ],
       ),
     );

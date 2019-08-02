@@ -6,6 +6,7 @@
 #import <cloud_firestore/CloudFirestorePlugin.h>
 #import <firebase_core/FirebaseCorePlugin.h>
 #import <firebase_storage/FirebaseStoragePlugin.h>
+#import <flutter_webview_plugin/FlutterWebviewPlugin.h>
 #import <location/LocationPlugin.h>
 #import <path_provider/PathProviderPlugin.h>
 #import <shared_preferences/SharedPreferencesPlugin.h>
@@ -17,6 +18,7 @@
   [FLTCloudFirestorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTCloudFirestorePlugin"]];
   [FLTFirebaseCorePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseCorePlugin"]];
   [FLTFirebaseStoragePlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTFirebaseStoragePlugin"]];
+  [FlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterWebviewPlugin"]];
   [LocationPlugin registerWithRegistrar:[registry registrarForPlugin:@"LocationPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
