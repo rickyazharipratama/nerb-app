@@ -103,4 +103,19 @@ class NerbTheme{
 
  static NerbTheme instance = NerbTheme();
 
+  List<Color> backLightGradient = [
+    Color(0x22fefefe),
+    Color(0xaafefefe),
+    Color(0xddfefefe),
+    Color(0xeefefefe),
+    Color(0xfffefefe)
+  ];
+  List<Color> backDarkGradient = [
+    Color(0x22252525),
+    Color(0xaa252525),
+    Color(0xdd252525),
+    Color(0xee252525),
+    Color(0xff252525)
+  ];
+
 }

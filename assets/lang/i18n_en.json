@@ -33,11 +33,13 @@
     "errorTitle":{
         "favoriteIsEmpty":"Favorite Place Is Empty",
         "placeIsAlreadyExist":"Place Is Already Exist",
-        "general":"Ups!"
+        "general":"Ups!",
+        "typePlaceEmpty":"Type Place is Empty"
     },
     "errorDesc":{
         "favoriteIsEmpty":"You can update popular places if you have one or several popular places on your list. Please add your popular place first.",
         "placeIsAlreadyExist":"The type of place you choose is already in your popular list.",
-        "general":"It seems you can not get information properly. Please try again in a few moment."
+        "general":"It seems you can not get information properly. Please try again in a few moment.",
+        "typePlaceEmpty":"Sorry, it's look like this type place is still empty."
     }
 }
