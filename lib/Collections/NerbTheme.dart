@@ -47,6 +47,23 @@ class NerbTheme{
           fontWeight: FontWeight.w300
         )
       ),
+      textTheme: TextTheme(
+        title: TextStyle(
+          fontSize: 21,
+          color: Colors.white,
+          fontWeight: FontWeight.w500
+        ),
+        display1: TextStyle(
+          fontSize: 16,
+          color: Color(0xff5ca0d3),
+          fontWeight: FontWeight.w500
+        ),
+        headline: TextStyle(
+          fontSize: 16,
+          color : Colors.white,
+          fontWeight: FontWeight.w500
+        )
+      ),
       buttonColor: Color(0xFF666666),
       highlightColor: Color(0xfff3f3f3),
       canvasColor: Color(0x77ffffff),
@@ -92,6 +109,23 @@ class NerbTheme{
           fontSize: 13,
           color: Color(0xff585858),
           fontWeight: FontWeight.w300
+        )
+      ),
+      textTheme: TextTheme(
+        title: TextStyle(
+          fontSize: 21,
+          color: Colors.white,
+          fontWeight: FontWeight.w500
+        ),
+        display1: TextStyle(
+          fontSize: 16,
+          color: Color(0xff5ca0d3),
+          fontWeight: FontWeight.w500
+        ),
+        headline: TextStyle(
+          fontSize: 16,
+          color : Colors.white,
+          fontWeight: FontWeight.w500
         )
       ),
       buttonColor: Color(0xffc6c6c6),

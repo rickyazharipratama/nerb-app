@@ -31,21 +31,27 @@ class DetailNearbyPlaceResponse{
     vicinity = data['vicinity'];
   }
 
+  DetailNearbyPlaceResponse.flag(String flag){
+    id = flag;
+  }
+
   Map<String,dynamic> getMap(){
+
     List<Map<String,dynamic>> mapPlaces = List();
-    photos.forEach((pt){
-      mapPlaces.add(pt.getMap());
-    });
+    if(photos != null){
+      photos.forEach((pt){
+        mapPlaces.add(pt.getMap());
+      });
+    }
     return {
-      'geometry' : geometry.getMap(),
+      'geometry' : geometry != null ? geometry.getMap() : null,
       'icon' : icon,
       'name' : name,
-      'photos' : mapPlaces,
+      'photos' : photos != null ? mapPlaces : null,
       'place_id' : placeId,
       'reference' : reference,
       'types' : types,
       'vicinity' : vicinity
     };
   }
-
 }

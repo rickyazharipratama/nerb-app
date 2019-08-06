@@ -28,7 +28,8 @@
         "theme":"Tema"
     },
     "button":{
-        "retry":"Coba Lagi"
+        "retry":"Coba Lagi",
+        "seeAll":"Lihat Semua"
     },
     "errorTitle":{
         "favoriteIsEmpty":"Tempat Populer Kosong",

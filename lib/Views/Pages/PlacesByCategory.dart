@@ -111,7 +111,7 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
                                 tag: "title-"+widget.category.id,
                                 child: Text(
                                   UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
-                                  style: Theme.of(context).primaryTextTheme.title,
+                                  style: Theme.of(context).textTheme.title,
                                 ),
                               ),
                             ),

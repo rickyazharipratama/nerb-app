@@ -118,7 +118,7 @@ class _CategoryItemState extends State<CategoryItem> {
                      child: Text(
                        UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
                        textAlign: TextAlign.left,
-                       style: Theme.of(context).primaryTextTheme.subhead
+                       style: Theme.of(context).textTheme.headline
                      ),
                    ),
                  ),

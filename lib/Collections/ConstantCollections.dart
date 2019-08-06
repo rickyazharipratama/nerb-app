@@ -27,6 +27,7 @@ static const int DEFAULT_RADIUS = 500;
 //FLAG
   static const String EMPTY_FAVORITE = "emptyFav";
   static const String OPERATOR_FAVORITE = "operatorFav";
+  static const String SEE_ALL = "seeAll";
   
   static const String LANGUAGE_ID = "id";
   static const String LANGUAGE_EN = "en";

@@ -1,3 +1,4 @@
+import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 
 class NearbyPlaceResponse {
@@ -15,6 +16,11 @@ class NearbyPlaceResponse {
         nearbyPlaces.add(DetailNearbyPlaceResponse.fromJson(res));
       }
       
+    }
+    if(nearbyPlaces != null){
+      if(nearbyPlaces.length > 0){
+        nearbyPlaces.add(DetailNearbyPlaceResponse.flag(ConstantCollections.SEE_ALL));
+      }
     }
     status = data['status'];
     errorMessages = data['error_message'];
@@ -37,4 +43,6 @@ class NearbyPlaceResponse {
       'next_page_token' : nextPageToken
     };
   }
+
+  int get getLength => nearbyPlaces != null ? nearbyPlaces.length : 0;
 }

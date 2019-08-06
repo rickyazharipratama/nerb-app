@@ -4,14 +4,18 @@ import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
+import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
+import 'package:nerb/Views/Components/Buttons/FlexibleButton.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerPlaceNearYou.dart';
 import 'package:nerb/Views/Components/misc/WrapperError.dart';
+import 'package:nerb/Views/Pages/Places.dart';
 
 class PlacesNearYou extends StatefulWidget {
 
@@ -60,6 +64,26 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: nearbyPlace.nearbyPlaces.map((place){
+                if(place.id == ConstantCollections.SEE_ALL){
+                  return FlexibleButton(
+                    title: UserLanguage.of(context).button("seeAll"),
+                    background: Theme.of(context).highlightColor,
+                    width: 180,
+                    height: 230,
+                    callback: (){
+                      List<DetailNearbyPlaceResponse> tmp = List();
+                      tmp.addAll(nearbyPlace.nearbyPlaces);
+                      tmp.removeLast();
+                      NerbNavigator.instance.push(context,
+                        child: Places(
+                          title: UserLanguage.of(context).title('placesNearYou'),
+                          places: tmp,
+                          nextToken: nearbyPlace.nextPageToken,
+                        )
+                      );
+                    },
+                  );
+                }
                 return PlaceNearYouItem(
                   place: place,
                 );

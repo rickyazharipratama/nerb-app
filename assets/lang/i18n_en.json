@@ -28,7 +28,8 @@
         "theme":"Theme"
     },
     "button":{
-        "retry":"Retry"
+        "retry":"Retry",
+        "seeAll":"See All"
     },
     "errorTitle":{
         "favoriteIsEmpty":"Favorite Place Is Empty",

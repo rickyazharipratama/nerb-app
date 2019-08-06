@@ -30,10 +30,10 @@ class PlaceNearYouItem extends StatelessWidget {
                   borderRadius: BorderRadius.circular(5),
                   child: place.photos != null ?
                     CachedNetworkImage(
-                      imageUrl: APICollections.instance.baseMapEndpoint+APICollections.instance.apiPlacePhoto(
+                      imageUrl: place.photos != null ? APICollections.instance.baseMapEndpoint+APICollections.instance.apiPlacePhoto(
                         photoReference: place.photos[0].photoReference,
                         maxWidth: 400
-                      ),
+                      ): "",
                       color: ColorCollections.wrapperCategory,
                       colorBlendMode: BlendMode.srcATop,
                       fit: BoxFit.cover,
@@ -75,8 +75,7 @@ class PlaceNearYouItem extends StatelessWidget {
                                     color: ColorCollections.blenBrokenImage,
                                   )
                                 ),
-                              )
-
+                              ),
                             ],
                           );
                         }
@@ -141,7 +140,7 @@ class PlaceNearYouItem extends StatelessWidget {
                     place.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).primaryTextTheme.subhead
+                    style: Theme.of(context).textTheme.headline
                   ),
                 ),
               )
