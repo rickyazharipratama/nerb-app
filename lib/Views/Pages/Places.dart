@@ -1,14 +1,10 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/APICollections.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
-import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Views/Components/Collections/Items/PotraitPlaceItem.dart';
-import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
+import 'package:nerb/Views/Components/Collections/Items/DetailPlace.dart';
 import 'package:nerb/Views/Components/misc/NerbPushAppBar.dart';
+import 'package:nerb/Views/Components/misc/WebviewPlaceholder.dart';
 
 class Places extends StatefulWidget {
 
@@ -25,15 +21,16 @@ class Places extends StatefulWidget {
 class _PlacesState extends State<Places> {
 
   List<DetailNearbyPlaceResponse>places;
-  int activeIndex = 0;
   String nextToken;
 
-  PageController listController;
+  //0 list
+  //1 grid
+  //2
+  int mode = 0;
 
   @override
   void initState() {
     super.initState();
-    listController = PageController(initialPage: activeIndex, viewportFraction: 0.8);
     if(widget.nextToken != null){
       this.nextToken = widget.nextToken;
     }
@@ -47,104 +44,130 @@ class _PlacesState extends State<Places> {
   Widget build(BuildContext context) {
     return Material(
       color: Theme.of(context).backgroundColor,
-      child: Stack(
+      child: Column(
         children: <Widget>[
-          Positioned.fill(
-            child: CachedNetworkImage(
-              imageUrl: places[activeIndex].photos != null ? APICollections.instance.baseMapEndpoint+APICollections.instance.apiPlacePhoto(
-                photoReference: places[activeIndex].photos[0].photoReference,
-                maxWidth: 400
-              ) : "",
-              fit: BoxFit.cover,
-              color: ColorCollections.wrapperCategory,
-              colorBlendMode: BlendMode.srcATop,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              placeholder: (context,_){
-                if(CommonHelper.instance.getPlaceImagebyIconName(icon: places[activeIndex].icon) != null){
-                  return Image.asset(
-                    CommonHelper.instance.getPlaceImagebyIconName(icon: places[activeIndex].icon),
-                    width: 159,
-                    height: 200,
-                    fit: BoxFit.cover,
-                    color: ColorCollections.wrapperCategory,
-                    colorBlendMode: BlendMode.srcATop,
-                  );
-                }
-                return ImagePlaceholder();
-              },
-              errorWidget: (context,_,__){
-                if(CommonHelper.instance.getPlaceImagebyIconName(icon: places[activeIndex].icon) != null){
-                  return Stack(
-                    children: <Widget>[
-                      Positioned.fill(
-                        child: Image.asset(
-                          CommonHelper.instance.getPlaceImagebyIconName(icon: places[activeIndex].icon),
-                          width: 159,
-                          height: 200,
-                          fit: BoxFit.cover,
-                          color: ColorCollections.wrapperCategory,
-                          colorBlendMode: BlendMode.srcATop,
-                        ),
+          NerbPushAppBar(
+            title: widget.title,
+            buttom: Padding(
+              padding: const EdgeInsets.only(top: 5, right: 10),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(),
+                  ),
+                  
+                  GestureDetector(
+                    onTap: (){
+                      if(mode != 0){
+                        if(mounted){
+                          setState(() {
+                            mode = 0;
+                          });
+                        }
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      decoration: BoxDecoration(
+                        color: mode == 0 ? Theme.of(context).buttonColor : Theme.of(context).highlightColor,
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(5)
+                        )
                       ),
-
-                      Positioned.fill(
-                        child: Center(
-                          child: Icon(
-                            Icons.broken_image,
-                            size: 45,
-                            color: ColorCollections.blenBrokenImage,
-                          )
-                        ),
+                      child: Icon(
+                        Icons.menu,
+                        size: 20,
+                        color: Theme.of(context).brightness == Brightness.light ? mode == 0 ? Colors.white : Theme.of(context).primaryTextTheme.body1.color : Theme.of(context).primaryTextTheme.body1.color,
                       ),
-                    ],
-                  );
-                }
-                return ImagePlaceholder();
-              },
-            )
-          ),
-
-          Positioned.fill(
-            child: ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    NerbPushAppBar(
-                      title: widget.title,
                     ),
+                  ),
 
-                    Expanded(
-                      child: PageView.builder(
-                        controller: listController,
-                        itemCount: places.length,
-                        itemBuilder: (context,idx){
-                          return PotraitPlaceItem(
-                            place: places[idx],
-                            blur: activeIndex == idx ? 30 : 0,
-                            offset: activeIndex == idx ? 20 : 0,
-                            top: activeIndex == idx ? 10 : 50,
-                          );
-                        },
-                        onPageChanged: (active){
-                          if(mounted){
-                            setState(() {
-                              activeIndex = active;
-                            });
-                          }
-                        },
+                  GestureDetector(
+                    onTap: (){
+                      if(mode != 1){
+                        if(mounted){
+                          setState(() {
+                            mode = 1;
+                          });
+                        }
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10,5,10,5),
+                      decoration: BoxDecoration(
+                        color: mode == 1 ? Theme.of(context).buttonColor : Theme.of(context).highlightColor,
                       ),
-                    )
-                  ],
-                ),
+                      child: Icon(
+                        Icons.view_module,
+                        size: 20,
+                        color: Theme.of(context).brightness == Brightness.light ? mode == 1 ? Colors.white : Theme.of(context).primaryTextTheme.body1.color : Theme.of(context).primaryTextTheme.body1.color,
+                      ),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: (){
+                      if(mode != 2){
+                        if(mounted){
+                          setState(() {
+                            mode = 2;
+                          });
+                        }
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      decoration: BoxDecoration(
+                        color: mode == 2 ? Theme.of(context).buttonColor : Theme.of(context).highlightColor,
+                        borderRadius: BorderRadius.horizontal(
+                          right: Radius.circular(5)
+                        )
+                      ),
+                      child: Icon(
+                        Icons.map,
+                        size: 20,
+                        color: Theme.of(context).brightness == Brightness.light ? mode == 2 ? Colors.white : Theme.of(context).primaryTextTheme.body1.color : Theme.of(context).primaryTextTheme.body1.color,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+          Expanded(
+            child: mode == 0 ?
+                ListView(
+                  children: places.map((place){
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      child: DetailPlace(
+                        place: place,
+                      ),
+                    );
+                  }).toList(),
+                )
+              : mode == 1 ?
+                GridView.count(
+                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 5,
+                  children: places.map((place){
+                    return DetailPlace(
+                      place: place,
+                      mode: 1,
+                    );
+                  }).toList(),
+                )
+              : mode == 2 ?
+                WebviewPlaceholder(
+                  child: Container(),
+                  onRectChanged: (rect){},
+                )
+                : Container()
+            ,
+          )
         ],
       ),
-    );
+    ); 
   }
 }
