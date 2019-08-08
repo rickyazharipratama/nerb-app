@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/Collections/Items/DetailPlace.dart';
 import 'package:nerb/Views/Components/misc/NerbPushAppBar.dart';
-import 'package:nerb/Views/Components/misc/WebviewPlaceholder.dart';
 
 class Places extends StatefulWidget {
 
@@ -22,20 +25,40 @@ class _PlacesState extends State<Places> {
 
   List<DetailNearbyPlaceResponse>places;
   String nextToken;
+  Completer<GoogleMapController> mapController;
+
+  CameraPosition plex;
 
   //0 list
   //1 grid
   //2
   int mode = 0;
 
+  Set<Marker> mrk;
+
   @override
   void initState() {
     super.initState();
+    mapController = Completer();
     if(widget.nextToken != null){
       this.nextToken = widget.nextToken;
     }
     if(widget.places != null){
       this.places = List();
+      mrk = Set();
+      widget.places.forEach((place){
+        this.places.add(place);
+        mrk.add(Marker(
+          position: LatLng(double.parse(place.geometry.location.latitude), double.parse(place.geometry.location.longitude)),
+          markerId: MarkerId(place.id),
+          anchor: Offset(0.5,0),
+          flat: true,
+          infoWindow: InfoWindow(
+            title: place.name
+          ),
+          visible: true,
+        ));
+      });
       this.places.addAll(widget.places);
     }
   }
@@ -106,9 +129,24 @@ class _PlacesState extends State<Places> {
                   ),
 
                   GestureDetector(
-                    onTap: (){
+                    onTap: () async{
                       if(mode != 2){
                         if(mounted){
+                          Location loc = Location();
+                          loc.changeSettings(
+                            accuracy: LocationAccuracy.HIGH
+                          );
+                          try{
+                            LocationData myloc = await loc.getLocation();
+                            plex = CameraPosition(
+                              target: LatLng(myloc.latitude, myloc.longitude),
+                              zoom: 15.5,
+                              bearing: 10,
+                              tilt: 20
+                            );
+                          }on PlatformException catch(e){
+                            print("error: "+e.code);
+                          }
                           setState(() {
                             mode = 2;
                           });
@@ -151,6 +189,7 @@ class _PlacesState extends State<Places> {
                   padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                   crossAxisCount: 2,
                   crossAxisSpacing: 5,
+                  childAspectRatio: 9/16,
                   children: places.map((place){
                     return DetailPlace(
                       place: place,
@@ -159,15 +198,24 @@ class _PlacesState extends State<Places> {
                   }).toList(),
                 )
               : mode == 2 ?
-                WebviewPlaceholder(
-                  child: Container(),
-                  onRectChanged: (rect){},
+                GoogleMap(
+                  mapType: MapType.normal,
+                  initialCameraPosition: plex,
+                  myLocationEnabled: true,
+                  markers: mrk,
+                  onMapCreated: (GoogleMapController controller){
+                    mapController.complete(controller);
+                  },
                 )
-                : Container()
-            ,
+                : Container(),
           )
         ],
       ),
     ); 
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

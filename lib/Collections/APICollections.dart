@@ -1,6 +1,6 @@
 class APICollections{
 
-  String _apiKey = "AIzaSyC9cbFzf3a4_Z6gwkSE-tXW8WDtQQ8dR08";
+  String _apiKey = "AIzaSyCrQR6LC62OwsSAkOXMqNZ1Z_E3fLagJ0M";
   String baseMapEndpoint = "https://maps.googleapis.com/maps/api";
 
   static APICollections instance = APICollections();

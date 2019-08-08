@@ -22,6 +22,6 @@ class DistanceHelper{
   }
   String getFormatDistance(BuildContext context,double distance){
     NumberFormat format =  NumberFormat("###,###",UserLanguage.of(context).currentLanguage);
-    return format.format(distance >=1 ? distance : getMeter(distance))+(distance >=1 ? "KM" : "M");
+    return format.format(distance >=1 ? distance : getMeter(distance))+(distance >=1 ? " KM" : " M");
   }
 }

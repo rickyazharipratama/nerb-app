@@ -35,7 +35,8 @@ class _DetailPlaceState extends State<DetailPlace> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: (MediaQuery.of(context).size.width * 9 / 16 ) +70,
+      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9 / 16 ) +80
+      : ((((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9) + 110,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -43,89 +44,92 @@ class _DetailPlaceState extends State<DetailPlace> {
         children: <Widget>[
 
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: widget.place.photos != null ? CachedNetworkImage(
-                imageUrl: APICollections.instance.baseMapEndpoint
-                  +APICollections.instance.apiPlacePhoto(
-                    maxWidth: MediaQuery.of(context).size.width.toInt(),
-                    photoReference: widget.place.photos[0].photoReference
-                  ),
-                
-                height: widget. mode == 0 ?((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*9)/16,
-                width:  widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                fit: BoxFit.cover,
-                color: ColorCollections.wrapperCategory,
-                colorBlendMode: BlendMode.srcATop,
-                placeholder: (context,_){
-                  if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
-                    return Image.asset(
-                      CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
-                      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*9)/16,
-                      width: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20)) : ((MediaQuery.of(context).size.width - 25) / 2),
-                      fit: BoxFit.cover
-                    );
-                  }
-                  return Container(
-                    width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 9) / 16,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).highlightColor
+            child: Hero(
+              tag: "image-"+widget.place.id,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: widget.place.photos != null ? CachedNetworkImage(
+                  imageUrl: APICollections.instance.baseMapEndpoint
+                    +APICollections.instance.apiPlacePhoto(
+                      maxWidth: MediaQuery.of(context).size.width.toInt(),
+                      photoReference: widget.place.photos[0].photoReference
                     ),
-                    child: ImagePlaceholder(),
-                  );
-                },
-                errorWidget: (context,_,__){
-                  if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
-                    return Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Image.asset(
-                            CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
-                            height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25) / 2) * 9) / 16,
-                            width: widget.mode == 0 ? (MediaQuery.of(context).size.width -20) : ((MediaQuery.of(context).size.width - 25) / 2),
-                            fit: BoxFit.cover,
+                  
+                  height: widget. mode == 0 ?((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
+                  width:  widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                  fit: BoxFit.cover,
+                  color: ColorCollections.wrapperCategory,
+                  colorBlendMode: BlendMode.srcATop,
+                  placeholder: (context,_){
+                    if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
+                      return Image.asset(
+                        CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
+                        height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
+                        width: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20)) : ((MediaQuery.of(context).size.width - 25) / 2),
+                        fit: BoxFit.cover
+                      );
+                    }
+                    return Container(
+                      width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).highlightColor
+                      ),
+                      child: ImagePlaceholder(),
+                    );
+                  },
+                  errorWidget: (context,_,__){
+                    if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
+                      return Stack(
+                        children: <Widget>[
+                          Positioned.fill(
+                            child: Image.asset(
+                              CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
+                              height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
+                              width: widget.mode == 0 ? (MediaQuery.of(context).size.width -20) : ((MediaQuery.of(context).size.width - 25) / 2),
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
 
-                        Positioned.fill(
-                          child: Center(
-                            child: Icon(
-                              Icons.broken_image,
-                              size: 45,
-                              color: ColorCollections.blenBrokenImage,
-                            )
+                          Positioned.fill(
+                            child: Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                size: 45,
+                                color: ColorCollections.blenBrokenImage,
+                              )
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      );
+                    }
+                    return Container(
+                      width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Theme.of(context).highlightColor
+                      ),
+                      child: ImagePlaceholder(),
                     );
-                  }
-                  return Container(
+                  },
+                )
+                : Container(
                     width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 9) / 16,
+                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Theme.of(context).highlightColor
                     ),
                     child: ImagePlaceholder(),
-                  );
-                },
-              )
-              : Container(
-                  width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                  height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 9) / 16,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).highlightColor
                   ),
-                  child: ImagePlaceholder(),
-                ),
+              ),
             ),
           ),
           
           Container(
-            height: 70,
+            height: widget.mode == 0  ? 80 : 110,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,33 +138,14 @@ class _DetailPlaceState extends State<DetailPlace> {
                   padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
                   child: Text(
                     widget.place.name,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).primaryTextTheme.subhead,
                   ),
                 ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 5, right: 5),
-                        child: Text(
-                          widget.place.vicinity,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).primaryTextTheme.body1,
-                        ),
-                      ),
-                    ),
 
-                    Text(
-                      DistanceHelper.instance.getFormatDistance(context, distance),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: Theme.of(context).primaryTextTheme.body1,
-                    )
-                  ],
-                )
+                placeDescription(context)
+                
               ],
             ),
           )
@@ -168,6 +153,112 @@ class _DetailPlaceState extends State<DetailPlace> {
       ),
     );
   }
+
+
+  Widget placeDescription(context){
+    return widget.mode == 0 ? Row(
+      children: <Widget>[
+        Expanded(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Icon(
+                Icons.room,
+                color: Theme.of(context).buttonColor,
+                size: 25, 
+              ),
+
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: Text(
+                    widget.place.vicinity,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).primaryTextTheme.body1,
+                  ),
+                ),
+              ),
+            ],
+          )
+        ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.directions,
+              color: Theme.of(context).buttonColor,
+              size: 25, 
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                DistanceHelper.instance.getFormatDistance(context, distance),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: Theme.of(context).primaryTextTheme.body1,
+              ),
+            )
+          ],
+        )
+      ],
+    ) : Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.room,
+              color: Theme.of(context).buttonColor,
+              size: 25, 
+            ),
+
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5, right: 5),
+                child: Text(
+                  widget.place.vicinity,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).primaryTextTheme.body1,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.directions,
+              color: Theme.of(context).buttonColor,
+              size: 25, 
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 5),
+              child: Text(
+                DistanceHelper.instance.getFormatDistance(context, distance),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: Theme.of(context).primaryTextTheme.body1,
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
 
   initiateData() async{
     Location loc = Location();
@@ -186,6 +277,5 @@ class _DetailPlaceState extends State<DetailPlace> {
     } on PlatformException catch(e){
       print("error : "+e.code);
     }
-
   }
 }
