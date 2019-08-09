@@ -4,7 +4,7 @@ import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
+import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
 
 class PlaceNearYouItem extends StatelessWidget {
 
@@ -26,71 +26,25 @@ class PlaceNearYouItem extends StatelessWidget {
         child: Stack(
           children: <Widget>[
               Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: place.photos != null ?
-                    CachedNetworkImage(
-                      imageUrl: place.photos != null ? APICollections.instance.baseMapEndpoint+APICollections.instance.apiPlacePhoto(
+                child: Hero(
+                  tag: "image-"+place.id,
+                  child: NerbCacheImage(
+                    radius: 5,
+                    height: 150,
+                    width: 200,
+                    placeholder: CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon) != null ?
+                      CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon)
+                      : null
+                    ,
+                    url: place.photos != null ?
+                      APICollections.instance.baseMapEndpoint + APICollections.instance.apiPlacePhoto(
                         photoReference: place.photos[0].photoReference,
                         maxWidth: 400
-                      ): "",
-                      color: ColorCollections.wrapperCategory,
-                      colorBlendMode: BlendMode.srcATop,
-                      fit: BoxFit.cover,
-                      width: 159,
-                      height: 200,
-                      placeholder: (context,_){
-                        if(CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon) != null){
-                          return Image.asset(
-                            CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon),
-                            width: 159,
-                            height: 200,
-                            fit: BoxFit.cover,
-                            color: ColorCollections.wrapperCategory,
-                            colorBlendMode: BlendMode.srcATop,
-                          );
-                        }
-                        return ImagePlaceholder();
-                      },
-                      errorWidget: (context,_,__){
-                        if(CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon) != null){
-                          return Stack(
-                            children: <Widget>[
-                              Positioned.fill(
-                                child: Image.asset(
-                                  CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon),
-                                  width: 159,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                  color: ColorCollections.wrapperCategory,
-                                  colorBlendMode: BlendMode.srcATop,
-                                ),
-                              ),
-
-                              Positioned.fill(
-                                child: Center(
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    size: 45,
-                                    color: ColorCollections.blenBrokenImage,
-                                  )
-                                ),
-                              ),
-                            ],
-                          );
-                        }
-                        return ImagePlaceholder();
-                      },
-                  ) : CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon) != null ?
-                    Image.asset(
-                      CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon),
-                      width: 159,
-                      height: 200,
-                      fit: BoxFit.cover,
-                      color: ColorCollections.wrapperCategory,
-                      colorBlendMode: BlendMode.srcATop,
-                    ) :ImagePlaceholder(),
-                ),
+                      )
+                      :null
+                    ,
+                  ),
+                )
               ),
 
               Positioned(

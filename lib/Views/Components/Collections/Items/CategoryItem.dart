@@ -5,8 +5,8 @@ import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
+import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
 import 'package:nerb/Views/Pages/PlacesByCategory.dart';
 
 class CategoryItem extends StatefulWidget {
@@ -56,19 +56,15 @@ class _CategoryItemState extends State<CategoryItem> {
 
                Positioned.fill(
                  child: viewState == 0 ?
-                 ClipRRect(
-                   borderRadius: BorderRadius.circular(5),
-                    child: Hero(
-                      tag: widget.category.id,
-                      child: CachedNetworkImage(
-                        imageUrl: image,
-                        fit: BoxFit.cover,
-                        color: Color(0x77000000),
-                        colorBlendMode: BlendMode.srcATop,
-                        placeholder: (context,_)=> ImagePlaceholder(),
-                        errorWidget: (context,_,__)=> ImagePlaceholder(),
-                      ),
-                    ),
+                  Hero(
+                    tag: widget.category.id,
+                    child: NerbCacheImage(
+                      height: 115,
+                      width: 220,
+                      placeholder:null,
+                      radius: 5,
+                      url: image,
+                    )
                  ): ImagePlaceholder(),
                ),
 

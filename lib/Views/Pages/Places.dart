@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/Collections/Items/DetailPlace.dart';
+import 'package:nerb/Views/Components/Collections/MapPlaces.dart';
 import 'package:nerb/Views/Components/misc/NerbPushAppBar.dart';
 
 class Places extends StatefulWidget {
@@ -35,6 +36,7 @@ class _PlacesState extends State<Places> {
   int mode = 0;
 
   Set<Marker> mrk;
+  LocationData myloc;
 
   @override
   void initState() {
@@ -137,7 +139,7 @@ class _PlacesState extends State<Places> {
                             accuracy: LocationAccuracy.HIGH
                           );
                           try{
-                            LocationData myloc = await loc.getLocation();
+                            myloc = await loc.getLocation();
                             plex = CameraPosition(
                               target: LatLng(myloc.latitude, myloc.longitude),
                               zoom: 15.5,
@@ -198,14 +200,10 @@ class _PlacesState extends State<Places> {
                   }).toList(),
                 )
               : mode == 2 ?
-                GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: plex,
-                  myLocationEnabled: true,
+                MapPlaces(
                   markers: mrk,
-                  onMapCreated: (GoogleMapController controller){
-                    mapController.complete(controller);
-                  },
+                  myLocation: LatLng(myloc.latitude, myloc.longitude),
+                  places: places,
                 )
                 : Container(),
           )

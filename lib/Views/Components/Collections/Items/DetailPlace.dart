@@ -1,13 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Collections/APICollections.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
+import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
 
 class DetailPlace extends StatefulWidget {
 
@@ -46,84 +44,20 @@ class _DetailPlaceState extends State<DetailPlace> {
           Expanded(
             child: Hero(
               tag: "image-"+widget.place.id,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: widget.place.photos != null ? CachedNetworkImage(
-                  imageUrl: APICollections.instance.baseMapEndpoint
-                    +APICollections.instance.apiPlacePhoto(
-                      maxWidth: MediaQuery.of(context).size.width.toInt(),
-                      photoReference: widget.place.photos[0].photoReference
-                    ),
-                  
-                  height: widget. mode == 0 ?((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
-                  width:  widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                  fit: BoxFit.cover,
-                  color: ColorCollections.wrapperCategory,
-                  colorBlendMode: BlendMode.srcATop,
-                  placeholder: (context,_){
-                    if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
-                      return Image.asset(
-                        CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
-                        height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
-                        width: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20)) : ((MediaQuery.of(context).size.width - 25) / 2),
-                        fit: BoxFit.cover
-                      );
-                    }
-                    return Container(
-                      width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Theme.of(context).highlightColor
-                      ),
-                      child: ImagePlaceholder(),
-                    );
-                  },
-                  errorWidget: (context,_,__){
-                    if(CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon) != null){
-                      return Stack(
-                        children: <Widget>[
-                          Positioned.fill(
-                            child: Image.asset(
-                              CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon),
-                              height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
-                              width: widget.mode == 0 ? (MediaQuery.of(context).size.width -20) : ((MediaQuery.of(context).size.width - 25) / 2),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-
-                          Positioned.fill(
-                            child: Center(
-                              child: Icon(
-                                Icons.broken_image,
-                                size: 45,
-                                color: ColorCollections.blenBrokenImage,
-                              )
-                            ),
-                          ),
-                        ],
-                      );
-                    }
-                    return Container(
-                      width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                      height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Theme.of(context).highlightColor
-                      ),
-                      child: ImagePlaceholder(),
-                    );
-                  },
-                )
-                : Container(
-                    width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width -20) * 9) / 16: (((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Theme.of(context).highlightColor
-                    ),
-                    child: ImagePlaceholder(),
-                  ),
+              child: NerbCacheImage(
+                height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
+                width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                placeholder: CommonHelper.instance.getPlaceImagebyIconName(
+                  icon: widget.place.icon
+                ) != null ? 
+                  CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon)
+                :null,
+                url: widget.place.photos != null ?
+                  APICollections.instance.baseMapEndpoint + APICollections.instance.apiPlacePhoto(
+                    maxWidth: MediaQuery.of(context).size.width.toInt(),
+                    photoReference: widget.place.photos[0].photoReference
+                  )
+                  :null
               ),
             ),
           ),
