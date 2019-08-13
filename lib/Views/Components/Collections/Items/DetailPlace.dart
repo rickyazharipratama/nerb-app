@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:location/location.dart';
-import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
@@ -20,14 +18,12 @@ class DetailPlace extends StatefulWidget {
 
 class _DetailPlaceState extends State<DetailPlace> {
 
-  double distance = 0;
   LocationData myLoc;
 
 
   @override
   void initState() {
     super.initState();
-    initiateData();
   }
   @override
   Widget build(BuildContext context) {
@@ -47,17 +43,12 @@ class _DetailPlaceState extends State<DetailPlace> {
               child: NerbCacheImage(
                 height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
                 width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                placeholder: CommonHelper.instance.getPlaceImagebyIconName(
-                  icon: widget.place.icon
+                placeholder: CommonHelper.instance.getPlaceImageByCategory(
+                  category: widget.place.category.title
                 ) != null ? 
                   CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon)
                 :null,
-                url: widget.place.photos != null ?
-                  APICollections.instance.baseMapEndpoint + APICollections.instance.apiPlacePhoto(
-                    maxWidth: MediaQuery.of(context).size.width.toInt(),
-                    photoReference: widget.place.photos[0].photoReference
-                  )
-                  :null
+                url: null
               ),
             ),
           ),
@@ -71,7 +62,7 @@ class _DetailPlaceState extends State<DetailPlace> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(5, 5, 10, 5),
                   child: Text(
-                    widget.place.name,
+                    widget.place.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).primaryTextTheme.subhead,
@@ -131,7 +122,7 @@ class _DetailPlaceState extends State<DetailPlace> {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                DistanceHelper.instance.getFormatDistance(context, distance),
+                DistanceHelper.instance.getFormatDistance(context, widget.place.distance.toDouble()),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: Theme.of(context).primaryTextTheme.body1,
@@ -181,7 +172,7 @@ class _DetailPlaceState extends State<DetailPlace> {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                DistanceHelper.instance.getFormatDistance(context, distance),
+                DistanceHelper.instance.getFormatDistance(context, widget.place.distance.toDouble()),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: Theme.of(context).primaryTextTheme.body1,
@@ -191,25 +182,5 @@ class _DetailPlaceState extends State<DetailPlace> {
         )
       ],
     );
-  }
-
-
-  initiateData() async{
-    Location loc = Location();
-    try{
-      myLoc = await loc.getLocation();
-      if(mounted){
-        setState(() {
-          distance = DistanceHelper.instance.getDistance(
-            fromLat: myLoc.latitude,
-            fromLong: myLoc.longitude,
-            toLat: double.parse(widget.place.geometry.location.latitude),
-            toLong: double.parse(widget.place.geometry.location.longitude)
-          );
-        });
-      }
-    } on PlatformException catch(e){
-      print("error : "+e.code);
-    }
   }
 }

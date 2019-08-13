@@ -11,21 +11,19 @@ class PlaceController{
 
   getNearbyPlace({String type, String location, String radius, String pageToken, RequestResponseCallback callback, String language}){
 
-    NetworkHelper.instance.requestGet(
+    NetworkHelper.instance(language == ConstantCollections.LANGUAGE_ID ? "id-ID" : "en-US").requestGet(
       path: APICollections.instance.apiNearbyPlace(
         location: location,
-        pageToken: pageToken,
         radius: radius,
         language: language,
         type: type
-      )
+      ),
     ).then((res){
-      
       if(res != null){
          if(res.data != null){
            print(json.encode(res.data));
            Map<String,dynamic> respon = res.data;
-           if(respon['status'] == ConstantCollections.RESPONSE_OK){
+           if(res.statusCode == 200){
              callback.onSuccessResponseSuccess(respon);
            }else{
              callback.onSuccessResponseFailed(respon);

@@ -1,9 +1,7 @@
-cloud_firestore=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.5+2/
-firebase_core=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+6/
-firebase_storage=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/firebase_storage-3.0.2/
+cloud_firestore=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.9/
+firebase_core=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+8/
 flutter_webview_plugin=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.5/
-google_maps_flutter=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/google_maps_flutter-0.5.20+2/
 location=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/location-2.3.5/
-path_provider=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/path_provider-1.1.0/
-shared_preferences=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/
-sqflite=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+1/
+path_provider=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/path_provider-1.2.0/
+shared_preferences=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+4/
+sqflite=/Users/lumos/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+3/

@@ -4,7 +4,6 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
 import 'package:nerb/Views/Pages/PlacesByCategory.dart';
@@ -28,7 +27,6 @@ class _CategoryItemState extends State<CategoryItem> {
   @override
   void initState() {
     super.initState();
-    retrieveImage();
   }
 
   @override
@@ -55,17 +53,20 @@ class _CategoryItemState extends State<CategoryItem> {
               children: <Widget>[
 
                Positioned.fill(
-                 child: viewState == 0 ?
-                  Hero(
+                 child: Hero(
                     tag: widget.category.id,
-                    child: NerbCacheImage(
-                      height: 115,
-                      width: 220,
-                      placeholder:null,
-                      radius: 5,
-                      url: image,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        widget.category.imageStorage,
+                        height: 115,
+                        width: 220,
+                        fit: BoxFit.cover,
+                        color: ColorCollections.wrapperCategory,
+                        colorBlendMode: BlendMode.srcATop,
+                      ),
                     )
-                 ): ImagePlaceholder(),
+                 ),
                ),
 
                Positioned(
@@ -84,13 +85,10 @@ class _CategoryItemState extends State<CategoryItem> {
                        ),
                        child: Center(
                          child: widget.category.icon != null ?
-                            Image.asset(
-                              "assets/"+widget.category.icon,
-                              fit: BoxFit.fitHeight,
-                              width: 15,
-                              height: 15,
-                              color: Colors.black,
-                              colorBlendMode: BlendMode.srcIn,
+                            Icon(
+                              IconData(int.parse(widget.category.icon),fontFamily: 'MaterialIcons'),
+                              size: 25,
+                              color: ColorCollections.titleColor,
                             )
                             : Icon(
                               Icons.landscape,
@@ -124,19 +122,5 @@ class _CategoryItemState extends State<CategoryItem> {
           ),
       ),
     );
-  }
-
-  retrieveImage() async{
-    String uri = await  FirebaseStorage
-      .instance
-      .ref()
-      .child(widget.category.imageStorage.replaceAll(ConstantCollections.FIREBASE_STORAGE_URL, ""))
-      .getDownloadURL();
-    if(mounted){
-      setState((){
-        image = uri != null ? uri : "";
-        viewState = 0;
-      });
-    }
   }
 }

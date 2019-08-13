@@ -1,57 +1,56 @@
-import 'package:nerb/Models/Response/Geometry.dart';
-
-import 'PlacePhoto.dart';
+import 'package:nerb/Models/Response/CategoryPlaceResponse.dart';
 
 class DetailNearbyPlaceResponse{
-  Geometry geometry;
+  
+  List<double> position;
+  int distance;
+  String title;
+  double averageRating;
+  CategoryPlaceResponse category;
   String icon;
-  String id;
-  String name;
-  List<PlacePhoto> photos;
-  String placeId;
-  String reference;
-  List<String> types;
   String vicinity;
+  String type;
+  String href;
+  String id;
+  List<String> chainId;
 
   DetailNearbyPlaceResponse.fromJson(Map<String,dynamic> data){
-    
-    geometry = data['geometry'] != null ? Geometry.fromJson(data['geometry']) : null;
-    icon = data['icon'];
-    id = data['id'];
-    name = data['name'];
-    if(data['photos'] != null){
-      photos = new List<PlacePhoto>();
-      for(Map<String,dynamic> pt in data['photos']){
-        photos.add(PlacePhoto.fromJson(pt));
-      }
-    }
-    placeId = data['place_id'];
-    reference = data['reference'];
-    types = data['types'].cast<String>();
-    vicinity = data['vicinity'];
-  }
-
-  DetailNearbyPlaceResponse.flag(String flag){
-    id = flag;
+     if(data['position'] != null){
+       position = List();
+       for(dynamic dt in data['position']){
+          position.add(double.parse(dt.toString()));
+       }
+     }
+     distance = data['distance'] != null ? int.parse(data['distance'].toString()) : -1;
+     title = data['title'];
+     averageRating = data['averageRating'] != null ? double.parse(data['averageRating'].toString()) : 0;
+     category = data['category'] != null ? CategoryPlaceResponse.fromJson(data['category']) : null;
+     icon = data['icon'];
+     vicinity = data['vicinity'];
+     type= data['type'];
+     href = data['href'];
+     id = data['id'];
+     if(data['chainIds'] != null){
+       chainId = List();
+       for(String id in data['chainIds']){
+         chainId.add(id);
+       }
+     }
   }
 
   Map<String,dynamic> getMap(){
-
-    List<Map<String,dynamic>> mapPlaces = List();
-    if(photos != null){
-      photos.forEach((pt){
-        mapPlaces.add(pt.getMap());
-      });
-    }
     return {
-      'geometry' : geometry != null ? geometry.getMap() : null,
+      'position'  : position,
+      'distance'  : distance,
+      'title'     : title,
+      'averageRating' : averageRating,
+      'category' : category != null ? category.getMap() : null,
       'icon' : icon,
-      'name' : name,
-      'photos' : photos != null ? mapPlaces : null,
-      'place_id' : placeId,
-      'reference' : reference,
-      'types' : types,
-      'vicinity' : vicinity
+      'vicinity'  : vicinity,
+      'type' : type,
+      'href' : href,
+      'id' : id,
+      'chainIds' : chainId
     };
   }
 }

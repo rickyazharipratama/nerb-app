@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -30,7 +29,6 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
   void initState() {
     super.initState();
     image = widget.imageUrl;
-    initiateData();
   }
 
   @override
@@ -175,21 +173,6 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
         ),
       ),
     );
-  }
-
-  initiateData() async{
-    if(image == null){
-      String uri = await FirebaseStorage
-        .instance
-        .ref()
-        .child(widget.category.imageStorage.replaceAll(ConstantCollections.FIREBASE_STORAGE_URL,""))
-        .getDownloadURL();
-      if(mounted){
-        setState(() {
-          image = uri;
-        });
-      }
-    }
   }
 
 }

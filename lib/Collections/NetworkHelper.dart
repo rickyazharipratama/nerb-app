@@ -5,14 +5,17 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 
 class NetworkHelper{
 
-  static NetworkHelper instance  = NetworkHelper();
+  static NetworkHelper instance(String lang) => NetworkHelper(lang);
   Dio dio;
 
-  NetworkHelper(){
+  NetworkHelper(String lang){
     dio = Dio(BaseOptions(
       baseUrl: APICollections.instance.baseMapEndpoint,
       connectTimeout: ConstantCollections.Connectiontimeout,
       responseType: ResponseType.json,
+      headers: {
+        'Accept-Language' : lang
+      }
     ));
   }
 

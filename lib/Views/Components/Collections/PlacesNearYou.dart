@@ -78,7 +78,6 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                         child: Places(
                           title: UserLanguage.of(context).title('placesNearYou'),
                           places: tmp,
-                          nextToken: nearbyPlace.nextPageToken,
                         )
                       );
                     },

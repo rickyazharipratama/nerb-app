@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "252320902495",
-    "firebase_url": "https://nerbeeapp-8f6cb.firebaseio.com",
-    "project_id": "nerbeeapp-8f6cb",
-    "storage_bucket": "nerbeeapp-8f6cb.appspot.com"
+    "project_number": "967291397681",
+    "firebase_url": "https://nerbee-app.firebaseio.com",
+    "project_id": "nerbee-app",
+    "storage_bucket": "nerbee-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:252320902495:android:7d7c9de018cb4590",
+        "mobilesdk_app_id": "1:967291397681:android:7d7c9de018cb4590",
         "android_client_info": {
           "package_name": "com.teamCoret.nerb"
         }
       },
       "oauth_client": [
         {
-          "client_id": "252320902495-qnhtq1rb5m2slvjrdv62ihbg48ct3pmj.apps.googleusercontent.com",
+          "client_id": "967291397681-gqthpb9rk1j0b8mi2g7hvjl54921r6be.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA7oXjdjJN3TG5-NYxc0JhXFjm2WAn5lVc"
+          "current_key": "AIzaSyAYmurKyurT4k-n-gtL1eDUGlEQA16Lm9I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "252320902495-qnhtq1rb5m2slvjrdv62ihbg48ct3pmj.apps.googleusercontent.com",
+              "client_id": "967291397681-gqthpb9rk1j0b8mi2g7hvjl54921r6be.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "252320902495-hnp5ct3cipeqjslo8cog7p85clbmt0io.apps.googleusercontent.com",
+              "client_id": "967291397681-k5eac0gsh09u37fvt32ght6u2pdtjv63.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.teamCoret.nerb"
+                "bundle_id": "com.teamcoret.nerbee"
               }
             }
           ]

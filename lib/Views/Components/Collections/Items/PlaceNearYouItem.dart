@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
@@ -13,7 +12,24 @@ class PlaceNearYouItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(place.icon);
+    print(place.category.id);
+    print(place.category.title);
+    print(place.title);
+    String plc = CommonHelper.instance.getPlaceImageByCategory(category: place.category.id.toLowerCase());
+    if(plc == null){
+      if(place.category.title.contains("/")){
+        List<String> plcs = place.category.title.split("/");
+        for(int i= 0; i < plcs.length; i++){
+          plc = CommonHelper.instance.getPlaceImageByCategory(category: plcs[i].toLowerCase());
+          if(plc != null){
+            i = plcs.length;
+          }
+        }
+      }else{
+        plc = CommonHelper.instance.getPlaceImageByCategory(category: place.category.title.toLowerCase());
+      }
+    }
+    print(plc);
     return Container(
       width: 180,
       height: 230,
@@ -32,16 +48,8 @@ class PlaceNearYouItem extends StatelessWidget {
                     radius: 5,
                     height: 150,
                     width: 200,
-                    placeholder: CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon) != null ?
-                      CommonHelper.instance.getPlaceImagebyIconName(icon: place.icon)
-                      : null
-                    ,
-                    url: place.photos != null ?
-                      APICollections.instance.baseMapEndpoint + APICollections.instance.apiPlacePhoto(
-                        photoReference: place.photos[0].photoReference,
-                        maxWidth: 400
-                      )
-                      :null
+                    placeholder: plc,
+                    url: null
                     ,
                   ),
                 )
@@ -91,7 +99,7 @@ class PlaceNearYouItem extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 5),
                   child: Text(
-                    place.name,
+                    place.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.headline

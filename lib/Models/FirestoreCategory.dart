@@ -10,7 +10,7 @@ class FirestoreCategory{
   FirestoreCategory(String id, Map<String,dynamic> data){
     this.id = id;
     name = data['name'] != null ? Names.fromJson(data['name']) : null;
-    imageStorage = data['imageStorage'] != null ? data['imageStorage'] : null;
+    imageStorage = data['image'] != null ? data['image'] : null;
     icon = data['icon'] != null ? data['icon'] : null;
   }
 }

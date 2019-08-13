@@ -7,13 +7,10 @@ static const int DEFAULT_RADIUS = 500;
 //network
  static const int Connectiontimeout = 10000;
 
-
-//uri
-  static const String FIREBASE_STORAGE_URL = "gs://nerbeeapp-8f6cb.appspot.com/";
   
 
 //firestore
-  static const String FIRESTORE_CATEGORY = "category";
+  static const String FIRESTORE_CATEGORY = "kategori";
   static const String FIRESTORE_PLACE = "Place";
   static const String FIRESTORE_DEFAULT_FAVORITE = "defaultFavorites";
 

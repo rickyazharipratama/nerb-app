@@ -28,14 +28,11 @@ dependencies:
   flutter_webview_plugin: ^0.3.5
   shimmer: ^1.0.0
   cloud_firestore: ^0.12.5+2
-  firebase_storage: ^3.0.2
   cached_network_image: ^1.0.0
   shared_preferences: ^0.5.3+1
   dashed_container: ^1.0.1
   dio: ^2.1.7
   location: ^2.3.5
-  simple_animations: ^1.3.0
-  google_maps_flutter: ^0.5.20+2
 
 dev_dependencies:
   flutter_test:
@@ -63,17 +60,66 @@ flutter:
    - assets/ic_transportation.png
    - assets/ic_public_facility.png
    - assets/ic_entertainment.png
-   - assets/ic_broken_image.png
 
-   - assets/placeholder_business.png
-   - assets/placeholder_geocode.png
-   - assets/placeholder_restaurant.png
-   - assets/placeholder_bank.png
-   - assets/placeholder_shopping.png
-   - assets/placeholder_school.png
-   - assets/placeholder_lodging.png
    - assets/ic_id.png
    - assets/ic_usa.png
+
+   - assets/restaurant.jpg
+   - assets/airport.jpg
+   - assets/drinks.jpg
+   - assets/nightlife.jpg
+   - assets/cinema.jpg
+   - assets/Theatre.jpg
+   - assets/gambling.jpg
+   - assets/historical-monument.jpg
+   - assets/museum.jpg
+   - assets/religious-place.jpg
+   - assets/body-of-water.jpg
+   - assets/montain-hill.jpg
+   - assets/forest.jpg
+   - assets/national-park.jpg
+   - assets/public transportation.jpg
+   - assets/cargo transportation.jpg
+   - assets/Rest Area.jpg
+   - assets/lodging.jpg
+   - assets/hotel.jpg
+   - assets/outdoor recreation.jpg
+   - assets/leisure.jpg
+   - assets/mall.jpg
+   - assets/grocery.jpg
+   - assets/pharmacist.jpg
+   - assets/ecom.jpg
+   - assets/furniture.jpg
+   - assets/books-store.jpg
+   - assets/clothing store.jpg
+   - assets/consumer-goods.jpg
+   - assets/barber.jpg
+   - assets/social-media.jpg
+   - assets/commercial.jpg
+   - assets/business facility.jpg
+   - assets/emergency-service.jpg
+   - assets/consumer-service.jpg
+   - assets/post.jpg
+   - assets/map.jpg
+   - assets/fuel.jpg
+   - assets/dealer.jpg
+   - assets/car-repair.jpg
+   - assets/car-rental.jpg
+   - assets/truck-dealer.jpg
+   - assets/healthCare.jpg
+   - assets/city-hall.jpg
+   - assets/school.jpg
+   - assets/library.jpg
+   - assets/convention.jpg
+   - assets/parking.jpg
+   - assets/sport facility.jpg
+   - assets/restrom.jpg
+   - assets/construction.jpg
+   - assets/town.jpg
+   - assets/building.jpg
+   - assets/road.jpg
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

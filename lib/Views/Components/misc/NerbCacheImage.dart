@@ -42,6 +42,8 @@ class NerbCacheImage extends StatelessWidget {
               width: width,
               height: height,
               fit: BoxFit.cover,
+              color: ColorCollections.wrapperCategory,
+              colorBlendMode: BlendMode.srcATop,
             )
           : Container(
               width: width,
@@ -54,17 +56,17 @@ class NerbCacheImage extends StatelessWidget {
             ),
           ),
 
-        Positioned.fill(
-          child: placeholder != null ?
-            Center(
-              child: Icon(
-                Icons.broken_image,
-                size: 45,
-                color: ColorCollections.blenBrokenImage,
-              ),
-            )
-          : Container(),
-        )
+        // Positioned.fill(
+        //   child: placeholder != null ?
+        //     Center(
+        //       child: Icon(
+        //         Icons.broken_image,
+        //         size: 45,
+        //         color: ColorCollections.blenBrokenImage,
+        //       ),
+        //     )
+        //   : Container(),
+        // )
       ],
     );
   }
