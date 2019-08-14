@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
+import 'package:nerb/Models/Names.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
@@ -79,6 +82,30 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
             Expanded(
               child:  viewState == 0 ? ListView(
                 children: categories.map((item){
+                  List<PlaceModel> plcs = List();
+                  plcs.addAll(places.where((plc)=> plc.categories.contains(item.id)));
+                  print(plcs.length);
+                  List<Names> sections;
+                  
+                  if(plcs != null){
+                    if(plcs.length > 0){
+                      if(plcs.length > 1){
+                        plcs.sort((a,b){
+                          return UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.section.id.compareTo(b.section.id) : a.section.en.compareTo(b.section.en);
+                        });
+                      }
+                      sections = List();
+                      Names lastSection = plcs[0].section;
+                      sections.add(lastSection);
+                      for(int i=1;i <plcs.length;i++){
+                        Names curr = plcs[i].section;
+                        if(lastSection.en != curr.en && lastSection.id != curr.id){
+                          sections.add(curr);
+                          lastSection = curr;
+                        }
+                      }
+                    }
+                  }
                   return Padding(
                     padding: const EdgeInsets.all(10),
                     child: Column(
@@ -89,29 +116,51 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                         Padding(
                           padding: const EdgeInsets.only(top: 10,bottom: 5),
                           child: Text(
-                            UserLanguage.of(context).locale.languageCode == ConstantCollections.LANGUAGE_ID ? item.name.id : item.name.en,
+                            UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? item.name.id : item.name.en,
                             style: Theme.of(context).primaryTextTheme.subtitle
                           )
                         ),
 
-                        Padding(
-                          padding : const EdgeInsets.only(top: 10, bottom: 10),
-                          child : places.where((plc) => plc.categories.contains(item.id)) != null ?
-                            Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.start,
-                              runSpacing: 15,
-                              spacing: 10,
-                              children: places.where((plc)=> plc.categories.contains(item.id)).map((place){
-                                return PlaceItem(
-                                  callback: onTappedPlaceItem,
-                                  place: place,
+                        sections != null ?
+                          sections.length > 0 ?
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: sections.map((plc){
+                                List<PlaceModel> sctPlace = plcs.where((pc) => pc.section.id == plc.id && pc.section.en == plc.en).toList();
+                                print("sctPlace : "+sctPlace.length.toString());
+                              return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 10,bottom: 5),
+                                      child: Text(
+                                        UserLanguage.of(context).locale.languageCode == ConstantCollections.LANGUAGE_ID ? plc.id: plc.en,
+                                        style: Theme.of(context).primaryTextTheme.subtitle
+                                      )
+                                    ),
+                                    sctPlace != null ?
+                                      sctPlace.length > 0 ?
+                                        Wrap(
+                                          crossAxisAlignment: WrapCrossAlignment.start,
+                                          runSpacing: 15,
+                                          spacing: 10,
+                                          children: sctPlace.map((pct){
+                                            return PlaceItem(
+                                              callback: onTappedPlaceItem,
+                                              place: pct,
+                                            );
+                                          }).toList(),
+                                        )
+                                      : Container()
+                                    : Container()
+                                  ],
                                 );
-                              }).toList()
+                              }).toList(),
                             )
-                          : Container(
-                            height: 150,
-                          )
-                        ),
+                          : Container()
+                        :Container()
                       ],
                     ),
                   );
@@ -147,7 +196,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
 
           if(mounted){
             setState(() {
-              print(places.length);
+              print("places : "+places.length.toString());
               viewState = 0;
             });
           }

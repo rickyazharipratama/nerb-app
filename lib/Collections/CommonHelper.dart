@@ -29,32 +29,32 @@ class CommonHelper{
   }
 
   String getPlaceImageByCategory({String category}){
-    List<String> restaurant = ["restaurant","casual dining","fine dining","take out and delivery only", "food market-stall", "taqueria", "deli", "cafeteria", "bistro", "fast food"];
-    List<String> drinks = ["coffee-tea","coffee shop","tea house"];
+    List<String> restaurant = ["restaurant","casual dining","fine dining","take out and delivery only", "food market-stall","market-stall", "taqueria", "deli", "cafeteria", "bistro", "fast food"];//done
+    List<String> drinks = ["coffee-tea","coffee shop","tea house"];//done
     
-    List<String> nightLifeEntertainment = ["nightlife-entertainment","bar or pub","night club","dancing", "karaoke", "live entertainment-music", "billiards-pool hall", "video arcade-game room", "jazz club", "beer garden", "adult entertainment", "cocktail lounge"];
-    List<String> cinema = ["cinema"];
-    List<String> theatreMusicCulture = ["theatre, music and culture", "performing arts","music","arts"];
-    List<String> gamblingLotteryBetting =["gambling-lottery-betting", "casino", "lottery booth"];
+    List<String> nightLifeEntertainment = ["nightlife-entertainment","bar or pub","night club","dancing", "karaoke", "live entertainment-music", "billiards-pool hall", "video arcade-game room", "jazz club", "beer garden", "adult entertainment", "cocktail lounge","going out"];//done
+    List<String> cinema = ["cinema"];//done
+    List<String> theatreMusicCulture = ["theatre, music and culture", "performing arts","music","arts"];//done
+    List<String> gamblingLotteryBetting =["gambling-lottery-betting", "casino", "lottery booth"];//done
     
-    List<String> landmarkAttarction = ["landmark-attraction","tourist attraction","gallery","historical monument","winery","named intersection-chowk","brewery","distillery"];
-    List<String> museum =["museum","science museum","children's museum","history museum","art museum"];
-    List<String> religiousPlaces = ["religious place", "church","temple", "synagogue", "ashram", "mosque", "other place of worship","gurdwara"];
+    List<String> landmarkAttarction = ["landmark-attraction","tourist attraction","gallery","historical monument","winery","named intersection-chowk","brewery","distillery"];//done
+    List<String> museum =["museum","science museum","children's museum","history museum","art museum"];//done
+    List<String> religiousPlaces = ["religious place", "church","temple", "synagogue", "ashram", "mosque", "other place of worship","gurdwara"];//done
     
-    List<String> bodyOfWater= ["body of water", "reservoir", "waterfall", "bay-harbor", "river", "canal", "lake","wndersea feature"];
-    List<String> montainHill =["mountain or hill", "mountain passes", "mountain peaks"];
-    List<String> forestVegetation=["forest, heath or other vegetation"];
-    List<String> natureNGeogaphical=["natural and geographical"];
+    List<String> bodyOfWater= ["body of water", "reservoir", "waterfall", "bay-harbor", "river", "canal", "lake","undersea feature"];//done
+    List<String> montainHill =["mountain or hill", "mountain passes", "mountain peaks"];//done
+    List<String> forestVegetation=["forest, heath or other vegetation"];//done
+    List<String> natureNGeogaphical=["natural and geographical"];//done
 
-    List<String> airport=["public sports airport","airport","airport terminal"];
-    List<String> publicTransportation=["public transport","train station","bus station","underground train-subway","commuter rail station","commuter train","public transit access","transportation service","bus stop","local transit","ferry terminal","boat ferry","rail ferry","taxi stand","highway exit","tollbooth","lightrail","water transit","monorail","aerial tramway","bus rapid transit","inclined rail","bicycle sharing location","bicycle parking"];
+    List<String> airport=["public sports airport","airport","airport terminal"];//done
+    List<String> publicTransportation=["public transport","train station","bus station","underground train-subway","commuter rail station","commuter train","public transit access","transportation service","bus stop","local transit","ferry terminal","boat ferry","rail ferry","taxi stand","highway exit","tollbooth","lightrail","water transit","monorail","aerial tramway","bus rapid transit","inclined rail","bicycle sharing location","bicycle parking"];//done
     List<String> cargoTransportation=["cargo transportation","weigh station","cargo center","rail yard","seaport-harbour","airport cargo","couriers","cargo transportation","delivery entrance","loading dock","loading zone"];
-    List<String> restArea=["rest area","complete rest area","parking and restroom only rest area","parking only rest area","motorway service rest area","scenic overlook rest area"];
+    List<String> restArea=["rest area","complete rest area","parking and restroom only rest area","parking only rest area","motorway service rest area","scenic overlook rest area"];//done
 
     List<String> hotel =["hotel-motel,hotel or motel","hotel","motel"];
     List<String> lodging=["lodging","hostel","campground","guest house","bed and breakfast","holiday park","short-time motel"];
 
-    List<String> outdoorRecreation = ["outdoor-recreation","park-recreation area","sports field","garden","beach","recreation center","ski lift","scenic point","off road trailhead","trailhead","off-road vehicle area","campsite","outdoor service","ranger station","bicycle service","going out"];
+    List<String> outdoorRecreation = ["outdoor-recreation","park-recreation area","sports field","garden","beach","recreation center","ski lift","scenic point","off road trailhead","trailhead","off-road vehicle area","campsite","outdoor service","ranger station","bicycle service"];
     List<String> leisure = ["leisure","amusement park","zoo","wild animal park","wildlife refuge","aquarium","ski resort","animal park","water park"];
 
     List<String> generalStore = ["store","convenience store","shopping mall","department store,mall-shopping complex","mall-shopping","mall","shopping center"];

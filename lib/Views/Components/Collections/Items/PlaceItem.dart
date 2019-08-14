@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -14,6 +16,7 @@ class PlaceItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("item places : "+jsonEncode(place.getMap()));
     return InkWell(
       onTap: (){
         callback(place);
@@ -56,7 +59,7 @@ class PlaceItem extends StatelessWidget {
                   right: 2
                 ),
                 child: Text(
-                  UserLanguage.of(context).currentLanguage != ConstantCollections.LANGUAGE_ID ? place.name.id: place.name.en,
+                  UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id: place.name.en,
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,

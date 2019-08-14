@@ -7,6 +7,7 @@ class PlaceModel{
   String forSearch;
   String materialIcon;
   List<String> categories;
+  Names section;
   Names name;
   String id;
 
@@ -21,6 +22,7 @@ class PlaceModel{
       });
     }
     name = data['name'] != null ? Names.fromJson(data['name']) : null;
+    section = data['section'] != null?Names.fromJson(data['section']): null;
   }
 
   PlaceModel.fromStore(Map<String,dynamic> data){
@@ -34,6 +36,7 @@ class PlaceModel{
       });
     }
     name = data['name'] != null ? Names.fromJson(data['name']) : null;
+    section = data['section'] != null ? Names.fromJson(data['section']) : null;
   }
 
   PlaceModel.emptyPlace({String prefix}){
@@ -50,8 +53,8 @@ class PlaceModel{
       'forSearch':forSearch,
       'materialIcon':materialIcon,
       'categories' : categories != null ? categories : null,
-      'name' : name != null ? name.getMap() : null
+      'name' : name != null ? name.getMap() : null,
+      'section': section != null ? section.getMap() : null
     };
   }
-
 }

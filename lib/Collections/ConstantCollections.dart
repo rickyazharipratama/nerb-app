@@ -11,7 +11,7 @@ static const int DEFAULT_RADIUS = 500;
 
 //firestore
   static const String FIRESTORE_CATEGORY = "kategori";
-  static const String FIRESTORE_PLACE = "Place";
+  static const String FIRESTORE_PLACE = "places";
   static const String FIRESTORE_DEFAULT_FAVORITE = "defaultFavorites";
 
 //preferences
