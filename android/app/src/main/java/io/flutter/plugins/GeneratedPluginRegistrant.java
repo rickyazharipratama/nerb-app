@@ -3,6 +3,8 @@ package io.flutter.plugins;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugins.firebase.cloudfirestore.CloudFirestorePlugin;
 import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
+import io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlugin;
+import com.it_nomads.fluttersecurestorage.FlutterSecureStoragePlugin;
 import com.flutter_webview_plugin.FlutterWebviewPlugin;
 import com.lyokone.location.LocationPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
@@ -19,6 +21,8 @@ public final class GeneratedPluginRegistrant {
     }
     CloudFirestorePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.cloudfirestore.CloudFirestorePlugin"));
     FirebaseCorePlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.core.FirebaseCorePlugin"));
+    FirebaseRemoteConfigPlugin.registerWith(registry.registrarFor("io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlugin"));
+    FlutterSecureStoragePlugin.registerWith(registry.registrarFor("com.it_nomads.fluttersecurestorage.FlutterSecureStoragePlugin"));
     FlutterWebviewPlugin.registerWith(registry.registrarFor("com.flutter_webview_plugin.FlutterWebviewPlugin"));
     LocationPlugin.registerWith(registry.registrarFor("com.lyokone.location.LocationPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));

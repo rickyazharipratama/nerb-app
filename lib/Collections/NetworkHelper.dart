@@ -13,9 +13,6 @@ class NetworkHelper{
       baseUrl: APICollections.instance.baseMapEndpoint,
       connectTimeout: ConstantCollections.Connectiontimeout,
       responseType: ResponseType.json,
-      headers: {
-        'Accept-Language' : lang
-      }
     ));
   }
 

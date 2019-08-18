@@ -9,10 +9,10 @@ class PlaceController{
 
   static PlaceController instance = PlaceController();
 
-  getNearbyPlace({String type, String location, String radius, String pageToken, RequestResponseCallback callback, String language}){
+  getNearbyPlace({String type, String location, String radius, String pageToken, RequestResponseCallback callback, String language}) async{
 
     NetworkHelper.instance(language == ConstantCollections.LANGUAGE_ID ? "id-ID" : "en-US").requestGet(
-      path: APICollections.instance.apiNearbyPlace(
+      path: await APICollections.instance.apiNearbyPlace(
         location: location,
         radius: radius,
         language: language,

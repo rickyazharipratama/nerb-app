@@ -15,6 +15,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
   AnimationController animController;
   Animation anim;
   bool isSettingActive = false;
+  bool isPlaceActive = false;
   BuildContext parentContext;
   @override
   void initState() {
@@ -50,7 +51,15 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
             onTap: (){
               if(isSettingActive){
                 if(mounted){
-                  closeSettingMenu();
+                  setState(() {
+                      closeSettingMenu();
+                  });
+                }
+              }else if(isPlaceActive){
+                if(mounted){
+                  setState(() {
+                    closingPlaceList();
+                  });
                 }
               }else{
                 if(mounted){
@@ -87,7 +96,10 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
           parentContext = childContext;
           return ListView(
             children: <Widget>[
-              Favorite(),
+              Favorite(
+                closingPlace: closingPlaceList,
+                openingPlace: openingPlaceList,
+              ),
               Padding(padding: const EdgeInsets.all(5),),
               Categories(),
               PlacesNearYou()
@@ -98,6 +110,25 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     );
   }
   
+  openingPlaceList(){
+    if(mounted){
+      setState(() {
+        isPlaceActive = true;
+        animController.forward();
+      });
+    }
+  }
+
+  closingPlaceList(){
+    if(mounted){
+      setState(() {
+        isPlaceActive = false;
+        animController.reverse();
+        Navigator.of(context, rootNavigator: true).pop();
+      });
+    }
+  }
+
   showSettingMenu(){
     showBottomSheet(
       context: parentContext,

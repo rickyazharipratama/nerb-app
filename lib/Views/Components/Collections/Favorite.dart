@@ -19,7 +19,10 @@ import 'Items/PlaceItem.dart';
 
 class Favorite extends StatefulWidget {
 
-  Favorite();
+  final VoidCallback openingPlace;
+  final VoidCallback closingPlace;
+
+  Favorite({@required this.openingPlace, @required this.closingPlace});
 
   @override
   _FavoriteState createState() => new _FavoriteState();
@@ -245,30 +248,39 @@ class _FavoriteState extends State<Favorite> {
 
   showPlaceList(trigger) async{
     if(!isEditMode){
-       PlaceModel item = await showModalBottomSheet(
-         builder: (context)=>PlacesListByCategoryModal(
-         ),
-         context: context
-       );
-       if(item != null){
-         if(favorites.where((place)=> place.forSearch == item.forSearch).length > 0){
-           showModalBottomSheet(
-             context: context,
-             builder: (_) => ErrorModal(
-               title: UserLanguage.of(context).errorTitle("placeIsAlreadyExist"),
-               desc : UserLanguage.of(context).errorDesc("placeIsAlreadyExist")
-             )
-           );
-         }else{
-            int idx = favorites.indexOf(trigger);
-            if(mounted){
-              setState(() {
-                favorites[idx] = item;
-                savingToStore();
-              });
-            }
-         }
-       }
+      widget.openingPlace();
+      showBottomSheet(
+        context: context,
+        builder: (context){
+          return PlacesListByCategoryModal(
+            onSelected: onSelectedPlace,
+            placeHolder: trigger,
+          );
+        }
+      );
+    }
+  }
+
+  onSelectedPlace(List<PlaceModel> item){
+    if(item != null){
+      if(favorites.where((place)=> place.forSearch == item[1].forSearch).length > 0){
+        showModalBottomSheet(
+          context: context,
+          builder: (_) => ErrorModal(
+            title: UserLanguage.of(context).errorTitle('placeIsAlreadyExist'),
+            desc: UserLanguage.of(context).errorDesc('placeIsAlreadyExist')
+          )
+        );
+      }else{
+        int idx = favorites.indexOf(item[0]);
+        if(mounted){
+          setState(() {
+            favorites[idx] = item[1];
+            savingToStore();
+            widget.closingPlace();
+          });
+        }
+      }
     }
   }
 }

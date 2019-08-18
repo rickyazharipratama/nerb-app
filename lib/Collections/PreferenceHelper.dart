@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceHelper{
@@ -60,5 +62,27 @@ class PreferenceHelper{
       return false;
     }
     return val;
+  }
+
+  Future<void> setSecureStorage({@required String key, @required val}) async{
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    await storage.write(
+      key: key,
+      value: val
+    );
+  }
+
+  Future<void> deleteSecureStorage({@required String key}) async{
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    await storage.delete(
+      key: key
+    );
+  }
+
+  Future<String> getSecureStorage({@required String key}) async{
+    FlutterSecureStorage storage = FlutterSecureStorage();
+    return await storage.read(
+      key: key
+    );
   }
 }

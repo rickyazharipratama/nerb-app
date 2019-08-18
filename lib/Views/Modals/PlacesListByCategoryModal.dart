@@ -1,8 +1,9 @@
+
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/Names.dart';
@@ -12,7 +13,11 @@ import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
 
 class PlacesListByCategoryModal extends StatefulWidget {
-  PlacesListByCategoryModal();
+
+  final ValueChanged<List<PlaceModel>> onSelected;
+  final PlaceModel placeHolder;
+
+  PlacesListByCategoryModal({@required this.onSelected, @required this.placeHolder});
 
   @override
   _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
@@ -45,46 +50,11 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
           mainAxisSize: MainAxisSize.min,
           children : <Widget>[
 
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 15, 10, 15),
-              child: Row(
-                children: <Widget>[
-                  Expanded(child: Text(
-                    UserLanguage.of(context).label('places'),
-                    style: Theme.of(context).primaryTextTheme.title
-                  ),),
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    child: Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 10,
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            
-            Separator(),
-
             Expanded(
               child:  viewState == 0 ? ListView(
                 children: categories.map((item){
                   List<PlaceModel> plcs = List();
                   plcs.addAll(places.where((plc)=> plc.categories.contains(item.id)));
-                  print(plcs.length);
                   List<Names> sections;
                   
                   if(plcs != null){
@@ -107,20 +77,20 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                     }
                   }
                   return Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         
                         Padding(
-                          padding: const EdgeInsets.only(top: 10,bottom: 5),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
                             UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? item.name.id : item.name.en,
                             style: Theme.of(context).primaryTextTheme.subtitle
                           )
                         ),
-
+                        Separator(),
                         sections != null ?
                           sections.length > 0 ?
                             Column(
@@ -129,38 +99,42 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
                               children: sections.map((plc){
                                 List<PlaceModel> sctPlace = plcs.where((pc) => pc.section.id == plc.id && pc.section.en == plc.en).toList();
                                 print("sctPlace : "+sctPlace.length.toString());
-                              return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 10,bottom: 5),
-                                      child: Text(
-                                        UserLanguage.of(context).locale.languageCode == ConstantCollections.LANGUAGE_ID ? plc.id: plc.en,
-                                        style: Theme.of(context).primaryTextTheme.subtitle
-                                      )
-                                    ),
-                                    sctPlace != null ?
-                                      sctPlace.length > 0 ?
-                                        Wrap(
-                                          crossAxisAlignment: WrapCrossAlignment.start,
-                                          runSpacing: 15,
-                                          spacing: 10,
-                                          children: sctPlace.map((pct){
-                                            return PlaceItem(
-                                              callback: onTappedPlaceItem,
-                                              place: pct,
-                                            );
-                                          }).toList(),
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                                child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 10,bottom: 5),
+                                        child: Text(
+                                          UserLanguage.of(context).locale.languageCode == ConstantCollections.LANGUAGE_ID ? plc.id: plc.en,
+                                          style: Theme.of(context).primaryTextTheme.subhead
                                         )
+                                      ),
+                                      sctPlace != null ?
+                                        sctPlace.length > 0 ?
+                                          Wrap(
+                                            crossAxisAlignment: WrapCrossAlignment.start,
+                                            runSpacing: 15,
+                                            spacing: 5,
+                                            children: sctPlace.map((pct){
+                                              return PlaceItem(
+                                                callback: onTappedPlaceItem,
+                                                place: pct,
+                                              );
+                                            }).toList(),
+                                          )
+                                        : Container()
                                       : Container()
-                                    : Container()
-                                  ],
-                                );
+                                    ],
+                                  ),
+                              );
                               }).toList(),
                             )
                           : Container()
-                        :Container()
+                        :Container(),
+                        Separator()
                       ],
                     ),
                   );
@@ -173,73 +147,48 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
     );
   }
   
-  initiateData(){
-    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
-      .snapshots()
-      .listen(retrieveCategory)
-      .onError(onLoadError);
-  }
+  initiateData() async{
 
-  retrieveCategory(QuerySnapshot data){
-    if(!isLoadError){
-      List<FirestoreCategory> tmpCategories = List();
-        for(DocumentSnapshot doc in data.documents){
-          tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
-        }
-        if(categories == null){
-          categories = List<FirestoreCategory>();
-        } else{
-          categories.clear();
-        }
-        categories.addAll(tmpCategories);
-        if(places != null){
+    List<FirestoreCategory> tmpCategories = List();
+    List<String> cat = await PreferenceHelper.instance.getStringListValue(
+      key: ConstantCollections.PREF_LAST_CATEGORY
+    );
+    cat.forEach((ct){
+      tmpCategories.add(FirestoreCategory(jsonDecode(ct)));
+    });
 
-          if(mounted){
-            setState(() {
-              print("places : "+places.length.toString());
-              viewState = 0;
-            });
-          }
-        }
-      Firestore.instance.collection(ConstantCollections.FIRESTORE_PLACE)
-        .snapshots()
-        .listen(retrievePlace)
-        .onError(onLoadError);
-    }
-  }
-
-  retrievePlace(QuerySnapshot data){
-    if(!isLoadError){
-      List<PlaceModel> tmp = List();
-      for(DocumentSnapshot doc in data.documents){
-        tmp.add(PlaceModel.fromFireStore(doc.documentID,doc.data));
-      }
-      if(places == null){
-        places = List();
-      }else{
-        places.clear();
-      }
-      places.addAll(tmp);
-      if(categories != null){
-        if(mounted){
-          setState(() {
-            viewState = 0;
-          });
-        }
-      }
-    }
-  }
-
-  onLoadError(error){
+    List<String> plcs = await PreferenceHelper.instance.getStringListValue(
+      key: ConstantCollections.PREF_LAST_PLACE
+    );
+    List<PlaceModel> tmpPlace = List();
+    plcs.forEach((plc){
+      tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
+    });
     if(mounted){
       setState(() {
-        viewState = 1;
-        isLoadError = true;
+        if(categories == null){
+          categories = List();
+        }else{
+          categories.clear();
+        }
+
+        if(places == null){
+          places = List();
+        }else{
+          places.clear();
+        }
+
+        categories.addAll(tmpCategories);
+        places.addAll(tmpPlace);
+        viewState = 0;
       });
     }
   }
 
   onTappedPlaceItem(item){
-    Navigator.of(context, rootNavigator: true).pop(item);  
+    List<PlaceModel>lst = List();
+    lst.add(widget.placeHolder);
+    lst.add(item);
+    widget.onSelected(lst);
   }
 }

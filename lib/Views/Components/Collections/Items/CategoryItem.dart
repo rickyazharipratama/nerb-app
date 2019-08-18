@@ -4,8 +4,6 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
-import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
-import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
 import 'package:nerb/Views/Pages/PlacesByCategory.dart';
 
 class CategoryItem extends StatefulWidget {
@@ -36,7 +34,7 @@ class _CategoryItemState extends State<CategoryItem> {
         NerbNavigator.instance.push(context,
           child: PlacesByCategory(
             category: widget.category,
-            imageUrl: image,
+            imageUrl: widget.category.imageStorage,
           )
         );
       },
@@ -87,7 +85,7 @@ class _CategoryItemState extends State<CategoryItem> {
                          child: widget.category.icon != null ?
                             Icon(
                               IconData(int.parse(widget.category.icon),fontFamily: 'MaterialIcons'),
-                              size: 25,
+                              size: 17,
                               color: ColorCollections.titleColor,
                             )
                             : Icon(

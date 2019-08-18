@@ -156,7 +156,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     Location loc = Location();
     LocationData  dt = await loc.getLocation();
     int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
-    PlaceController.instance.getNearbyPlace(
+    await PlaceController.instance.getNearbyPlace(
       callback: this,
       location: dt.latitude.toString()+","+dt.longitude.toString(),
       language: UserLanguage.of(context).currentLanguage,

@@ -39,6 +39,7 @@ class _NerbAppState extends State<NerbApp> {
       setState(() {
         ulDelegate = UserLanguageLocalizationDelegate(locale: Locale(lang));
         isUsedDarkTheme = theme;
+        setStyleStatusAndNavigation();
       });
     }
   }
@@ -55,8 +56,6 @@ class _NerbAppState extends State<NerbApp> {
 
   @override
   Widget build(BuildContext context) {
-    
-    setStyleStatusAndNavigation();
     return ulDelegate != null ?
     MaterialApp(
       locale: ulDelegate.locale,
@@ -67,8 +66,8 @@ class _NerbAppState extends State<NerbApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate
       ],
-      theme: isUsedDarkTheme ? NerbTheme.instance.darkTheme : NerbTheme.instance.lightTheme,
-      darkTheme: NerbTheme.instance.darkTheme,
+      theme: isUsedDarkTheme ? toDarkMode() : toLightMode(),
+      darkTheme: toDarkMode(),
       supportedLocales: [
         const Locale(ConstantCollections.LANGUAGE_EN),
         const Locale(ConstantCollections.LANGUAGE_ID)
@@ -78,12 +77,35 @@ class _NerbAppState extends State<NerbApp> {
     );
   }
 
+  ThemeData toLightMode(){
+    isUsedDarkTheme = false;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Color(0xff252525),
+      systemNavigationBarIconBrightness: Brightness.dark
+    ));
+    return NerbTheme.instance.lightTheme;
+  }
+
+  ThemeData toDarkMode(){
+    isUsedDarkTheme = true;
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarColor: Color(0x55000000),
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Color(0xfffefefe),
+      systemNavigationBarIconBrightness: Brightness.light
+    ));
+    return NerbTheme.instance.darkTheme;
+  }
+
   changingTheme(isDarkTHeme){
     PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: isDarkTHeme);
     if(mounted){
       setState(() {
         isUsedDarkTheme = isDarkTHeme;
-        setStyleStatusAndNavigation();
       });
     }
   }

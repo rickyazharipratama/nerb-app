@@ -1,13 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Views/Components/Collections/Items/CategoryItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerCategories.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class Categories extends StatefulWidget {
@@ -96,31 +98,17 @@ class _CategoriesState extends State<Categories> {
     );
   }
     
-  void initializationData() {
-    Firestore.instance.collection(ConstantCollections.FIRESTORE_CATEGORY)
-      .snapshots()
-      .listen(onRetrieveCategory)
-      .onError(onRetrieveError);
+  initializationData() async{
+    await onRetrieveCategory(); 
   }
 
-  onRetrieveError(error){
-    if(mounted){
-      setState(() {
-        viewState = 1;
-        isError = true;
-      });
-    }
-  }
-
-
-  onRetrieveCategory(QuerySnapshot data){
+  onRetrieveCategory() async{
     if(!isError){
       List<FirestoreCategory> tmpCategories = new List();
-      for(DocumentSnapshot doc in data.documents){
-        print(doc.documentID);
-        print(doc.data.toString());
-        tmpCategories.add(FirestoreCategory(doc.documentID, doc.data));
-      }
+      List<String> prefCat = await PreferenceHelper.instance.getStringListValue(key: ConstantCollections.PREF_LAST_CATEGORY);
+      prefCat.forEach((cat){
+        tmpCategories.add(FirestoreCategory(jsonDecode(cat)));
+      });
       if(mounted){
         setState(() {
           if(categories == null){

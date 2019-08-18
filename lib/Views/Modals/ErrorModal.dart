@@ -14,7 +14,7 @@ class ErrorModal extends StatelessWidget {
     return GestureDetector(
       onTap: (){},
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         padding: const EdgeInsets.fromLTRB(10,5,10,10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,11 +58,7 @@ class ErrorModal extends StatelessWidget {
                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                child: Text(
                  this.desc,
-                 style: TextStyle(
-                   color: ColorCollections.titleColor,
-                   fontSize: FontSizeHelper.titleMenu(scale: MediaQuery.of(context).textScaleFactor),
-                   fontWeight: FontWeight.w700
-                 ),
+                 style: Theme.of(context).primaryTextTheme.body1
                ),
              )
           ],

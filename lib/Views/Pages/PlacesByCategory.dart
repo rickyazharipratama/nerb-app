@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -8,7 +7,6 @@ import 'package:nerb/Collections/NerbTheme.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Views/Components/Collections/WrapperPlacesByCategory.dart';
-import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 
 class PlacesByCategory extends StatefulWidget {
 
@@ -52,14 +50,14 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
                   Positioned.fill(
                     child: Hero(
                       tag: widget.category.id,
-                      child: image != null ? CachedNetworkImage(
-                        imageUrl: widget.imageUrl,
+                      child: Image.asset(
+                        widget.imageUrl,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 2,
+                        color: ColorCollections.wrapperCategory,
                         fit: BoxFit.cover,
-                        color: Color(0x77000000),
                         colorBlendMode: BlendMode.srcATop,
-                        placeholder: (context,_)=> ImagePlaceholder(),
-                        errorWidget: (context,_,__)=> ImagePlaceholder(),
-                      ) : ImagePlaceholder(),
+                      )
                     )
                   ),
 
@@ -85,13 +83,10 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
                               ),
                               child: Center(
                                 child: widget.category.icon != null ?
-                                    Image.asset(
-                                      "assets/"+widget.category.icon,
-                                      fit: BoxFit.fitHeight,
-                                      width: 25,
-                                      height: 25,
-                                      color: Colors.black,
-                                      colorBlendMode: BlendMode.srcIn,
+                                    Icon(
+                                      IconData(int.parse(widget.category.icon),fontFamily: 'MaterialIcons'),
+                                      size: 25,
+                                      color: ColorCollections.titleColor,
                                     )
                                     : Icon(
                                       Icons.landscape,
