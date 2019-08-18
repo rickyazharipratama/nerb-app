@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/Names.dart';
@@ -10,6 +11,7 @@ import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/Items/ShimmerPlace.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
+import 'package:nerb/Views/Pages/Places.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WrapperPlacesBycategory extends StatefulWidget {
@@ -65,6 +67,14 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> {
                     children: places.where((plc) => plc.section.id == sct.id && plc.section.en == sct.en).map((place){
                       return PlaceItem(
                         place: place,
+                        callback: (place){
+                          NerbNavigator.instance.push(context,
+                            child: Places(
+                              title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
+                              forSearch: place.forSearch,
+                            )
+                          );
+                        },
                       );
                     }).toList(),
                   )

@@ -6,7 +6,8 @@
         "privacyPolicy":"Kebijakan Privasi",
         "termCondition":"Syarat & Ketentuan",
         "thirdPartySoftware":"Perangkat Lunak Pihak Ketiga",
-        "credits":"Kredit"
+        "credits":"Kredit",
+        "maintenance": "KAMI AKAN SEGERA KEMBALI"
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
@@ -16,7 +17,8 @@
         "privacyPolicy":"Kebijakan penting untuk kita.",
         "termCondition":"Hal-hal yang mungkin perlu kamu ketahui.",
         "thirdPartySoftware":"Perangkat lunak yang mendukung dalam pengembangan aplikasi ini.",
-        "credits":"Temui pencipta konten-kontent di dalam aplikasi ini."
+        "credits":"Temui pencipta konten-kontent di dalam aplikasi ini.",
+        "maintenance":"Maat atas ketidaknymanannya, saat ini kami sedang melakukan modifikasi di dalam sistem untuk kenyamanan yang lebih baik dalam menggunakan aplikasi ini. Terima kasih atas kesabarannya!"
     },
     "label":{
         "places":"Tempat",

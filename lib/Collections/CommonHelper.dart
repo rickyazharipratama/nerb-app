@@ -2,8 +2,13 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/DistanceHelper.dart';
+import 'package:nerb/Collections/NerbNavigator.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/Views/Pages/Maintenance.dart';
 
 class CommonHelper{
 
@@ -30,12 +35,12 @@ class CommonHelper{
   }
 
   String getPlaceImageByCategory({String category}){
-    List<String> restaurant = ["restaurant","casual dining","fine dining","take out and delivery only", "food market-stall","market-stall", "taqueria", "deli", "cafeteria", "bistro", "fast food"];//done
+    List<String> restaurant = ["restaurant","casual dining","fine dining","take out & delivery only", "food market-stall","market-stall", "taqueria", "deli", "cafeteria", "bistro", "fast food"];//done
     List<String> drinks = ["coffee-tea","coffee shop","tea house"];//done
     
     List<String> nightLifeEntertainment = ["nightlife-entertainment","bar or pub","night club","dancing", "karaoke", "live entertainment-music", "billiards-pool hall", "video arcade-game room", "jazz club", "beer garden", "adult entertainment", "cocktail lounge","going out"];//done
     List<String> cinema = ["cinema"];//done
-    List<String> theatreMusicCulture = ["theatre, music and culture", "performing arts","music","arts"];//done
+    List<String> theatreMusicCulture = ["theatre, music & culture", "performing arts","music","arts"];//done
     List<String> gamblingLotteryBetting =["gambling-lottery-betting", "casino", "lottery booth"];//done
     
     List<String> landmarkAttarction = ["landmark-attraction","tourist attraction","gallery","historical monument","winery","named intersection-chowk","brewery","distillery"];//done
@@ -45,50 +50,50 @@ class CommonHelper{
     List<String> bodyOfWater= ["body of water", "reservoir", "waterfall", "bay-harbor", "river", "canal", "lake","undersea feature"];//done
     List<String> montainHill =["mountain or hill", "mountain passes", "mountain peaks"];//done
     List<String> forestVegetation=["forest, heath or other vegetation"];//done
-    List<String> natureNGeogaphical=["natural and geographical"];//done
+    List<String> natureNGeogaphical=["natural & geographical"];//done
 
     List<String> airport=["public sports airport","airport","airport terminal"];//done
     List<String> publicTransportation=["public transport","train station","bus station","underground train-subway","commuter rail station","commuter train","public transit access","transportation service","bus stop","local transit","ferry terminal","boat ferry","rail ferry","taxi stand","highway exit","tollbooth","lightrail","water transit","monorail","aerial tramway","bus rapid transit","inclined rail","bicycle sharing location","bicycle parking"];//done
     List<String> cargoTransportation=["cargo transportation","weigh station","cargo center","rail yard","seaport-harbour","airport cargo","couriers","cargo transportation","delivery entrance","loading dock","loading zone"];//done
-    List<String> restArea=["rest area","complete rest area","parking and restroom only rest area","parking only rest area","motorway service rest area","scenic overlook rest area"];//done
+    List<String> restArea=["rest area","complete rest area","parking & restroom only rest area","parking only rest area","motorway service rest area","scenic overlook rest area"];//done
 
     List<String> hotel =["hotel-motel,hotel or motel","hotel","motel"];//done
-    List<String> lodging=["lodging","hostel","campground","guest house","bed and breakfast","holiday park","short-time motel"];//done
+    List<String> lodging=["lodging","hostel","campground","guest house","bed & breakfast","holiday park","short-time motel"];//done
 
     List<String> outdoorRecreation = ["outdoor-recreation","park-recreation area","sports field","garden","beach","recreation center","ski lift","scenic point","off road trailhead","trailhead","off-road vehicle area","campsite","outdoor service","ranger station","bicycle service"];//done
     List<String> leisure = ["leisure","amusement park","theme park","zoo","wild animal park","wildlife refuge","aquarium","ski resort","animal park","water park"];//done
 
     List<String> generalStore = ["store","convenience store","shopping mall","department store,mall-shopping complex","mall-shopping","mall","shopping center","shop"];//done
-    List<String> foodnDrink =["food and drink","food-beverage specialty store","food-beverage","grocery","specialty food store","wine and liquor","bakery and baked goods store","sweet shop","butcher","dairy goods"];//done
+    List<String> foodnDrink =["food & drink","food-beverage specialty store","food-beverage","grocery","specialty food store","wine & liquor","bakery & baked goods store","sweet shop","butcher","dairy goods"];//done
     List<String> drugStorePharmacy =["drugstore-pharmacy","drugstore or pharmacy","drugstore","pharmacy"];//done
-    List<String> electronic=["electronics","consumer electronics store","mobile retailer","mobile service center","computer and software","entertainment electronics"];//done
-    List<String> hardwareHouseGarden = ["hardware, house and garden","home improvement-hardware store","home specialty store","floor and carpet","furniture store","garden center","glass and window","lumber","major appliance","power equipment dealer","paint store"];//done
+    List<String> electronic=["electronics","consumer electronics store","mobile retailer","mobile service center","computer & software","entertainment electronics"];//done
+    List<String> hardwareHouseGarden = ["hardware, house & garden","home improvement-hardware store","home specialty store","floor & carpet","furniture store","garden center","glass & window","lumber","major appliance","power equipment dealer","paint store"];//done
     List<String> bookStore =["other bookshop","bookstore","bookshop"];
     List<String> clothingAccessories = ["clothing & accessories","men's apparel","women's apparel","children's apparel","shoes-footwear","specialty clothing store"];//done
-    List<String> consumerGoods =["consumer goods","sporting goods store","office supply and services store","specialty store","pet supply","warehouse-wholesale store","general merchandise","discount store","flowers and jewelry","variety store","gift, antique and art","record, cd and video","video and game rental","bicycle and bicycle accessories shop","market","motorcycle accessories","non-store retailers","pawnshop","used-second hand merchandise stores","adult shop","arts and crafts supplies","florist","jeweler","toy store","hunting-fishing shop","running-walking shop","skate shop","ski shop","snowboard shop","surf shop","bmx shop","camping-hiking shop","camping-hiking","canoe-kayak shop","cross country ski shop","tack shop"];
-    List<String> hairNBeauty = ["hair and beauty","barber","nail salon","hair salon"];//done
+    List<String> consumerGoods =["consumer goods","sporting goods store","office supply & services store","specialty store","pet supply","warehouse-wholesale store","general merchandise","discount store","flowers & jewelry","variety store","gift, antique & art","record, cd & video","video & game rental","bicycle & bicycle accessories shop","market","motorcycle accessories","non-store retailers","pawnshop","used-second hand merchandise stores","adult shop","arts & crafts supplies","florist","jeweler","toy store","hunting-fishing shop","running-walking shop","skate shop","ski shop","snowboard shop","surf shop","bmx shop","camping-hiking shop","camping-hiking","canoe-kayak shop","cross country ski shop","tack shop"];
+    List<String> hairNBeauty = ["hair & beauty","barber","nail salon","hair salon"];//done
 
     List<String> moneyCashService =["banking","bank","atm","money-cash","money-cash services","money transferring service","check cashing service-currency exchange","service-currency"];//done
     List<String> communicationMedia = ["communication-media","telephone service"];//done
-    List<String> commercialServices =["service","commercial services","advertising-marketing, pr and market research","catering and other food services","construction","customer care-service center","care-service","engineering and scientific services","farming","food production","human resources and recruiting services","investigation services","it and office equipment services","landscaping services","locksmiths and security systems services","management and consulting services","manufacturing","mining","modeling agencies","motorcycle service and maintenance","organizations and societies","entertainment and recreation","finance and insurance","healthcare","healthcare and healthcare support services","rental and leasing","repair and maintenance services","printing and publishing","specialty trade contractors","towing service","translation and interpretation services","apartment rental-flat rental","b2b sales and services","b2b restaurant services","aviation","interior and exterior design","property management","financial investment firm"];//done
+    List<String> commercialServices =["service","commercial services","advertising-marketing, pr & market research","catering & other food services","construction","customer care-service center","care-service","engineering & scientific services","farming","food production","human resources & recruiting services","investigation services","it & office equipment services","landscaping services","locksmiths & security systems services","management & consulting services","manufacturing","mining","modeling agencies","motorcycle service & maintenance","organizations & societies","entertainment & recreation","finance & insurance","healthcare","healthcare & healthcare support services","rental & leasing","repair & maintenance services","printing & publishing","specialty trade contractors","towing service","translation & interpretation services","apartment rental-flat rental","b2b sales & services","b2b restaurant services","aviation","interior & exterior design","property management","financial investment firm"];//done
     List<String> businessIndustry =["business facility","business & services","business","services"];//done
     List<String> policeFireEmergency =["police-fire-emergency","police station","solice services-security","services-security","fire department","ambulance services"];
-    List<String> consumerServices =["consumer services","travel agent-ticketing","travel-agency","agent-ticketing","dry cleaning and laundry","attorney","boating","business service","business service","funeral director","mover","photography","real estate services","repair service","social service","storage","tailor and alteration","tax service","utilities","waste and sanitary","bicycle service and maintenance","bill payment service","body piercing and tattoos","Wedding services and bridal studio","internet cafe","kindergarten and childcare","maid services","marriage and match making services","public administration","wellness center and services","pet care","legal services","tanning salon","recycling center","electrical","plumbing"];
+    List<String> consumerServices =["consumer services","travel agent-ticketing","travel-agency","agent-ticketing","dry cleaning & laundry","attorney","boating","business service","business service","funeral director","mover","photography","real estate services","repair service","social service","storage","tailor & alteration","tax service","utilities","waste & sanitary","bicycle service & maintenance","bill payment service","body piercing & tattoos","Wedding services & bridal studio","internet cafe","kindergarten & childcare","maid services","marriage & match making services","public administration","wellness center & services","pet care","legal services","tanning salon","recycling center","electrical","plumbing"];
     List<String> postOffice=["post office"];
     List<String> touristInformation =["tourist information"];
     List<String> fuelStation =["fueling station","petrol-gasoline station","ev charging station"];
-    List<String> carDealerSales =["car dealer-sales","dealer-sales","automobile dealership-new cars","dealership-new","automobile dealership-used cars","motorcycle dealership"];
+    List<String> carDealerSales =["car dealer-sales","dealer-sales","car-dealer-repair","automobile dealership-new cars","dealership-new","automobile dealership-used cars","motorcycle dealership"];
     List<String> carRepairServices =["car repair-service","repair-service","car wash-detailing","wash-detailing","car repair","auto parts","emission testing","tire repair","truck repair","van repair","road assistance","automobile club"];
     List<String> carRental =["car rental","rental car agency"];
     List<String> truckSemiDealerService=["truck-semi dealer-services","dealer-services","truck dealership","truck parking","truck stop-plaza","stop-plaza","truck wash"];
     
     List<String> healthCare =["hospital or health care facility","hospital or healthcare facility","dentist-dental office","dentist-dental","family-general practice physicians","family-general","psychiatric institute","nursing home","medical services-clinics","services-clinics","hospital","optical","veterinarian","hospital emergency room","therapist","chiropractor","blood bank"];
     List<String> governmentOrCommunityFacilities = ["government or community facility","city hall","embassy","military base","county council","civic-community center","civic-community","court house","government office","border crossing"];
-    List<String> educationalFacilities =["educational facility","education facility","higher education","school","training and development","coaching institute","fine arts","language studies"];
+    List<String> educationalFacilities =["educational facility","education facility","higher education","school","training & development","coaching institute","fine arts","language studies"];
     List<String> libraries=["other library","library"];
     List<String> eventSpaces =["event spaces","banquet hall","convention-exhibition center"];
-    List<String> parking =["parking","parking facility","parking garage-parking house","garage-parking","parking lot","park and ride","cellphone parking lot"];
-    List<String> sportFacilityVanue=["sports facility-venue","facility-venue","sports complex-stadium","complex-stadium","ice skating rink","swimming pool","tennis court","bowling center","indoor ski","hockey","racquetball court","shooting range","soccer club","squash court","fitness-health club","fitness-health","indoor sports","golf course","golf practice range","race track","sporting instruction and camps","sports activities","basketball","badminton","rugby","diving center","bike park","bmx track","running track"];
+    List<String> parking =["parking","parking facility","parking garage-parking house","garage-parking","parking lot","park & ride","cellphone parking lot"];
+    List<String> sportFacilityVanue=["sports facility-venue","facility-venue","sports complex-stadium","complex-stadium","ice skating rink","swimming pool","tennis court","bowling center","indoor ski","hockey","racquetball court","shooting range","soccer club","squash court","fitness-health club","fitness-health","indoor sports","golf course","golf practice range","race track","sporting instruction & camps","sports activities","basketball","badminton","rugby","diving center","bike park","bmx track","running track"];
     List<String> facilities =["facilities","cemetery","crematorium","public restroom-toilets","restroom-toilets","clubhouse","registration office"];
     
     List<String> cityTownVillage = ["city, town or village","hamlet","named place","neighborhood"];
@@ -274,5 +279,49 @@ class CommonHelper{
     @required BuildContext context
   }){
     return UserLanguage.of(context).errorDesc("general");
+  }
+
+  Future<bool> isNeedToRefreshNearbyPlace(int lastFetch) async{
+    String lastLocation = await PreferenceHelper.instance.getStringValue(
+      key: ConstantCollections.PREF_LAST_LOCATION
+    );
+    Location loc = Location();
+    LocationData currLoc = await loc.getLocation();
+    int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
+
+    if(DateTime.now().millisecondsSinceEpoch > lastFetch + (5 * 60 *1000)){
+      return true;
+    }else{
+      if(lastLocation == null){
+        return true;
+      }else{
+        List<String> lastLocations = lastLocation.split(",");
+        double lastLat = double.parse(lastLocations[0]);
+        double lastLong = double.parse(lastLocations[1]);
+        double distance = DistanceHelper.instance.getDistance(
+          fromLat: lastLat,
+          fromLong: lastLong,
+          toLat: currLoc.latitude,
+          toLong: currLoc.longitude
+        );
+        if(distance > radius){
+          return true;
+        }
+        return false;
+      }
+    }
+  }
+
+  Future<bool>checkMaintenance(BuildContext context) async{
+    print("maintenance request");
+    RemoteConfig rc = await fetchRemoteConfig();
+    bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
+    if(isMaintenance){
+      print("is maintenance");
+      NerbNavigator.instance.newClearRoute(context,
+        child: Maintenance()
+      );
+    }
+    return isMaintenance;
   }
 }

@@ -6,7 +6,8 @@
         "privacyPolicy":"Privacy Policy",
         "termCondition":"Terms & Conditions",
         "thirdPartySoftware":"Third Party Software",
-        "credits":"Credits"
+        "credits":"Credits",
+        "maintenance": "WE'LL BE BACK SOON"
     },
     "desc":{
         "radiusSetting":"You can set the range of places you want to find from your current location.",
@@ -16,7 +17,8 @@
         "privacyPolicy":"Important policy for us.",
         "termCondition":"The things you might to know",
         "thirdPartySoftware":"Softwares that supports application development.",
-        "credits":"Meet the authors of contents in this application."
+        "credits":"Meet the authors of contents in this application.",
+        "maintenance":"Sorry for the inconvenience, we are currently making modifications in our system for better experiences using this application. Thanks for your patience!"
     },
     "label":{
         "places":"Places",

@@ -73,63 +73,66 @@ class _SplashState extends State<Splash> {
   }
 
   initiateData() async{
-    remoteConfig = await CommonHelper.instance.fetchRemoteConfig();
-    
-    String appId  = await PreferenceHelper.instance.getSecureStorage(
-      key: ConstantCollections.PREF_APP_ID
-    );
-    String appCode = await PreferenceHelper.instance.getSecureStorage(
-      key: ConstantCollections.PREF_APP_CODE
-    );
-    hereApiVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_HERE_API_VERSION
-    );
+    bool isMaintenance = await CommonHelper.instance.checkMaintenance(context);
+    if(!isMaintenance){
+      remoteConfig = await CommonHelper.instance.fetchRemoteConfig();
+      
+      String appId  = await PreferenceHelper.instance.getSecureStorage(
+        key: ConstantCollections.PREF_APP_ID
+      );
+      String appCode = await PreferenceHelper.instance.getSecureStorage(
+        key: ConstantCollections.PREF_APP_CODE
+      );
+      hereApiVersion = await PreferenceHelper.instance.getIntValue(
+        key: ConstantCollections.PREF_LAST_HERE_API_VERSION
+      );
 
-    if(hereApiVersion > 0){
-      int remoteHereVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_HERE_API_VERSION);
-      if(hereApiVersion  < remoteHereVersion){
-        hereApiVersion = remoteHereVersion;
-        isNeedGetKey = true;
+      if(hereApiVersion > 0){
+        int remoteHereVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_HERE_API_VERSION);
+        if(hereApiVersion  < remoteHereVersion){
+          hereApiVersion = remoteHereVersion;
+          isNeedGetKey = true;
+        }
+      }else{
+        if(appId == null || appCode == null){
+          isNeedGetKey = true;
+          hereApiVersion = 1;
+        }
       }
-    }else{
-      if(appId == null || appCode == null){
-        isNeedGetKey = true;
-        hereApiVersion = 1;
-      }
-    }
 
-    lastSavedCategoriesVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_CATEGORY_VERSION
-    );
+      lastSavedCategoriesVersion = await PreferenceHelper.instance.getIntValue(
+        key: ConstantCollections.PREF_LAST_CATEGORY_VERSION
+      );
 
-    if(lastSavedCategoriesVersion > 0){
-      int remoteCategoriesVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_CATEGORY_VERSION);
-      if(lastSavedCategoriesVersion < remoteCategoriesVersion){
+      if(lastSavedCategoriesVersion > 0){
+        int remoteCategoriesVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_CATEGORY_VERSION);
+        if(lastSavedCategoriesVersion < remoteCategoriesVersion){
+          isNeedGetCategory = true;
+          lastSavedCategoriesVersion = remoteCategoriesVersion;
+        }
+      }else{
         isNeedGetCategory = true;
-        lastSavedCategoriesVersion = remoteCategoriesVersion;
+        lastSavedCategoriesVersion = 1;
       }
-    }else{
-      isNeedGetCategory = true;
-      lastSavedCategoriesVersion = 1;
-    }
 
-    lastSavedPlaceVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_PLACE_VERSION
-    );
-    if(lastSavedPlaceVersion > 0){
-      int remotePlaceVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_PLACES_VERSION);
-      if(lastSavedPlaceVersion < remotePlaceVersion){
+      lastSavedPlaceVersion = await PreferenceHelper.instance.getIntValue(
+        key: ConstantCollections.PREF_LAST_PLACE_VERSION
+      );
+      if(lastSavedPlaceVersion > 0){
+        int remotePlaceVersion = remoteConfig.getInt(ConstantCollections.REMOTE_CONFIG_PLACES_VERSION);
+        if(lastSavedPlaceVersion < remotePlaceVersion){
+          isNeedGetPlaces = true;
+          lastSavedPlaceVersion = remotePlaceVersion;
+        }
+      }else{
         isNeedGetPlaces = true;
-        lastSavedPlaceVersion = remotePlaceVersion;
+        lastSavedPlaceVersion = 1;
       }
-    }else{
-      isNeedGetPlaces = true;
-      lastSavedPlaceVersion = 1;
-    }
-    if(!isNeedGetKey && !isNeedGetCategory && !isNeedGetPlaces){
-      await openLAstAct();
-    }else{
-      await fetchFireStoreKeyData();
+      if(!isNeedGetKey && !isNeedGetCategory && !isNeedGetPlaces){
+        await openLAstAct();
+      }else{
+        await fetchFireStoreKeyData();
+      }
     }
   }
 

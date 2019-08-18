@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
@@ -14,6 +15,7 @@ import 'package:nerb/Views/Components/Shimmers/ShimerFavorite.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
 import 'package:nerb/Views/Modals/ErrorModal.dart';
 import 'package:nerb/Views/Modals/PlacesListByCategoryModal.dart';
+import 'package:nerb/Views/Pages/Places.dart';
 
 import 'Items/PlaceItem.dart';
 
@@ -79,6 +81,14 @@ class _FavoriteState extends State<Favorite> {
                               )
                             : PlaceItem(
                               place: fav,
+                              callback: (place){
+                                NerbNavigator.instance.push(context,
+                                  child: Places(
+                                    title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
+                                    forSearch: place.forSearch,
+                                  )
+                                );
+                              },
                             );
                     }).toList(),
                   ),
@@ -127,6 +137,14 @@ class _FavoriteState extends State<Favorite> {
                               )
                               : PlaceItem(
                                   place: fav,
+                                  callback: (place){
+                                    NerbNavigator.instance.push(context,
+                                      child: Places(
+                                        title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
+                                        forSearch: place.forSearch,
+                                      )
+                                    );
+                                  },
                                 );
                     }).toList(),
                   )

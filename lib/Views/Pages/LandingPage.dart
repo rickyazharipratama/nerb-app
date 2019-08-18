@@ -33,9 +33,13 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         });
       }
     });
+    initiateData();
   }
 
-
+  initiateData() async{
+    bool isMaintenance = await CommonHelper.instance.checkMaintenance(context);
+  }
+  
   @override
   Widget build(BuildContext context) {
     CommonHelper.instance.forcePortraitOrientation();

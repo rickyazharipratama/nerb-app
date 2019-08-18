@@ -6,7 +6,6 @@ static const int DEFAULT_RADIUS = 500;
 
 //network
  static const int Connectiontimeout = 10000;
-
   
 
 //firestore
@@ -19,6 +18,7 @@ static const int DEFAULT_RADIUS = 500;
   static const String REMOTE_CONFIG_HERE_API_VERSION = "hereApiVersion";
   static const String REMOTE_CONFIG_PLACES_VERSION = "placesVersion";
   static const String REMOTE_CONFIG_CATEGORY_VERSION = "categoryVersion";
+  static const String REMOTE_CONFIG_IS_MAINTENANCE = "isMaintenance";
 
 
 //preferences
@@ -33,6 +33,8 @@ static const int DEFAULT_RADIUS = 500;
   static const String PREF_LAST_HERE_API_VERSION = "hereApiVersion";
   static const String PREF_LAST_CATEGORY = "lastCategory";
   static const String PREF_LAST_PLACE = "lastPlace";
+  static const String PREF_NEARBY_PLACE = "nearbyPlace";
+  static const String PREF_LAST_LOCATION = "lastLocation";
 
 
 //FLAG

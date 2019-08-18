@@ -3,6 +3,11 @@ import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 class NearbyPlaceResponse {
   List<DetailNearbyPlaceResponse> nearbyPlaces;
   
+  int _lastFetch;
+
+  set setLastFetch(int val) => _lastFetch = val;
+  int get lastFetch => _lastFetch;
+
   NearbyPlaceResponse.fromJson(Map<String,dynamic> data){
     if(data['results'] != null){
       if(data['results']['items'] != null){
@@ -11,6 +16,9 @@ class NearbyPlaceResponse {
           nearbyPlaces.add(DetailNearbyPlaceResponse.fromJson(res));
         }
       }
+    }
+    if(data['lastFetch'] != null){
+      _lastFetch = int.parse(data['lastFetch'].toString());
     }
   }
 
@@ -23,7 +31,10 @@ class NearbyPlaceResponse {
        });
     }
     return {
-      'results' : np
+      'results' : {
+        'items' : np
+      },
+      'lastFetch': _lastFetch
     };
   }
 
