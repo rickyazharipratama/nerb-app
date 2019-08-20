@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Views/Components/Collections/Categories.dart';
 import 'package:nerb/Views/Components/Collections/Favorite.dart';
 import 'package:nerb/Views/Components/Collections/PlacesNearYou.dart';
+import 'package:nerb/Views/Modals/MinorUpdate.dart';
 import 'package:nerb/Views/Modals/Settings.dart';
 
 class LandingPage extends StatefulWidget {
@@ -38,6 +41,19 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
 
   initiateData() async{
     bool isMaintenance = await CommonHelper.instance.checkMaintenance(context);
+    bool isMinorUpdate = await PreferenceHelper.instance.isHaveVal(
+      key: ConstantCollections.PREF_IS_MINOR_UPDATE
+    );
+    if(isMinorUpdate){
+      await showModalBottomSheet(
+        context: context,
+        builder: (context) => MinorUpdate()
+      );
+      PreferenceHelper.instance.setBoolValue(
+        key: ConstantCollections.PREF_IS_MINOR_UPDATE,
+        val: false
+      );
+    }
   }
   
   @override

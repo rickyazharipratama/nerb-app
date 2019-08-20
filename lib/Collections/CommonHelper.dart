@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,9 @@ import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/Models/Response/AppVersion.dart';
 import 'package:nerb/Views/Pages/Maintenance.dart';
+import 'package:nerb/Views/Pages/MajorUpdate.dart';
 
 class CommonHelper{
 
@@ -66,7 +70,7 @@ class CommonHelper{
     List<String> generalStore = ["store","convenience store","shopping mall","department store,mall-shopping complex","mall-shopping","mall","shopping center","shop"];//done
     List<String> foodnDrink =["food & drink","food-beverage specialty store","food-beverage","grocery","specialty food store","wine & liquor","bakery & baked goods store","sweet shop","butcher","dairy goods"];//done
     List<String> drugStorePharmacy =["drugstore-pharmacy","drugstore or pharmacy","drugstore","pharmacy"];//done
-    List<String> electronic=["electronics","consumer electronics store","mobile retailer","mobile service center","computer & software","entertainment electronics"];//done
+    List<String> electronic=["electronics","consumer electronics store","hardware-house-garden-shop","mobile retailer","mobile service center","computer & software","entertainment electronics"];//done
     List<String> hardwareHouseGarden = ["hardware, house & garden","home improvement-hardware store","home specialty store","floor & carpet","furniture store","garden center","glass & window","lumber","major appliance","power equipment dealer","paint store"];//done
     List<String> bookStore =["other bookshop","bookstore","bookshop"];
     List<String> clothingAccessories = ["clothing & accessories","men's apparel","women's apparel","children's apparel","shoes-footwear","specialty clothing store"];//done
@@ -323,5 +327,27 @@ class CommonHelper{
       );
     }
     return isMaintenance;
+  }
+  Future<bool> isMajorUpdateVersion(BuildContext context) async{
+    RemoteConfig rc = await fetchRemoteConfig();
+    String tmp = rc.getString(ConstantCollections.REMOTE_CONFIG_UPDATE_VERSION);
+    print(tmp);
+    if(tmp != null){
+      AppVersion vrs = AppVersion.fromJson(jsonDecode(tmp));
+      if(vrs.minVersion > ConstantCollections.VERSION_INT){
+        NerbNavigator.instance.newClearRoute(context,
+          child: MajorUpdate()
+        );
+        return true;
+      }else{
+        if(vrs.currVersion > ConstantCollections.VERSION_INT){
+          PreferenceHelper.instance.setBoolValue(
+            key: ConstantCollections.PREF_IS_MINOR_UPDATE,
+            val: true
+          );
+        }
+      }
+    }
+    return false;
   }
 }

@@ -1,6 +1,7 @@
 class ConstantCollections{
 
-static const String VERSION = "0.0.1";
+static const String VERSION = "1.0.0";
+static const int VERSION_INT = 1;
 static const int DEFAULT_RADIUS = 500;
 
 
@@ -19,6 +20,7 @@ static const int DEFAULT_RADIUS = 500;
   static const String REMOTE_CONFIG_PLACES_VERSION = "placesVersion";
   static const String REMOTE_CONFIG_CATEGORY_VERSION = "categoryVersion";
   static const String REMOTE_CONFIG_IS_MAINTENANCE = "isMaintenance";
+  static const String REMOTE_CONFIG_UPDATE_VERSION = "versionProduction";
 
 
 //preferences
@@ -35,6 +37,7 @@ static const int DEFAULT_RADIUS = 500;
   static const String PREF_LAST_PLACE = "lastPlace";
   static const String PREF_NEARBY_PLACE = "nearbyPlace";
   static const String PREF_LAST_LOCATION = "lastLocation";
+  static const String PREF_IS_MINOR_UPDATE = "isMinorUpdate";
 
 
 //FLAG

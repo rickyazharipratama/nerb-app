@@ -12,9 +12,6 @@ class PlaceNearYouItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(place.category.id);
-    print(place.category.title);
-    print(place.title);
     String plc = CommonHelper.instance.getPlaceImageByCategory(category: place.category.id.toLowerCase());
     if(plc == null){
       if(place.category.title.contains("/")){
@@ -43,7 +40,7 @@ class PlaceNearYouItem extends StatelessWidget {
           children: <Widget>[
               Positioned.fill(
                 child: Hero(
-                  tag: "image-"+place.id,
+                  tag: "pny-image-"+place.id,
                   child: NerbCacheImage(
                     radius: 5,
                     height: 150,

@@ -94,7 +94,7 @@ class _SettingsState extends State<Settings> {
             Padding(
               padding: const prefix0.EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Text(
-                UserLanguage.of(context).desc("appAbout"),
+                UserLanguage.of(context).desc("about"),
                 softWrap: true,
                 style: Theme.of(context).primaryTextTheme.body1,
               ),
@@ -107,28 +107,36 @@ class _SettingsState extends State<Settings> {
                 NerbNavigator.instance.push(context,
                   child: WebPage(
                     title: UserLanguage.of(context).title("privacyPolicy"),
-                    url: "https://flutter.dev/",
+                    url: "https://nerb-app.fun/privacy-policy/",
                   )
                 );
               },
             ),
 
             SettingButton(
-              title: UserLanguage.of(context).title("termCondition"),
-              desc: UserLanguage.of(context).desc("termCondition"),
-              callback: (){},
-            ),
-
-            SettingButton(
               title: UserLanguage.of(context).title("thirdPartySoftware"),
               desc: UserLanguage.of(context).desc("thirdPartySoftware"),
-              callback: (){},
+              callback: (){
+                NerbNavigator.instance.push(context,
+                  child: WebPage(
+                    title: UserLanguage.of(context).title("thirdPartySoftware"),
+                    url: "https://nerb-app.fun/third-party-software-license/",
+                  )
+                );
+              },
             ),
 
             SettingButton(
               title: UserLanguage.of(context).title("credits"),
               desc: UserLanguage.of(context).desc("credits"),
-              callback: (){},
+              callback: (){
+                NerbNavigator.instance.push(context,
+                  child: WebPage(
+                    title: UserLanguage.of(context).title("credits"),
+                    url: "https://nerb-app.fun/credit-en-light/",
+                  )
+                );
+              },
             )
 
         ],

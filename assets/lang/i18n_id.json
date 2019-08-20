@@ -7,7 +7,8 @@
         "termCondition":"Syarat & Ketentuan",
         "thirdPartySoftware":"Perangkat Lunak Pihak Ketiga",
         "credits":"Kredit",
-        "maintenance": "KAMI AKAN SEGERA KEMBALI"
+        "maintenance": "KAMI AKAN SEGERA KEMBALI",
+        "update":"Saatny Melakukan Pembaharuan...!"
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
@@ -18,7 +19,9 @@
         "termCondition":"Hal-hal yang mungkin perlu kamu ketahui.",
         "thirdPartySoftware":"Perangkat lunak yang mendukung dalam pengembangan aplikasi ini.",
         "credits":"Temui pencipta konten-kontent di dalam aplikasi ini.",
-        "maintenance":"Maat atas ketidaknymanannya, saat ini kami sedang melakukan modifikasi di dalam sistem untuk kenyamanan yang lebih baik dalam menggunakan aplikasi ini. Terima kasih atas kesabarannya!"
+        "maintenance":"Maat atas ketidaknymanannya, saat ini kami sedang melakukan modifikasi di dalam sistem untuk kenyamanan yang lebih baik dalam menggunakan aplikasi ini. Terima kasih atas kesabarannya!",
+        "about":"nerb adalah aplikasi yang bisa memudahkan anda menemukan tempat-tempat yang menarik atau yang ingin anda tuju.",
+        "update":"Versi terbaru dari aplikasi ini telah tesedia di market, Silahkan memperbaharui aplikasi unutuk kenyamanan penggunaan aplikasi yang lebih baik."
     },
     "label":{
         "places":"Tempat",
@@ -27,11 +30,13 @@
         "radius":"Radius",
         "language":"Bahasa",
         "version":"Versi",
-        "theme":"Tema"
+        "theme":"Tema",
+        "wn":"Apa yang baru"
     },
     "button":{
         "retry":"Coba Lagi",
-        "seeAll":"Lihat Semua"
+        "seeAll":"Lihat Semua",
+        "update":"PERBAHARUI"
     },
     "errorTitle":{
         "favoriteIsEmpty":"Tempat Populer Kosong",

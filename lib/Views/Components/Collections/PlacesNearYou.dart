@@ -79,6 +79,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                       NerbNavigator.instance.push(context,
                         child: Places(
                           title: UserLanguage.of(context).title('placesNearYou'),
+                          forSearch: "-",
                         )
                       );
                     },
