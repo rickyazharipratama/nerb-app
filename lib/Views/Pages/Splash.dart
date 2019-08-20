@@ -11,6 +11,7 @@ import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Views/Pages/LandingPage.dart';
 
 class Splash extends StatefulWidget {
@@ -31,7 +32,7 @@ class _SplashState extends State<Splash> {
 
   bool isError = false;
   RemoteConfig remoteConfig;
-  bool isNeedLoading = false;
+  bool isNeedLoading = true;
 
   @override
   void initState() {
@@ -48,10 +49,25 @@ class _SplashState extends State<Splash> {
         children:<Widget>[
           Positioned.fill(
             child:Center(
-              child: Hero(
-                tag: "nerbeeLogo",
-                child: Text("NERBEE"),
-              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    Theme.of(context).brightness == Brightness.light ? "assets/nerb-black.png" : "assets/nerb-white.png",
+                    width: 85,
+                    height: 60,
+                    fit: BoxFit.contain,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+                    child: Text(
+                      UserLanguage.of(context).desc("splash"),
+                      style: Theme.of(context).textTheme.body1
+                    ),
+                  )
+                ],
+              )
             ),
           ),
           isNeedLoading ?
@@ -61,7 +77,7 @@ class _SplashState extends State<Splash> {
               left: 0,
               child: Center(
                 child: SpinKitThreeBounce(
-                  color: ColorCollections.titleColor,
+                  color: Theme.of(context).buttonColor,
                   size: 50,
                 ),
               ),

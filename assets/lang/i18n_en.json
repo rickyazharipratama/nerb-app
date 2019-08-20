@@ -21,7 +21,8 @@
         "credits":"Meet the authors of contents in this application.",
         "maintenance":"Sorry for the inconvenience, we are currently making modifications in our system for better experiences using this application. Thanks for your patience!",
         "about":"nerb is an application that can help you to find interesting places or places that you want to discover.",
-        "update":"The latest version of this application is available on the market, please update the application for better experience."
+        "update":"The latest version of this application is available on the market, please update the application for better experience.",
+        "splash":"Discover interesting places around you"
     },
     "label":{
         "places":"Places",

@@ -4,13 +4,16 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android.iml" filepath="$PROJECT_DIR$/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.5+2/android/cloud_firestore.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.5+2/android/cloud_firestore.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+6/android/firebase_core.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+6/android/firebase_core.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_storage-3.0.2/android/firebase_storage.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_storage-3.0.2/android/firebase_storage.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.9/android/cloud_firestore-0.12.9-cloud_firestore.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.12.9/android/cloud_firestore-0.12.9-cloud_firestore.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+8/android/firebase_core-0.4.0+8-firebase_core.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.0+8/android/firebase_core-0.4.0+8-firebase_core.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_remote_config-0.2.0+5/android/firebase_remote_config.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/firebase_remote_config-0.2.0+5/android/firebase_remote_config.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-3.2.1+1/android/flutter_secure_storage.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-3.2.1+1/android/flutter_secure_storage.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.5/android/flutter_webview_plugin.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/flutter_webview_plugin-0.3.5/android/flutter_webview_plugin.iml" />
       <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/location-2.3.5/android/location.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/location-2.3.5/android/location.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/path_provider-1.1.0/android/path_provider.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/path_provider-1.1.0/android/path_provider.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/android/shared_preferences.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+1/android/shared_preferences.iml" />
-      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+1/android/sqflite.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+1/android/sqflite.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/path_provider-1.2.0/android/path_provider-1.2.0-path_provider.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/path_provider-1.2.0/android/path_provider-1.2.0-path_provider.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+4/android/shared_preferences-0.5.3+4-shared_preferences.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/shared_preferences-0.5.3+4/android/shared_preferences-0.5.3+4-shared_preferences.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+3/android/sqflite-1.1.6+3-sqflite.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/sqflite-1.1.6+3/android/sqflite-1.1.6+3-sqflite.iml" />
+      <module fileurl="file://$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/store_redirect-1.0.1/android/store_redirect.iml" filepath="$USER_HOME$/.pub-cache/hosted/pub.dartlang.org/store_redirect-1.0.1/android/store_redirect.iml" />
     </modules>
   </component>
 </project>
