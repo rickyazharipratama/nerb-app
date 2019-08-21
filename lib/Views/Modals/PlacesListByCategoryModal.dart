@@ -49,6 +49,18 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children : <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.fromLTRB(10, 5, 10, 15),
+              child: Text(
+                UserLanguage.of(context).label('choosePlace'),
+                softWrap: true,
+                maxLines: 1,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).primaryTextTheme.title
+              ),
+            ),
 
             Expanded(
               child:  viewState == 0 ? ListView(

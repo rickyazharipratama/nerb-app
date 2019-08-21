@@ -6,7 +6,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:location/location.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
@@ -78,7 +77,7 @@ class _SplashState extends State<Splash> {
               child: Center(
                 child: SpinKitThreeBounce(
                   color: Theme.of(context).buttonColor,
-                  size: 50,
+                  size: 20,
                 ),
               ),
             )
@@ -204,6 +203,7 @@ class _SplashState extends State<Splash> {
         List<String> categories = List();
         snapshot.documents.forEach((cat){
           cat.data['id'] = cat.documentID;
+          print(jsonEncode(cat.data));
           categories.add(jsonEncode(cat.data));
         });
         PreferenceHelper.instance.setStringListValue(
@@ -234,6 +234,7 @@ class _SplashState extends State<Splash> {
         List<String> places = List();
         snapshots.documents.forEach((plc){
           plc.data['id'] = plc.documentID;
+          print(jsonEncode(plc.data));
           places.add(jsonEncode(plc.data));
         });
         PreferenceHelper.instance.setStringListValue(

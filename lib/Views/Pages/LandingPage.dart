@@ -64,7 +64,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
         actions: <Widget>[
 
           InkWell(

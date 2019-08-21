@@ -32,7 +32,8 @@
         "language":"Language",
         "version":"Version",
         "theme":"Theme",
-        "wn":"What's new"
+        "wn":"What's new",
+        "choosePlace":"Choose your favorite place"
     },
     "button":{
         "retry":"Retry",

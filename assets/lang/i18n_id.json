@@ -32,7 +32,8 @@
         "language":"Bahasa",
         "version":"Versi",
         "theme":"Tema",
-        "wn":"Apa yang baru"
+        "wn":"Apa yang baru",
+        "choosePlace":"Pilih tempat favorit kamu"
     },
     "button":{
         "retry":"Coba Lagi",

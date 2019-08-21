@@ -56,6 +56,7 @@ class _NerbAppState extends State<NerbApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("isDarkMode : "+isUsedDarkTheme.toString());
     return ulDelegate != null ?
     MaterialApp(
       locale: ulDelegate.locale,
@@ -67,7 +68,6 @@ class _NerbAppState extends State<NerbApp> {
         GlobalCupertinoLocalizations.delegate
       ],
       theme: isUsedDarkTheme ? toDarkMode() : toLightMode(),
-      darkTheme: toDarkMode(),
       supportedLocales: [
         const Locale(ConstantCollections.LANGUAGE_EN),
         const Locale(ConstantCollections.LANGUAGE_ID)

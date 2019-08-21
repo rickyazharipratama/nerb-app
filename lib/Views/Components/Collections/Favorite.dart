@@ -93,7 +93,7 @@ class _FavoriteState extends State<Favorite> {
                     }).toList(),
                   ),
 
-                  Padding(padding: const EdgeInsets.only(top: 10),),
+                  Padding(padding: const EdgeInsets.only(top: 10)),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -111,7 +111,7 @@ class _FavoriteState extends State<Favorite> {
                               splashColor: ColorCollections.shimmerHighlightColor,
                               highlightColor: ColorCollections.shimmerBaseColor,
                               child: Container(
-                                width: 50,
+                                width: 65,
                                 height: 50,
                                 decoration: BoxDecoration(
                                   border: Border.all(

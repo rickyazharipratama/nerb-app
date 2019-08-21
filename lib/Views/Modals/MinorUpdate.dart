@@ -24,10 +24,7 @@ class MinorUpdate extends StatelessWidget {
                 children: <Widget>[
                   
                   Expanded(
-                    child: Text(
-                      UserLanguage.of(context).title("update"),
-                      style: Theme.of(context).primaryTextTheme.subhead,
-                    ),
+                    child: Container()
                   ),
                   InkWell(
                     onTap: (){
@@ -69,6 +66,13 @@ class MinorUpdate extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Text(
+                                UserLanguage.of(context).title("update"),
+                                style: Theme.of(context).primaryTextTheme.title,
+                              ),
+                            ),
+                            Padding(
                               padding: const EdgeInsets.only(bottom: 20),
                               child: Text(
                                 UserLanguage.of(context).desc("update"),
@@ -86,6 +90,7 @@ class MinorUpdate extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
                                 padding: const EdgeInsets.all(10),
+                                color: Theme.of(context).buttonColor,
                                 child: Text(
                                   UserLanguage.of(context).button("update").toUpperCase(),
                                   textAlign: TextAlign.center,
