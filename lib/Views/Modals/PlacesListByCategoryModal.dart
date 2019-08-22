@@ -1,10 +1,15 @@
 
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:nerb/Callbacks/RequestResponseCallback.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/Names.dart';
 import 'package:nerb/Models/PlaceModel.dart';
@@ -23,14 +28,17 @@ class PlacesListByCategoryModal extends StatefulWidget {
   _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
 }
 
-class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
+class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> implements RequestResponseCallback{
 
 
   List<FirestoreCategory> categories;
   List<PlaceModel> places;
 
   int viewState = 1;
-  bool isLoadError = false;
+  bool isAlreadyRetry = false;
+  int statusCode = 500;
+  int currPlaceVersion = -1;
+  bool isNeedUpdate = false;
 
   @override
   void initState() {
@@ -160,40 +168,63 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
   }
   
   initiateData() async{
-
-    List<FirestoreCategory> tmpCategories = List();
-    List<String> cat = await PreferenceHelper.instance.getStringListValue(
-      key: ConstantCollections.PREF_LAST_CATEGORY
+    RemoteConfig rc = await CommonHelper.instance.fetchRemoteConfig();
+    int lastPlacesVersion = await PreferenceHelper.instance.getIntValue(
+      key: ConstantCollections.PREF_LAST_PLACE_VERSION
     );
-    cat.forEach((ct){
-      tmpCategories.add(FirestoreCategory(jsonDecode(ct)));
-    });
+    if(lastPlacesVersion > 0){
+      currPlaceVersion = rc.getInt(ConstantCollections.REMOTE_CONFIG_PLACES_VERSION);
+      if(lastPlacesVersion  < currPlaceVersion){
+        isNeedUpdate = true;
+      }
+    }
 
-    List<String> plcs = await PreferenceHelper.instance.getStringListValue(
-      key: ConstantCollections.PREF_LAST_PLACE
-    );
-    List<PlaceModel> tmpPlace = List();
-    plcs.forEach((plc){
-      tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
-    });
-    if(mounted){
-      setState(() {
-        if(categories == null){
-          categories = List();
-        }else{
-          categories.clear();
+    if(!isNeedUpdate){
+      List<String> plcs = await PreferenceHelper.instance.getStringListValue(
+        key: ConstantCollections.PREF_LAST_PLACE
+      );
+      if(plcs.length > 0){
+        List<FirestoreCategory> tmpCategories = List();
+        List<String> cat = await PreferenceHelper.instance.getStringListValue(
+          key: ConstantCollections.PREF_LAST_CATEGORY
+        );
+        cat.forEach((ct){
+          tmpCategories.add(FirestoreCategory(jsonDecode(ct)));
+        });
+        List<PlaceModel> tmpPlace = List();
+        plcs.forEach((plc){
+          tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
+        });
+        if(mounted){
+          setState(() {
+            if(categories == null){
+              categories = List();
+            }else{
+              categories.clear();
+            }
+
+            if(places == null){
+              places = List();
+            }else{
+              places.clear();
+            }
+
+            categories.addAll(tmpCategories);
+            places.addAll(tmpPlace);
+            viewState = 0;
+          });
         }
-
-        if(places == null){
-          places = List();
-        }else{
-          places.clear();
-        }
-
-        categories.addAll(tmpCategories);
-        places.addAll(tmpPlace);
-        viewState = 0;
-      });
+      }else{
+        PlaceController.instance.getPlacesCategory(
+          callback: this,
+          lang: UserLanguage.of(context).currentLanguage
+        );
+      }
+    }else{
+      PlaceController.instance.getPlacesCategory(
+        callback: this,
+        lang: UserLanguage.of(context).currentLanguage
+      );
     }
   }
 
@@ -202,5 +233,98 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> {
     lst.add(widget.placeHolder);
     lst.add(item);
     widget.onSelected(lst);
+  }
+
+  @override
+  onFailureWithResponse(Response res) {
+    if(mounted){
+      setState(() {
+        statusCode = res.statusCode;
+        viewState = 2;
+      });
+    }
+  }
+
+  @override
+  onSuccessResponseFailed(Map<String,dynamic> data) {
+    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+      if(!isAlreadyRetry){
+        isAlreadyRetry = true;
+        initiateData();
+      }else{
+        if(mounted){
+          setState(() {
+            statusCode = data['statusCode'];
+            viewState = 2;
+          });
+        }
+      }
+    }else{
+       if(mounted){
+         setState(() {
+           statusCode = data['statusCode'];
+           viewState = 2;
+         });
+       }
+    }
+  }
+
+  @override
+  onSuccessResponseSuccess(Map<String,dynamic> data) async{
+    List<String>strTmp = List();
+    for(Map<String, dynamic> dt in data['result'] as List<dynamic>){
+      strTmp.add(jsonEncode(dt));
+    }
+
+    PreferenceHelper.instance.setStringListValue(
+      key: ConstantCollections.PREF_LAST_PLACE,
+      value: strTmp
+    );
+
+    if(isNeedUpdate){
+      PreferenceHelper.instance.setIntValue(
+        key: ConstantCollections.PREF_LAST_PLACE,
+        value: currPlaceVersion
+      );
+    }
+
+    if(places == null){
+      places = List();
+    }else{
+      places.clear();
+    }
+
+    List<String> cat = await PreferenceHelper.instance.getStringListValue(
+      key: ConstantCollections.PREF_LAST_CATEGORY
+    );
+
+    if(categories == null){
+      categories = List();
+    }else{
+      categories.clear();
+    }
+
+    cat.forEach((ct){
+      categories.add(FirestoreCategory(jsonDecode(ct)));
+    });
+
+    strTmp.forEach((st){
+      places.add(PlaceModel.fromStore(jsonDecode(st)));
+    });
+    if(mounted){
+      setState(() {
+        viewState = 0;
+      });
+    }
+  }
+
+  @override
+  onfailure() {
+    if(mounted){
+      setState(() {
+        statusCode = 500;
+        viewState = 2;
+      });
+    }
   }
 }

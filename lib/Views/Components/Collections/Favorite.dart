@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -23,8 +22,9 @@ class Favorite extends StatefulWidget {
 
   final VoidCallback openingPlace;
   final VoidCallback closingPlace;
+  final bool isCategoryRetrieve;
 
-  Favorite({@required this.openingPlace, @required this.closingPlace});
+  Favorite({@required this.openingPlace, @required this.closingPlace,  this.isCategoryRetrieve : false});
 
   @override
   _FavoriteState createState() => new _FavoriteState();
@@ -63,93 +63,95 @@ class _FavoriteState extends State<Favorite> {
 
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-              child: viewState == 0 ? 
-              Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: favorites.getRange(0, 4).map((fav){
-                      return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ?
-                          AddFavoritesItem(
-                            callback: showPlaceList,
-                            place: fav,
-                          )
-                          : isEditMode ?
-                              EditPlaceItem(
-                                onDeleteClick: onDeletePlaceClicked,
-                                place: fav,
-                              )
-                            : PlaceItem(
-                              place: fav,
-                              callback: (place){
-                                NerbNavigator.instance.push(context,
-                                  child: Places(
-                                    title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
-                                    forSearch: place.forSearch,
-                                  )
-                                );
-                              },
-                            );
-                    }).toList(),
-                  ),
-
-                  Padding(padding: const EdgeInsets.only(top: 10)),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: favorites.getRange(4, favorites.length).map((fav){
-                       
-                       return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ? 
+              child: widget.isCategoryRetrieve ?
+                viewState == 0 ? 
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: favorites.getRange(0, 4).map((fav){
+                        return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ?
                             AddFavoritesItem(
                               callback: showPlaceList,
                               place: fav,
                             )
-                          : fav.id == ConstantCollections.OPERATOR_FAVORITE ?
-                            InkWell(
-                              onTap: isEditMode ? turnOffEditMode : turnOnEditMode,
-                              borderRadius: BorderRadius.circular(25),
-                              splashColor: ColorCollections.shimmerHighlightColor,
-                              highlightColor: ColorCollections.shimmerBaseColor,
-                              child: Container(
-                                width: 65,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
-                                    width: 1,
-                                  ),
-                                  color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
-                                  shape: BoxShape.circle
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    isEditMode ? Icons.close : Icons.edit,
-                                    color: Theme.of(context).buttonColor,
-                                    size: 25,
-                                  ),
-                                )
-                              ),
-                            )
                             : isEditMode ?
-                              EditPlaceItem(
-                                onDeleteClick: onDeletePlaceClicked,
+                                EditPlaceItem(
+                                  onDeleteClick: onDeletePlaceClicked,
+                                  place: fav,
+                                )
+                              : PlaceItem(
+                                place: fav,
+                                callback: (place){
+                                  NerbNavigator.instance.push(context,
+                                    child: Places(
+                                      title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
+                                      forSearch: place.forSearch,
+                                    )
+                                  );
+                                },
+                              );
+                      }).toList(),
+                    ),
+
+                    Padding(padding: const EdgeInsets.only(top: 10)),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: favorites.getRange(4, favorites.length).map((fav){
+                        
+                        return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ? 
+                              AddFavoritesItem(
+                                callback: showPlaceList,
                                 place: fav,
                               )
-                              : PlaceItem(
+                            : fav.id == ConstantCollections.OPERATOR_FAVORITE ?
+                              InkWell(
+                                onTap: isEditMode ? turnOffEditMode : turnOnEditMode,
+                                borderRadius: BorderRadius.circular(25),
+                                splashColor: ColorCollections.shimmerHighlightColor,
+                                highlightColor: ColorCollections.shimmerBaseColor,
+                                child: Container(
+                                  width: 65,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
+                                      width: 1,
+                                    ),
+                                    color: isEditMode ? Colors.red : Theme.of(context).highlightColor,
+                                    shape: BoxShape.circle
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      isEditMode ? Icons.close : Icons.edit,
+                                      color: Theme.of(context).buttonColor,
+                                      size: 25,
+                                    ),
+                                  )
+                                ),
+                              )
+                              : isEditMode ?
+                                EditPlaceItem(
+                                  onDeleteClick: onDeletePlaceClicked,
                                   place: fav,
-                                  callback: (place){
-                                    NerbNavigator.instance.push(context,
-                                      child: Places(
-                                        title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
-                                        forSearch: place.forSearch,
-                                      )
-                                    );
-                                  },
-                                );
-                    }).toList(),
-                  )
-                ],
-              )
+                                )
+                                : PlaceItem(
+                                    place: fav,
+                                    callback: (place){
+                                      NerbNavigator.instance.push(context,
+                                        child: Places(
+                                          title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
+                                          forSearch: place.forSearch,
+                                        )
+                                      );
+                                    },
+                                  );
+                      }).toList(),
+                    )
+                  ],
+                )
+                : ShimmerFavorite()
               : ShimmerFavorite(),
             ),
             Separator()
@@ -168,15 +170,6 @@ class _FavoriteState extends State<Favorite> {
       updateFavorites(
         items: tmpFavorites
       );
-    }else{
-      Firestore.instance.collection(ConstantCollections.FIRESTORE_DEFAULT_FAVORITE).snapshots().listen((document){
-        for(DocumentSnapshot doc in document.documents){
-          print(doc.documentID);
-          print(doc.data.toString());
-          tmpFavorites.add(PlaceModel.fromFireStore(doc.documentID, doc.data));
-        }
-        updateFavorites(items: tmpFavorites);
-      });
     }
   }
 

@@ -3,7 +3,13 @@ class ConstantCollections{
 static const String VERSION = "1.0.0";
 static const int VERSION_INT = 1;
 static const int DEFAULT_RADIUS = 500;
+static const String PREFIX = "nerb-mobile";
+static const ENVIRONMENT = DEV;
 
+
+//env
+static const String DEV = "development";
+static const String PROD = "production";
 
 //network
  static const int Connectiontimeout = 10000;
@@ -44,7 +50,6 @@ static const int DEFAULT_RADIUS = 500;
   static const String EMPTY_FAVORITE = "emptyFav";
   static const String OPERATOR_FAVORITE = "operatorFav";
   static const String SEE_ALL = "seeAll";
-  
   static const String LANGUAGE_ID = "id";
   static const String LANGUAGE_EN = "en";
   
@@ -54,4 +59,9 @@ static const int DEFAULT_RADIUS = 500;
   static const String RESPONSE_INVALID_REQUEST = "INVALID_REQUEST";
   static const String RESPONSE_INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
   static const String RESPONSE_TIMEOUT = "TIMEOUT";
+  static const String STATUS_SUCCESS = "SUCCESS";
+  static const String STATUS_FAILED = "FAILED";
+
+//status code
+  static const int STATUS_CODE_UNAUTHORIZE = 401;
 }

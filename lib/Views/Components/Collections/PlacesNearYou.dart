@@ -30,14 +30,14 @@ class PlacesNearYou extends StatefulWidget {
 class _PlacesNearYouState extends State<PlacesNearYou> implements RequestResponseCallback {
 
   int viewState = 1;
-  bool isLoadError = false;
-  int errorCode = 500;
+  bool isAlreadyRetry = false;
+  int statusCode = 500;
   String errorStatus;
   NearbyPlaceResponse nearbyPlace;
 
-
   RequestResponseState responseState;
   Location currLoc;
+
   @override
   void initState() {
     super.initState();
@@ -100,7 +100,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                   child: ShimmerPlaceNearYou(),
                 ),
 
-                isLoadError ?
+                viewState == 2 ?
                   WrapperError(
                     buttonText: UserLanguage.of(context).button("retry"),
                     title: responseState == RequestResponseState.onSuccessResponseFailed?
@@ -112,11 +112,11 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                         || responseState == RequestResponseState.onfailure?
                         CommonHelper.instance.getTitleErrorByCode(
                           context: context,
-                          code: errorCode
+                          code: statusCode
                         )
                         : CommonHelper.instance.getTitleErrorByCode(
                           context: context,
-                          code: errorCode
+                          code: statusCode
                         )
                     ,
                     desc: responseState == RequestResponseState.onSuccessResponseFailed?
@@ -128,17 +128,16 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                         || responseState == RequestResponseState.onfailure ?
                         CommonHelper.instance.getDescErrorByCode(
                           context: context,
-                          code: errorCode
+                          code: statusCode
                         )
                         : CommonHelper.instance.getDescErrorByCode(
                           context: context,
-                          code: errorCode
+                          code: statusCode
                         ),
                     height: 140,
                     callback: (){
                       if(mounted){
                         setState(() {
-                          isLoadError = false;
                           initiateData();
                         });
                       }
@@ -173,6 +172,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         }
       }else{
         print("fetch from request");
+        PreferenceHelper.instance.remove(key:ConstantCollections.PREF_NEARBY_PLACE);
         int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
         await PlaceController.instance.getNearbyPlace(
           callback: this,
@@ -197,17 +197,9 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   onFailureWithResponse(Response res) {
     if(mounted){
       setState(() {
-        isLoadError = true;
+        statusCode = res.statusCode;
+        viewState = 2;
         responseState = RequestResponseState.onFailureWithResponse;
-        errorCode = res.statusCode;
-        // errorTitle = CommonHelper.instance.getTitleErrorByCode(
-        //   code: res.statusCode,
-        //   context: context
-        // );
-        // errorDesc = CommonHelper.instance.getDescErrorByCode(
-        //   code: res.statusCode,
-        //   context: context
-        // );
       });
     }
   }
@@ -216,17 +208,28 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   onSuccessResponseFailed(Map<String,dynamic> data) {
     if(mounted){
       setState((){
-        isLoadError = true;
-        responseState = RequestResponseState.onSuccessResponseFailed;
-        errorStatus = data['status'];
-        // errorTitle = CommonHelper.instance.getTitleErrorByStatus(
-        //   status: data['status'],
-        //   context: context
-        // );
-        // errorDesc = CommonHelper.instance.getDescErrorByStatus(
-        //   status: data['status'],
-        //   context: context
-        // );
+        if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+          if(!isAlreadyRetry){
+            isAlreadyRetry = true;
+            initiateData();
+          }else{
+            if(mounted){
+              setState(() {
+                statusCode = data['statusCode'];
+                responseState = RequestResponseState.onSuccessResponseFailed;
+                viewState = 2;
+              });
+            }
+          }
+        }else{
+          if(mounted){
+            setState(() {
+              statusCode = data['statusCode'];
+              responseState = RequestResponseState.onSuccessResponseFailed;
+              viewState = 2;
+            });
+          }
+        }
       });
     }
   }
@@ -234,7 +237,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   @override
   onSuccessResponseSuccess(Map<String,dynamic> data) async{
     print("masuk sini");
-    nearbyPlace = NearbyPlaceResponse.fromJson(data);
+    nearbyPlace = NearbyPlaceResponse.fromJson(data['result']);
     nearbyPlace.setLastFetch = DateTime.now().millisecondsSinceEpoch;
 
     PreferenceHelper.instance.setStringValue(
@@ -246,6 +249,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
       key: ConstantCollections.PREF_LAST_LOCATION,
       value: dt.latitude.toString()+","+dt.longitude.toString()
     );
+    isAlreadyRetry = false;
     if(mounted){
       setState(() {
         viewState = 0;
@@ -258,8 +262,8 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   onfailure() {
     if(mounted){
       setState(() {
-        isLoadError = true;
-        errorCode = 500;
+        viewState = 2;
+        statusCode = 500;
         responseState = RequestResponseState.onfailure;
       });
     }

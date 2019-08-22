@@ -64,6 +64,11 @@ class PreferenceHelper{
     return val;
   }
 
+  Future<bool> remove({String key}) async{
+    _pref = await SharedPreferences.getInstance();
+    return _pref.remove(key);
+  }
+
   Future<void> setSecureStorage({@required String key, @required val}) async{
     FlutterSecureStorage storage = FlutterSecureStorage();
     await storage.write(

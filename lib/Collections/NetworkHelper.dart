@@ -17,7 +17,7 @@ class NetworkHelper{
   }
 
   Future<Response<Map<String,dynamic>>> requestGet({String path}) async{
-    print(internalServerResponse());
+    print(path);
     try{
       return dio.get(path);
     }catch(e){
@@ -28,19 +28,15 @@ class NetworkHelper{
 
   String timeoutResopnse(){
     return json.encode({
-      'html_attributions' : null,
-      'results' : null,
-      'status' : ConstantCollections.RESPONSE_TIMEOUT,
-      'error_message': ConstantCollections.RESPONSE_TIMEOUT
+      'status':'FAILED',
+      'desc':'timeout'
     });
   }
 
   Map<String,dynamic> internalServerResponse(){
     return {
-      'html_attributions' : null,
-      'results' : null,
-      'status' : ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR,
-      'error_message': ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR
+      'status':'FAILED',
+      'desc':'internal Server error'
     };
   }
 

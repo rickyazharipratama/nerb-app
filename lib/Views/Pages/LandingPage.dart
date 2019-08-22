@@ -20,6 +20,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
   bool isSettingActive = false;
   bool isPlaceActive = false;
   BuildContext parentContext;
+  bool isCategoryRetrieve = false;
   @override
   void initState() {
     super.initState();
@@ -119,9 +120,19 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
               Favorite(
                 closingPlace: closingPlaceList,
                 openingPlace: openingPlaceList,
+                isCategoryRetrieve: isCategoryRetrieve,
               ),
               Padding(padding: const EdgeInsets.all(5),),
-              Categories(),
+              Categories(
+                onDataRetrieved: (){
+                  if(mounted){
+                    setState(() {
+                      print("masuk sini");
+                      isCategoryRetrieve = true;
+                    });
+                  }
+                },
+              ),
               PlacesNearYou()
             ],
           );

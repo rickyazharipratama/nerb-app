@@ -1,26 +1,45 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
+import 'package:flutter/widgets.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 
 class APICollections{
 
   
-  String baseMapEndpoint = "https://places.api.here.com";
+  final String baseMapEndpoint = ConstantCollections.ENVIRONMENT == ConstantCollections.PROD ? "https://api.nerb-app.fun": "http://127.0.0.1/nerb-api";
 
   static APICollections instance = APICollections();
 
-
-  Future<String> apiNearbyPlace({String type, String location, String radius, String language}) async{
-    String appCode = await PreferenceHelper.instance.getSecureStorage(
-      key: ConstantCollections.PREF_APP_CODE
-    );
-
-    String appId = await PreferenceHelper.instance.getSecureStorage(
-      key: ConstantCollections.PREF_APP_ID
-    );
-    print("appCode : "+appCode);
-    print("appId :"+appId);
-    return "//places/v1/discover/around?app_id="+appId+"&app_code="+appCode
-      +"&in="+location+";r="+radius;
+  String getCategories(){
+    return baseMapEndpoint+"/api/places/getCategories?token="+_provideToken();
   }
 
+  String getCategoryPlaces(){
+    return baseMapEndpoint+"/api/places/getCategoryPlace?token="+_provideToken();
+  }
+
+  String getListPlace({
+    @required String location,
+    String cat
+  }){
+    return baseMapEndpoint+"/api/places/getListPlace?in="+location+"&token="+_provideToken()+(cat != null ?"&cat="+cat:"");
+  }
+
+  String getListPlaceByNext({
+    @required String next
+  }){
+    return baseMapEndpoint+"/api/places/getListPlace?token="+_provideToken()+"&next="+next;
+  }
+
+
+  String _provideToken(){
+    DateTime dt = DateTime.now().toUtc();
+    String plain = ConstantCollections.PREFIX+"-"+dt.year.toString()+(dt.month > 9 ?dt.month.toString() : "0"+dt.month.toString())+(dt.day > 9 ? dt.day.toString() : "0"+dt.day.toString())+(dt.hour > 9 ?dt.hour.toString() : "0"+dt.hour.toString())+(dt.minute > 9 ? dt.minute.toString() :"0"+dt.minute.toString());
+    print(plain);
+    var bytes = utf8.encode(plain);
+    var hash = sha256.convert(bytes);
+    print(hash.toString());
+    return hash.toString();
+  }
 }
