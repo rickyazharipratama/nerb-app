@@ -8,8 +8,9 @@ class ErrorPlaceholder extends StatelessWidget {
   final VoidCallback callback;
   final String buttonText;
   final isNeedButton;
+  final IconData icon;
 
-  ErrorPlaceholder({@required this.title, @required this.desc, this.callback, this.buttonText,this.isNeedButton : true});
+  ErrorPlaceholder({@required this.title, @required this.desc, this.callback, this.buttonText,this.isNeedButton : true, this.icon : Icons.error});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ErrorPlaceholder extends StatelessWidget {
         children: <Widget>[
 
           Icon(
-            Icons.error,
+            icon,
             color: Colors.red,
             size: 50,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
@@ -40,15 +41,23 @@ class _DetailPlaceState extends State<DetailPlace> {
           Expanded(
             child: Hero(
               tag: "image-"+widget.place.id,
-              child: NerbCacheImage(
-                height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
-                width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
-                placeholder: CommonHelper.instance.getPlaceImageByCategory(
-                  category: widget.place.category.title
-                ) != null ? 
-                  CommonHelper.instance.getPlaceImagebyIconName(icon: widget.place.icon)
-                :null,
-                url: null
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  CommonHelper.instance.getPlaceImageByCategory(
+                    category: widget.place.category.id
+                  ) == null ?
+                    CommonHelper.instance.getPlaceImageByCategory(
+                      category: widget.place.category.title
+                    ) : CommonHelper.instance.getPlaceImageByCategory(
+                      category: widget.place.category.id
+                    ),
+                  fit: BoxFit.cover,
+                  color: ColorCollections.wrapperCategory,
+                  colorBlendMode: BlendMode.srcATop,
+                  height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
+                  width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                ),
               ),
             ),
           ),
@@ -122,7 +131,7 @@ class _DetailPlaceState extends State<DetailPlace> {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                DistanceHelper.instance.getFormatDistance(context, widget.place.distance.toDouble()),
+                DistanceHelper.instance.getFormatDistance(context, (widget.place.distance.toDouble()/1000)),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: Theme.of(context).primaryTextTheme.body1,
@@ -172,7 +181,7 @@ class _DetailPlaceState extends State<DetailPlace> {
             Padding(
               padding: const EdgeInsets.only(left: 5),
               child: Text(
-                DistanceHelper.instance.getFormatDistance(context, widget.place.distance.toDouble()),
+                DistanceHelper.instance.getFormatDistance(context, widget.place.distance.toDouble()/1000),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
                 style: Theme.of(context).primaryTextTheme.body1,

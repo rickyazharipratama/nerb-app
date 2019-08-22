@@ -8,7 +8,8 @@
         "thirdPartySoftware":"Perangkat Lunak Pihak Ketiga",
         "credits":"Kredit",
         "maintenance": "KAMI AKAN SEGERA KEMBALI",
-        "update":"Saatny Melakukan Pembaharuan...!"
+        "update":"Saatny Melakukan Pembaharuan...!",
+        "aw":"Aw..!"
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
@@ -22,7 +23,8 @@
         "maintenance":"Maat atas ketidaknymanannya, saat ini kami sedang melakukan modifikasi di dalam sistem untuk kenyamanan yang lebih baik dalam menggunakan aplikasi ini. Terima kasih atas kesabarannya!",
         "about":"nerb adalah aplikasi yang bisa memudahkan anda menemukan tempat-tempat yang menarik atau yang ingin anda tuju.",
         "update":"Versi terbaru dari aplikasi ini telah tesedia di market, Silahkan memperbaharui aplikasi unutuk kenyamanan penggunaan aplikasi yang lebih baik.",
-        "splash":"Temukan tempat-tempat menarik di sekitar kamu."
+        "splash":"Temukan tempat-tempat menarik di sekitar kamu.",
+        "emptyPlace":"Kami tidak dapat menemkan tempat dari kategori ini di sekeliling kamu."
     },
     "label":{
         "places":"Tempat",

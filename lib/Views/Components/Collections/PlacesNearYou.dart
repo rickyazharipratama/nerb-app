@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -154,43 +152,17 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
 
 
   initiateData() async{
-    String lastNearbyPlace = await PreferenceHelper.instance.getStringValue(
-      key: ConstantCollections.PREF_NEARBY_PLACE
-    );
     currLoc = Location();
     LocationData  dt = await currLoc.getLocation();
-    if(lastNearbyPlace != null){
-      NearbyPlaceResponse tmp = NearbyPlaceResponse.fromJson(jsonDecode(lastNearbyPlace));
-      bool isNeedRefresh = await CommonHelper.instance.isNeedToRefreshNearbyPlace(tmp.lastFetch);
-      if(!isNeedRefresh){
-        print("fetch from preference");
-        if(mounted){
-          setState(() {
-            nearbyPlace = tmp;
-            viewState = 0;
-          });
-        }
-      }else{
-        print("fetch from request");
-        PreferenceHelper.instance.remove(key:ConstantCollections.PREF_NEARBY_PLACE);
-        int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
-        await PlaceController.instance.getNearbyPlace(
-          callback: this,
-          location: dt.latitude.toString()+","+dt.longitude.toString(),
-          language: UserLanguage.of(context).currentLanguage,
-          radius: radius.toString()
-        );
-      }
-    }else{
-      print("fetch from request");
-      int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
-      await PlaceController.instance.getNearbyPlace(
-        callback: this,
-        location: dt.latitude.toString()+","+dt.longitude.toString(),
-        language: UserLanguage.of(context).currentLanguage,
-        radius: radius.toString()
-      );
-    }
+    print("fetch from request");
+    int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
+    await PlaceController.instance.getNearbyPlace(
+      callback: this,
+      location: dt.latitude.toString()+","+dt.longitude.toString(),
+      language: UserLanguage.of(context).currentLanguage,
+      radius: radius.toString()
+    );
+    
   }
 
   @override
@@ -240,10 +212,6 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     nearbyPlace = NearbyPlaceResponse.fromJson(data['result']);
     nearbyPlace.setLastFetch = DateTime.now().millisecondsSinceEpoch;
 
-    PreferenceHelper.instance.setStringValue(
-      key: ConstantCollections.PREF_NEARBY_PLACE,
-      value: jsonEncode(nearbyPlace.getMap())
-    );
     LocationData dt = await currLoc.getLocation();
     PreferenceHelper.instance.setStringValue(
       key: ConstantCollections.PREF_LAST_LOCATION,

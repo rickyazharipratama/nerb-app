@@ -170,6 +170,24 @@ class _FavoriteState extends State<Favorite> {
       updateFavorites(
         items: tmpFavorites
       );
+    }else{
+      if(favorites == null){
+        favorites = List();
+      }else{
+        favorites.clear();
+      }
+      for(int i = favorites.length; i < 8;i++){
+        if(i == 7){
+          favorites.add(PlaceModel.forOperator());
+        }else{
+          favorites.add(PlaceModel.emptyPlace(prefix: i.toString()));
+        }
+      }
+      if(mounted){
+        setState(() {
+          viewState = 0;
+        });
+      }
     }
   }
 

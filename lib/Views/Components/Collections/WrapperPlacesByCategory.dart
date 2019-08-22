@@ -180,7 +180,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
     if(mounted){
       setState(() {
         statusCode = res.statusCode;
-        viewState = 2;
+        viewState =2;
       });
     }
   }
@@ -227,6 +227,11 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
           value: currPlaceVersion
         );
       }
+    List<PlaceModel> tmpPlace = List();
+    strTmp.forEach((plc){
+      tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
+    });
+    
 
     if(places == null){
       places = List();
@@ -234,9 +239,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
       places.clear();
     }
 
-    strTmp.forEach((st){
-      places.add(PlaceModel.fromStore(jsonDecode(st)));
-    });
+    places.addAll(tmpPlace.where((tmp) => tmp.categories.contains(widget.category)));
     places.sort((a,b) => UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.section.id.compareTo(b.section.id) : a.section.en.compareTo(b.section.en));
     if(sections == null){
       sections = List();
