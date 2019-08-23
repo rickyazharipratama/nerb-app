@@ -5,6 +5,7 @@ import io.flutter.plugins.firebase.firebaseremoteconfig.FirebaseRemoteConfigPlug
 import com.it_nomads.fluttersecurestorage.FlutterSecureStoragePlugin;
 import com.flutter_webview_plugin.FlutterWebviewPlugin;
 import com.lyokone.location.LocationPlugin;
+import com.baseflow.location_permissions.LocationPermissionsPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 import com.tekartik.sqflite.SqflitePlugin;
@@ -22,6 +23,7 @@ public final class GeneratedPluginRegistrant {
     FlutterSecureStoragePlugin.registerWith(registry.registrarFor("com.it_nomads.fluttersecurestorage.FlutterSecureStoragePlugin"));
     FlutterWebviewPlugin.registerWith(registry.registrarFor("com.flutter_webview_plugin.FlutterWebviewPlugin"));
     LocationPlugin.registerWith(registry.registrarFor("com.lyokone.location.LocationPlugin"));
+    LocationPermissionsPlugin.registerWith(registry.registrarFor("com.baseflow.location_permissions.LocationPermissionsPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
     SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
     SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));

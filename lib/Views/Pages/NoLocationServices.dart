@@ -1,44 +1,28 @@
 import 'dart:async';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:location_permissions/location_permissions.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
-import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Views/Pages/Splash.dart';
+import 'package:nerb/Views/Pages/LandingPage.dart';
+import 'package:nerb/Views/Pages/WrapperPermission.dart';
 
-class Maintenance extends StatefulWidget{
+class NoLocationServices extends StatefulWidget {
 
   @override
-  MaintenanceState createState() => MaintenanceState();
+  _NoLocationServicesState createState() => new _NoLocationServicesState();
 
 }
 
-class MaintenanceState extends State<Maintenance>{
+class _NoLocationServicesState extends State<NoLocationServices> {
 
   Timer timer;
-  RemoteConfig rc;
+
   @override
   void initState() {
     super.initState();
     initiateData();
-  }
-
-  initiateData()async{
-    rc = await CommonHelper.instance.fetchRemoteConfig();
-    timer = Timer.periodic(const Duration(minutes: 3),(timer) async{
-       rc = await CommonHelper.instance.fetchRemoteConfig();
-       bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
-       print("timer running");
-       if(!isMaintenance){
-         print("navigate to splash");
-         NerbNavigator.instance.newClearRoute(context,
-            child: Splash()
-         );
-       }
-    });
   }
 
   @override
@@ -69,7 +53,7 @@ class MaintenanceState extends State<Maintenance>{
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Text(
-                            UserLanguage.of(context).title("maintenance"),
+                            UserLanguage.of(context).title("locationService"),
                             style: Theme.of(context).primaryTextTheme.title,
                         ),
                       ),
@@ -77,7 +61,7 @@ class MaintenanceState extends State<Maintenance>{
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
                         child: Text(
-                          UserLanguage.of(context).desc("maintenance"),
+                          UserLanguage.of(context).desc("locationService"),
                           textAlign: TextAlign.center,
                           style: Theme.of(context).primaryTextTheme.body1,
                         ),
@@ -92,10 +76,26 @@ class MaintenanceState extends State<Maintenance>{
     );
   }
 
+  initiateData() async{
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) async{
+       print("location service");
+       if(await LocationPermissions().checkServiceStatus() == ServiceStatus.enabled){
+         if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.granted){
+           NerbNavigator.instance.newClearRoute(context,
+              child: LandingPage()
+           );
+         }else{
+           NerbNavigator.instance.newClearRoute(context,
+            child: WrapperPermission()
+           );
+         }
+       }
+    });
+  }
+
   @override
   void dispose() {
     timer.cancel();
     super.dispose();
   }
-
 }

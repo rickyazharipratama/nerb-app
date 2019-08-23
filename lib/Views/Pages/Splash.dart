@@ -1,11 +1,13 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:location/location.dart';
+import 'package:location_permissions/location_permissions.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Views/Pages/LandingPage.dart';
+import 'package:nerb/Views/Pages/NoLocationServices.dart';
+import 'package:nerb/Views/Pages/WrapperPermission.dart';
 
 class Splash extends StatefulWidget {
 
@@ -93,15 +95,22 @@ class _SplashState extends State<Splash> {
 
   openLAstAct() async{
     if(!isError){
-      Location loc = Location();
-      if(! await loc.hasPermission()){
-        await loc.requestPermission();
-      }
-      if(await loc.hasPermission()){
+      if(await LocationPermissions().checkServiceStatus() == ServiceStatus.enabled){
+        if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.granted){
+          NerbNavigator.instance.newClearRoute(context,
+            child: LandingPage()
+          );   
+        }else{
+          NerbNavigator.instance.newClearRoute(context,
+            child: WrapperPermission()
+          );
+        }
+      }else{
+        //should request services
         NerbNavigator.instance.newClearRoute(context,
-          child: LandingPage()
-        );   
-      } 
+          child: NoLocationServices()
+        );
+      }
     }
   }
 }

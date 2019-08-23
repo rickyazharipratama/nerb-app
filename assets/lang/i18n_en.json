@@ -9,7 +9,9 @@
         "credits":"Credits",
         "maintenance": "WE'LL BE BACK SOON",
         "update":"It's Time To Update...!",
-        "aw":"Aw..!"
+        "aw":"Aw..!",
+        "locationPermission":"Location Permission",
+        "locationService":"Location Service"
     },
     "desc":{
         "radiusSetting":"You can set the range of places you want to find from your current location.",
@@ -24,7 +26,9 @@
         "about":"nerb is an application that can help you to find interesting places or places that you want to discover.",
         "update":"The latest version of this application is available on the market, please update the application for better experience.",
         "splash":"Discover interesting places around you",
-        "emptyPlace":"we cannot find the places from this category around you."
+        "emptyPlace":"we cannot find the places from this category around you.",
+        "locationPermission":"In order to use this application's features, we need your permission to access location service on your device.",
+        "locationService":"In order to use this application's features, we need you to enable the location service."
     },
     "label":{
         "places":"Places",
@@ -40,7 +44,9 @@
     "button":{
         "retry":"Retry",
         "seeAll":"See All",
-        "update":"UPDATE"
+        "update":"UPDATE",
+        "requestPermission": "Request Permission",
+        "openAppSetting":"Open Setting"
     },
     "errorTitle":{
         "favoriteIsEmpty":"Favorite Place Is Empty",

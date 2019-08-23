@@ -14,6 +14,8 @@ static const String PROD = "production";
 //network
  static const int Connectiontimeout = 10000;
   
+//permission
+  static const String PERMISSION_LOCATION = "permissionLocation";
 
 //firestore
   static const String FIRESTORE_CATEGORY = "kategori";

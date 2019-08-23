@@ -9,7 +9,9 @@
         "credits":"Kredit",
         "maintenance": "KAMI AKAN SEGERA KEMBALI",
         "update":"Saatny Melakukan Pembaharuan...!",
-        "aw":"Aw..!"
+        "aw":"Aw..!",
+        "locationPermission":"Izin Lokasi",
+        "locationService":"Layanan Lokasi"
     },
     "desc":{
         "radiusSetting":"Kamu bisa atur jangkauan  tempat-tempat yang ingin kamu temukan dari lokasi kamu.",
@@ -24,7 +26,9 @@
         "about":"nerb adalah aplikasi yang bisa memudahkan anda menemukan tempat-tempat yang menarik atau yang ingin anda tuju.",
         "update":"Versi terbaru dari aplikasi ini telah tesedia di market, Silahkan memperbaharui aplikasi unutuk kenyamanan penggunaan aplikasi yang lebih baik.",
         "splash":"Temukan tempat-tempat menarik di sekitar kamu.",
-        "emptyPlace":"Kami tidak dapat menemkan tempat dari kategori ini di sekeliling kamu."
+        "emptyPlace":"Kami tidak dapat menemkan tempat dari kategori ini di sekeliling kamu.",
+        "locationPermission":"Dalam rangka menggunakan fitur-fitur pada aplikasi ini, kami membutuhkan izin anda untuk mengakses layanan lokasi pada device kamu.",
+        "locationService":"Dalam rangka menggunakan fitur-fitur pada aplikas ini, kami membutuhkan kamu untuk mengaktifkan layanan lokasi."
     },
     "label":{
         "places":"Tempat",
@@ -40,7 +44,9 @@
     "button":{
         "retry":"Coba Lagi",
         "seeAll":"Lihat Semua",
-        "update":"PERBAHARUI"
+        "update":"PERBAHARUI",
+        "requestPermission": "Ajukan Izin",
+        "openAppSetting":"Pengaturan Aplikasi"
     },
     "errorTitle":{
         "favoriteIsEmpty":"Tempat Populer Kosong",
