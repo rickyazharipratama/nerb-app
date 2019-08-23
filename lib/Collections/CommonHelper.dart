@@ -275,6 +275,16 @@ class CommonHelper{
     @required int code,
     @required BuildContext context
   }){
+    if(code == ConstantCollections.STATUS_CODE_TIMEOUT_CLIENT){
+      // no internet Connection
+      return UserLanguage.of(context).errorTitle("noInternet");
+    }else if (code == ConstantCollections.STATUS_CODE_TIMEOUT_SERVER){
+      // server timeout
+      return UserLanguage.of(context).errorTitle("serverTimeOut");
+    }else if (code == ConstantCollections.STATUS_INTERNAL_SERVER_ERROR){
+      //internal sever error
+      return UserLanguage.of(context).errorTitle("general");
+    }
     return UserLanguage.of(context).errorTitle("general");
   }
 
@@ -282,6 +292,16 @@ class CommonHelper{
     @required int code,
     @required BuildContext context
   }){
+    if(code == ConstantCollections.STATUS_CODE_TIMEOUT_CLIENT){
+      // no internet Connection
+      return UserLanguage.of(context).errorDesc("noInternet");
+    }else if (code == ConstantCollections.STATUS_CODE_TIMEOUT_SERVER){
+      // server timeout
+      return UserLanguage.of(context).errorDesc("serverTimeOut");
+    }else if (code == ConstantCollections.STATUS_INTERNAL_SERVER_ERROR){
+      //internal sever error
+      return UserLanguage.of(context).errorDesc("general");
+    }
     return UserLanguage.of(context).errorDesc("general");
   }
 

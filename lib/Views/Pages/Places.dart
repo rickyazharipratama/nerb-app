@@ -93,6 +93,7 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Column(

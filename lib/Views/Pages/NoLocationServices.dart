@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:location_permissions/location_permissions.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Views/Pages/LandingPage.dart';
@@ -27,6 +28,7 @@ class _NoLocationServicesState extends State<NoLocationServices> {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Stack(

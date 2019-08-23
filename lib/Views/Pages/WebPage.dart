@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Views/Components/misc/WebviewPlaceholder.dart';
 import 'package:nerb/Views/Pages/BasePushPage.dart';
 
@@ -34,6 +35,7 @@ class _WebPageState extends State<WebPage> {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return BasePushPage(
       title: widget.title,
       child: WebviewPlaceholder(

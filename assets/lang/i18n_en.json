@@ -52,12 +52,16 @@
         "favoriteIsEmpty":"Favorite Place Is Empty",
         "placeIsAlreadyExist":"Place Is Already Exist",
         "general":"Ups!",
-        "typePlaceEmpty":"Type Place is Empty"
+        "noInternet":"No Internet Connection",
+        "typePlaceEmpty":"Type Place is Empty",
+        "serverTimeOut":"Hold The Horses"
     },
     "errorDesc":{
         "favoriteIsEmpty":"You can update popular places if you have one or several popular places on your list. Please add your popular place first.",
         "placeIsAlreadyExist":"The type of place you choose is already in your popular list.",
         "general":"It seems you can not get information properly. Please try again in a few moment.",
-        "typePlaceEmpty":"Sorry, it's look like this type place is still empty."
+        "noInternet":"It seems we have problems with internet connection, Please check it and try again.",
+        "typePlaceEmpty":"Sorry, it's look like this type place is still empty.",
+        "serverTimeOut":"It seems we can't reach connection into server. PLese try again in a few moment."
     }
 }

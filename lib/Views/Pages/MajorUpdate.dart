@@ -32,6 +32,7 @@ class _MajoUpdateState extends State<MajorUpdate> {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Stack(

@@ -52,12 +52,14 @@
         "favoriteIsEmpty":"Tempat Populer Kosong",
         "placeIsAlreadyExist":"Tipe Tempat Sudah Ada",
         "general":"Ups!",
-        "typePlaceEmpty":"Tipe Tempat Belum Tersedia"
+        "typePlaceEmpty":"Tipe Tempat Belum Tersedia",
+        "serverTimeOut":"Santai Sejeneak"
     },
     "errorDesc":{
-        "favoriteIsEmpty":"Kamu dapat melakukan pembaruan tempat populer bila telah memiliki satu atau beberapa tempat populer didalam daftar tipe tempat populer kamu. Silahkan tambahkan tempat populer kamu terlebih dahulu.",
+        "favoriteIsEmpty":"Kamu dapat melakukan pembaruan tempat populer bila telah memiliki satu atau beberapa tempat populer didalam daftar tipe tempat populer kamu. Silakan tambahkan tempat populer kamu terlebih dahulu.",
         "placeIsAlreadyExist":"Tipe tempat yang kamu pilih sudah ada di dalam daftar tipe tempat populer kamu.",
-        "general":"Sepertinya kamu tidak bisa mendapatkan informasi dengan benar. Silahkan coba lagi dalam beberapa saat.",
-        "typePlaceEmpty":"Maaf, Sepertinya tipe tempat ini masih belum tersedia."
+        "general":"Sepertinya kamu tidak bisa mendapatkan informasi dengan benar. Silakan coba lagi dalam beberapa saat.",
+        "typePlaceEmpty":"Maaf, Sepertinya tipe tempat ini masih belum tersedia.",
+        "serverTimeOut":"Sepertinya kita tidak dapat menghubungi server. Silakan coba lagi dalam beberapa saat."
     }
 }

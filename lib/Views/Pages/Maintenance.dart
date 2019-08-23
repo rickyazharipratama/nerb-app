@@ -43,6 +43,7 @@ class MaintenanceState extends State<Maintenance>{
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: Stack(

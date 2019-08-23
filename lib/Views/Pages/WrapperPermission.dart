@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
@@ -23,6 +24,7 @@ class _WrapperPermissionState extends State<WrapperPermission> {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return Material(
       color: Theme.of(context).backgroundColor,
       child: PageView(

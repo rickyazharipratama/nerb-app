@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbTheme.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
@@ -31,6 +32,7 @@ class _PlacesByCategoryState extends State<PlacesByCategory> {
 
   @override
   Widget build(BuildContext context) {
+    CommonHelper.instance.forcePortraitOrientation();
     return WillPopScope(
       onWillPop: () async{
         Navigator.of(context).pop();

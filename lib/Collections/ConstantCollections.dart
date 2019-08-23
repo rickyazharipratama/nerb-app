@@ -12,7 +12,7 @@ static const String DEV = "development";
 static const String PROD = "production";
 
 //network
- static const int Connectiontimeout = 10000;
+ static const int Connectiontimeout = 8000;
   
 //permission
   static const String PERMISSION_LOCATION = "permissionLocation";
@@ -66,4 +66,9 @@ static const String PROD = "production";
 
 //status code
   static const int STATUS_CODE_UNAUTHORIZE = 401;
+  static const int STATUS_CODE_TIMEOUT_CLIENT = 408;
+  static const int STATUS_CODE_TIMEOUT_SERVER = 504;
+  static const int STATUS_INTERNAL_SERVER_ERROR = 500;
+  static const int STATUS_BAD_GATEWAY = 400;
+
 }

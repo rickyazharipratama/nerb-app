@@ -20,13 +20,35 @@ class NetworkHelper{
   Future<Response<Map<String,dynamic>>> requestGet({String path}) async{
     print(path);
     try{
-      return dio.get(path);
-    }catch(e){
-      print("network error");
-       return Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
+      return await dio.get(path);
+    }on DioError catch(e){
+      print("network error : " + e.type.toString());
+      if(e.type == DioErrorType.RESPONSE){
+        return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage:  e.response.statusMessage);
+      }else if(e.type == DioErrorType.CONNECT_TIMEOUT){
+        return checkExternalRequest();
+      }
+      return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
     }
   }
 
+  Response checkExternalRequest() {
+    try{
+      Response res;
+      dio.get("https://google.com")
+      .then((res){
+        res = Response(statusCode:504, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
+      });
+      return res;
+    }on DioError catch(e){
+      if(e.type == DioErrorType.RESPONSE){
+        return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage: e.response.statusMessage);
+      }else if(e.type == DioErrorType.CONNECT_TIMEOUT){
+        return Response(statusCode: 408, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
+      }
+      return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
+    }
+  }
 
   String timeoutResopnse(){
     return json.encode({
@@ -35,6 +57,8 @@ class NetworkHelper{
       'code':'timeout'
     });
   }
+
+
 
   Map<String,dynamic> internalServerResponse(){
     return {
