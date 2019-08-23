@@ -13,6 +13,7 @@ class NetworkHelper{
       baseUrl: APICollections.instance.baseMapEndpoint,
       connectTimeout: ConstantCollections.Connectiontimeout,
       responseType: ResponseType.json,
+      receiveDataWhenStatusError: true,
     ));
   }
 
@@ -21,6 +22,7 @@ class NetworkHelper{
     try{
       return dio.get(path);
     }catch(e){
+      print("network error");
        return Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
     }
   }
@@ -29,14 +31,16 @@ class NetworkHelper{
   String timeoutResopnse(){
     return json.encode({
       'status':'FAILED',
-      'desc':'timeout'
+      'desc':'timeout',
+      'code':'timeout'
     });
   }
 
   Map<String,dynamic> internalServerResponse(){
     return {
       'status':'FAILED',
-      'desc':'internal Server error'
+      'desc':'internal Server error',
+      'code':'internal_server_error'
     };
   }
 

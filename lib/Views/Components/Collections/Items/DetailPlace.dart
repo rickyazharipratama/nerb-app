@@ -4,7 +4,7 @@ import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
+import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 
 class DetailPlace extends StatefulWidget {
 
@@ -21,13 +21,19 @@ class _DetailPlaceState extends State<DetailPlace> {
 
   LocationData myLoc;
 
-
   @override
   void initState() {
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
+    String img = CommonHelper.instance.getPlaceImageByCategory(
+      category: widget.place.category.id
+    );
+    if(img == null){
+      img = CommonHelper.instance.getPlaceImageByCategory(
+        category: widget.place.category.title);
+    }
     return Container(
       width: MediaQuery.of(context).size.width,
       height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9 / 16 ) +80
@@ -43,20 +49,22 @@ class _DetailPlaceState extends State<DetailPlace> {
               tag: "image-"+widget.place.id,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  CommonHelper.instance.getPlaceImageByCategory(
-                    category: widget.place.category.id
-                  ) == null ?
-                    CommonHelper.instance.getPlaceImageByCategory(
-                      category: widget.place.category.title
-                    ) : CommonHelper.instance.getPlaceImageByCategory(
-                      category: widget.place.category.id
-                    ),
+                child: img != null ? Image.asset(
+                  img,
                   fit: BoxFit.cover,
                   color: ColorCollections.wrapperCategory,
                   colorBlendMode: BlendMode.srcATop,
                   height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
                   width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                )
+                : Container(
+                  height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
+                  width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).highlightColor
+                  ),
+                  child: ImagePlaceholder(),
                 ),
               ),
             ),

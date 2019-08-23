@@ -125,7 +125,7 @@ class _FavoriteState extends State<Favorite> {
                                   child: Center(
                                     child: Icon(
                                       isEditMode ? Icons.close : Icons.edit,
-                                      color: Theme.of(context).buttonColor,
+                                      color: isEditMode ? Colors.white : Theme.of(context).buttonColor,
                                       size: 25,
                                     ),
                                   )

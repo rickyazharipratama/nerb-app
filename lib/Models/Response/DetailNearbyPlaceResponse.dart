@@ -26,7 +26,7 @@ class DetailNearbyPlaceResponse{
      averageRating = data['averageRating'] != null ? double.parse(data['averageRating'].toString()) : 0;
      category = data['category'] != null ? CategoryPlaceResponse.fromJson(data['category']) : null;
      icon = data['icon'];
-     vicinity = data['vicinity'];
+     vicinity = data['vicinity'] != null  ? data['vicinity'].toString().replaceAll("<br/>", "\n") : null;
      type= data['type'];
      href = data['href'];
      id = data['id'];

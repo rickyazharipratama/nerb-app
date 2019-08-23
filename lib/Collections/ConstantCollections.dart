@@ -4,7 +4,7 @@ static const String VERSION = "1.0.0";
 static const int VERSION_INT = 1;
 static const int DEFAULT_RADIUS = 500;
 static const String PREFIX = "nerb-mobile";
-static const ENVIRONMENT = DEV;
+static const ENVIRONMENT = PROD;
 
 
 //env

@@ -15,7 +15,8 @@ class ShimmerListPlaces extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [1,2,3].map((_){
             return Container(
-              height: ((MediaQuery.of(context).size.width - 20) * 9 / 16 ) +80,
+              margin: const EdgeInsets.only(top: 10, bottom: 5),
+              height: ((MediaQuery.of(context).size.width - 20) * 9 / 16 ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5)

@@ -65,7 +65,16 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        centerTitle: false,
+        centerTitle: true,
+        title: Image.asset(
+            Theme.of(context).brightness == Brightness.dark ? 'assets/nerb-white.png' : 'assets/nerb-black.png',
+            width: (30 * 16)/9,
+            alignment: Alignment.topCenter,
+            height: 30,
+            color: Theme.of(context).brightness == Brightness.dark ? Color(0xfffefefe) : Color(0xff252525),
+            colorBlendMode: BlendMode.dstIn,
+            fit: BoxFit.contain,
+          ),
         actions: <Widget>[
 
           InkWell(

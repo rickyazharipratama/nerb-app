@@ -23,6 +23,7 @@ class _RadiusState extends State<Radius> {
 
   initiateData() async{
     rad = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
+    print("rad : "+rad.toString());
     if(mounted){
       setState(() { 
       });

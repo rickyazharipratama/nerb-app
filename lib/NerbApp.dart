@@ -56,7 +56,6 @@ class _NerbAppState extends State<NerbApp> {
 
   @override
   Widget build(BuildContext context) {
-    print("isDarkMode : "+isUsedDarkTheme.toString());
     return ulDelegate != null ?
     MaterialApp(
       locale: ulDelegate.locale,
@@ -83,7 +82,7 @@ class _NerbAppState extends State<NerbApp> {
       statusBarBrightness: Brightness.light,
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color(0xff252525),
+      systemNavigationBarColor: Color(0xfffefefe),
       systemNavigationBarIconBrightness: Brightness.dark
     ));
     return NerbTheme.instance.lightTheme;
@@ -95,13 +94,14 @@ class _NerbAppState extends State<NerbApp> {
       statusBarBrightness: Brightness.dark,
       statusBarColor: Color(0x55000000),
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xfffefefe),
+      systemNavigationBarColor: Color(0xff252525),
       systemNavigationBarIconBrightness: Brightness.light
     ));
     return NerbTheme.instance.darkTheme;
   }
 
   changingTheme(isDarkTHeme){
+    print("theme is dark : "+isDarkTHeme.toString());
     PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: isDarkTHeme);
     if(mounted){
       setState(() {

@@ -17,7 +17,8 @@ class ShimmerGridPlaces extends StatelessWidget {
           childAspectRatio: 9/16,
           children: [1,2,3,4].map((_){
             return Container(
-              height: ((((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9) + 110,
+              margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+              height: ((((MediaQuery.of(context).size.width - 25) / 2) * 16) / 9),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5)
