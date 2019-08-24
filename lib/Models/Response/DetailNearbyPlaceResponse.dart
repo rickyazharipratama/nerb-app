@@ -28,7 +28,7 @@ class DetailNearbyPlaceResponse{
      icon = data['icon'];
      vicinity = data['vicinity'] != null  ? data['vicinity'].toString().replaceAll("<br/>", "\n") : null;
      type= data['type'];
-     href = data['href'];
+     href = data['href'] != null ? Uri.encodeComponent(data['href']) : null;
      id = data['id'];
      if(data['chainIds'] != null){
        chainId = List();

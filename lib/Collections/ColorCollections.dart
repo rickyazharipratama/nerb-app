@@ -19,7 +19,7 @@ class ColorCollections{
   static final Color titleWhite = Color (0xffffffff);
   static final Color descColor = Color(0xff8e8e8e);
 
-  static final Color wrapperCategory = Color(0x33000000);
+  static final Color wrapperCategory = Color(0x77000000);
   static final Color placeholderCategory = Color(0xffd6d6d6);
 
 }

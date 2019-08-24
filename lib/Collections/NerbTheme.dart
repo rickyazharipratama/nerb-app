@@ -68,13 +68,16 @@ class NerbTheme{
           color: Color(0xff585858),
           fontWeight: FontWeight.w300
         ),
+        body2: TextStyle(
+          fontSize: 11,
+          color: Colors.white,
+          fontWeight: FontWeight.w300
+        )
       ),
       buttonColor: Color(0xFF666666),
       highlightColor: Color(0xfff3f3f3),
       canvasColor: Color(0x77ffffff),
       dialogBackgroundColor: Color(0xaa000000),
-      
-
     );
 
     darkTheme = ThemeData(
@@ -137,6 +140,11 @@ class NerbTheme{
           color: Color(0xfff8f8f8),
           fontWeight: FontWeight.w300
         ),
+        body2: TextStyle(
+          fontSize: 11,
+          color: Colors.white,
+          fontWeight: FontWeight.w300
+        )
       ),
       buttonColor: Color(0xffc6c6c6),
       highlightColor: Color(0xff454545),
