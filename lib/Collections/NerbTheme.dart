@@ -72,7 +72,12 @@ class NerbTheme{
           fontSize: 11,
           color: Colors.white,
           fontWeight: FontWeight.w300
-        )
+        ),
+        button: TextStyle(
+          fontSize: 13,
+          color: Colors.blue,
+          fontWeight: FontWeight.w300,
+        ),
       ),
       buttonColor: Color(0xFF666666),
       highlightColor: Color(0xfff3f3f3),
@@ -144,7 +149,12 @@ class NerbTheme{
           fontSize: 11,
           color: Colors.white,
           fontWeight: FontWeight.w300
-        )
+        ),
+        button: TextStyle(
+          fontSize: 13,
+          color: Colors.blue,
+          fontWeight: FontWeight.w300,
+        ),
       ),
       buttonColor: Color(0xffc6c6c6),
       highlightColor: Color(0xff454545),

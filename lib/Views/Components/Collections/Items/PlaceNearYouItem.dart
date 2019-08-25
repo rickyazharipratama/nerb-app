@@ -10,7 +10,8 @@ import 'package:nerb/Views/Pages/DetailPlaces.dart';
 class PlaceNearYouItem extends StatelessWidget {
 
   final DetailNearbyPlaceResponse place;
-  PlaceNearYouItem({this.place});
+  final VoidCallback callback;
+  PlaceNearYouItem({this.place, this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +36,16 @@ class PlaceNearYouItem extends StatelessWidget {
       margin: const EdgeInsets.only(left : 10, right : 10),
       child : GestureDetector(
         onTap: (){
-          NerbNavigator.instance.push(context,
-            child: DetailPlaces(
-              place: place,
-              img: plc,
-            )
-          );
+          if(this.callback == null){
+            NerbNavigator.instance.push(context,
+              child: DetailPlaces(
+                place: place,
+                img: plc,
+              )
+            );
+          }else{
+            this.callback();
+          }
         },
         child: Material(
           color: Theme.of(context).highlightColor,

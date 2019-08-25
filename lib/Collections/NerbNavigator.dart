@@ -34,4 +34,9 @@ static NerbNavigator instance = NerbNavigator();
         }
       ));
   }
+
+  Future<dynamic> removeThenPush(BuildContext context, {Widget child}){
+    Navigator.of(context).pop();
+    return push(context, child: child);
+  }
 }

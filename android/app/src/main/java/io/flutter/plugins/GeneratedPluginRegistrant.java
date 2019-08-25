@@ -10,6 +10,7 @@ import io.flutter.plugins.pathprovider.PathProviderPlugin;
 import io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin;
 import com.tekartik.sqflite.SqflitePlugin;
 import com.danieldallos.storeredirect.StoreRedirectPlugin;
+import io.flutter.plugins.urllauncher.UrlLauncherPlugin;
 
 /**
  * Generated file. Do not edit.
@@ -28,6 +29,7 @@ public final class GeneratedPluginRegistrant {
     SharedPreferencesPlugin.registerWith(registry.registrarFor("io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin"));
     SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));
     StoreRedirectPlugin.registerWith(registry.registrarFor("com.danieldallos.storeredirect.StoreRedirectPlugin"));
+    UrlLauncherPlugin.registerWith(registry.registrarFor("io.flutter.plugins.urllauncher.UrlLauncherPlugin"));
   }
 
   private static boolean alreadyRegisteredWith(PluginRegistry registry) {

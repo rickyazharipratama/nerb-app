@@ -1,9 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
-import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
+import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/Models/Response/SpecificDetailPlaceResponse.dart';
+import 'package:nerb/Views/Components/Collections/Related.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 class BottomDetailPlaces extends StatelessWidget  {
 
   final double currentOffsetPercent;
@@ -11,9 +13,10 @@ class BottomDetailPlaces extends StatelessWidget  {
   final ValueChanged<DragUpdateDetails> onVerticalDrugUpdate;
   final VoidCallback panDown;
   final bool isOpen;
-  final DetailNearbyPlaceResponse place;
+  final SpecificDetailPlaceResponse place;
+  final int distance;
 
-  BottomDetailPlaces({@required this.isOpen, @required this.currentOffsetPercent, @required this.animate, @required this.onVerticalDrugUpdate, @required this.panDown, @required this.place});
+  BottomDetailPlaces({@required this.isOpen, @required this.currentOffsetPercent, @required this.animate, @required this.onVerticalDrugUpdate, @required this.panDown, @required this.place, @required this.distance});
 
 
   @override
@@ -96,143 +99,255 @@ class BottomDetailPlaces extends StatelessWidget  {
   }
 
   Widget detailContent(BuildContext context){
-    return  ListView(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,  
-      children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).highlightColor
-                  ),
-                  child: Center(
-                    child: CachedNetworkImage(
-                      imageUrl: place.icon,
-                      alignment: Alignment.center,
-                      color: Theme.of(context).buttonColor,
-                      colorBlendMode: BlendMode.srcIn,
-                      errorWidget: (context,_,__)=> Icon(
-                        Icons.location_on,
-                        size: 25,
-                        color: Theme.of(context).buttonColor,
-                      ),
-                      width: 20,
-                      height: 20,
-                      fit: BoxFit.contain,
-                      placeholder: (context,_) => Icon(
-                        Icons.location_on,
-                        size: 20,
-                        color: Theme.of(context).buttonColor
-                      ),
-                    )
-                  ),
-                ),
-
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      place.title,
-                      style: Theme.of(context).primaryTextTheme.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+    return  Container(
+      height: 1 + ((MediaQuery.of(context).size.height - (134 + MediaQuery.of(context).padding.bottom)) * currentOffsetPercent),
+      child: ListView(
+        scrollDirection: Axis.vertical, 
+        children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Container(
+                    width: 75,
+                    height: 75,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).highlightColor
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: Separator(),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(top : 10, bottom : 10, left: 15, right: 15),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                  badge(context,
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    icon: Icons.directions,
-                    val: DistanceHelper.instance.getFormatDistance(context, (place.distance.toDouble()/1000)),
-                  ),
-                  
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10,left: 10, right: 10, bottom: 10),
                     child: Center(
-                      child: Container(
-                        width: 1,
-                        height: 50,
-                        color: Theme.of(context).highlightColor,
-                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+
+                            Icon(
+                              Icons.directions,
+                              size: 25,
+                              color: Theme.of(context).buttonColor,
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                 DistanceHelper.instance.getFormatDistance(context, (distance.toDouble() / 1000)),
+                                 style: Theme.of(context).primaryTextTheme.body1,
+                              ),
+                            )
+
+                        ],
+                      )
                     ),
                   ),
 
                   Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+
+                          Text(
+                            place.name,
+                            style: Theme.of(context).primaryTextTheme.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              place.location.address.text.replaceAll("<br/>", "\n"),
+                              style: Theme.of(context).primaryTextTheme.body1,
+                            ),
+                          )
+
+                        ],
+                      )
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10 , 5, 10, 5),
+              child: Separator(),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
                     child: badge(context,
-                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                      icon: Icons.room,
-                      val: place.vicinity.replaceAll("<br/>", "\n")
+                      padding: const EdgeInsets.fromLTRB(0, 5, 7.5, 5),
+                      icon: Icons.phone,
+                      val: place.contact != null ? place.contact.phone : List()
+                    ),
+                  ),
+                  Expanded(
+                    child: badge(context,
+                      padding: const EdgeInsets.fromLTRB(7.5, 5, 7.5, 5),
+                      val: place.contact != null ? place.contact.email : List(),
+                      icon: Icons.email
+                    ),
+                  ),
+                  Expanded(
+                    child: badge(context,
+                      padding: const EdgeInsets.fromLTRB(7.5, 5, 0, 5),
+                      val: place.contact != null ? place.contact.website : List(),
+                      icon: Icons.public
                     ),
                   )
-              ],
+                ],
+              ),
             ),
-          ),
 
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15 , 5, 15, 5),
+              child: Separator(),
+            ),
 
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15),
-            child: Separator(),
-          ),
-       ],
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  place.related != null ?
+                    place.related.publicTransport != null ?
+                      place.related.publicTransport.href != null ?
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, bottom: 10, right: 15, top: 20),
+                          child: Text(
+                            UserLanguage.of(context).label("publicTransportNearby"),
+                            style: Theme.of(context).primaryTextTheme.subtitle,
+                          )
+                        )
+                      :Container()
+                    :Container() 
+                  : Container(),
+
+                  place.related != null ?
+                    place.related.publicTransport != null ?
+                      place.related.publicTransport.href != null ?
+                        Related(
+                          href: place.related.publicTransport.href,
+                        )
+                      :Container()
+                    :Container() 
+                  : Container(),
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10, bottom: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  place.related != null ?
+                    place.related.recommended != null ?
+                      place.related.recommended.href != null ?
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15, bottom: 10, right: 15, top : 10),
+                        child: Text(
+                          UserLanguage.of(context).label("nearby"),
+                          style: Theme.of(context).primaryTextTheme.subtitle,
+                        )
+                      )
+                      :Container()
+                    :Container()
+                  :Container(),
+
+                  place.related != null ?
+                    place.related.recommended != null ?
+                      place.related.recommended.href != null ?
+                        Related(
+                          href: place.related.recommended.href,
+                        )
+                      :Container()
+                    :Container()
+                  :Container()
+                ],
+              ),
+            )
+         ],
+      ),
     );
   }
 
 
-  Widget badge(BuildContext context,{ EdgeInsets padding, IconData icon, String val}){
+  Widget badge(BuildContext context,{ List<SpecificDetailPlaceDetailContact> val, IconData icon, EdgeInsets padding :const  EdgeInsets.all(7.5)}){
     return Padding(
       padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Theme.of(context).highlightColor
-            ),
-            child: Center(
-              child: Icon(
-                icon,
-                color: Theme.of(context).buttonColor,
-                size: 25, 
+            
+            Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).highlightColor
+              ),
+              child: Center(
+                child: Icon(
+                  icon,
+                  color: Theme.of(context).buttonColor,
+                  size: 17,
+                ),
               ),
             ),
-          ),
 
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Text(
-              val,
-              style: Theme.of(context).primaryTextTheme.body1,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          )       
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: val.length > 0 ?
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: val.map((vl){
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: RichText(
+                          softWrap: true,
+                          text: vl.label.toLowerCase() == "website" ?
+                            TextSpan(
+                              style: Theme.of(context).textTheme.button,
+                              text: vl.value,
+                              recognizer: TapGestureRecognizer()..onTap = () async{
+                                if(await canLaunch(vl.value)){
+                                  await launch(vl.value,
+                                    forceWebView: false,
+                                    forceSafariVC: false
+                                  );
+                                }
+                              }
+                            )
+                            :TextSpan(
+                              style: Theme.of(context).primaryTextTheme.body1,
+                              text: vl.value
+                           )
+                        )
+                        
+                      );
+                  }).toList(),
+                )
+              : Text(
+                "-",
+                style: Theme.of(context).primaryTextTheme.body1,
+              )
+            )
         ],
       ),
     );

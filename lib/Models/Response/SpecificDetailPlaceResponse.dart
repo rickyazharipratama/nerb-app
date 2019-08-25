@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:nerb/Models/Response/CategoryPlaceResponse.dart';
 
 class SpecificDetailPlaceResponse{
@@ -6,7 +8,7 @@ class SpecificDetailPlaceResponse{
   String name;
   String placeId;
   String view;
-  CategoryPlaceResponse category;
+  List<CategoryPlaceResponse> category;
   String icon;
   SpecificDetailPlaceRelated related;
   SpecificDetailPlaceContact contact;
@@ -22,8 +24,12 @@ class SpecificDetailPlaceResponse{
     if(data['contacts'] != null){
       contact = SpecificDetailPlaceContact.fromJson(data['contacts'] as Map<String,dynamic>);
     }
+    category = List();
     if(data['categories'] != null){
-      category = CategoryPlaceResponse.fromJson(data['categories']);
+      (data['categories'] as List<dynamic>).forEach((cat){
+        print(jsonEncode(cat));
+        category.add(CategoryPlaceResponse.fromJson(cat));
+      });
     }
     icon = data['icon'];
     if(data['related'] != null){
@@ -144,20 +150,22 @@ class SpecificDetailPlaceContact{
   List<SpecificDetailPlaceDetailContact> website;
 
   SpecificDetailPlaceContact.fromJson(Map<String,dynamic> data){
+    phone = List();
+    email = List();
+    website = List();
     if(data != null){
-      phone = List();
       if(data['phone'] != null){
         (data['phone'] as List<dynamic>).forEach((phn){
           phone.add(SpecificDetailPlaceDetailContact.fromJson(phn));
         });
       }
-      email = List();
+      
       if(data['email'] != null){
         (data['email'] as List<dynamic>).forEach((em){
            email.add(SpecificDetailPlaceDetailContact.fromJson(em));
         });
       }
-      website = List();
+      
       if(data['website'] != null){
         (data['website'] as List<dynamic>).forEach((wb){
           website.add(SpecificDetailPlaceDetailContact.fromJson(wb));

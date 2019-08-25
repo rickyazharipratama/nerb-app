@@ -13,6 +13,8 @@ import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Models/Response/SpecificDetailPlaceResponse.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 import 'package:nerb/Views/Components/misc/BottomDetailPlaces.dart';
+import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DetailPlaces extends StatefulWidget {
   final DetailNearbyPlaceResponse place;
@@ -148,31 +150,147 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
               )
             ),
 
-            Positioned(
-              bottom: 60,
-              left: 20,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 5),
-                    child: Text(
-                      widget.place.title,
-                      style: Theme.of(context).textTheme.title,
+            viewState == 0 ?
+              Positioned(
+                bottom: 60,
+                left: 20,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10, bottom: 5),
+                      child: Text(
+                        detailPlace.name,
+                        style: Theme.of(context).textTheme.title,
+                      ),
                     ),
-                  ),
 
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Text(
-                      widget.place.vicinity.replaceAll("<br/>", "\n"),
-                      style: Theme.of(context).textTheme.body2,
-                    ),
-                  )
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        detailPlace.location.address.text.replaceAll("<br/>", "\n"),
+                        style: Theme.of(context).textTheme.body2,
+                      ),
+                    )
+                  ],
+                )
+              ) : Container(),
+
+            viewState == 0 ?
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: BottomDetailPlaces(
+                  place: detailPlace,
+                  animate: animateExplorer,
+                  currentOffsetPercent: currentOffsetPercent,
+                  isOpen: isdetailExpand,
+                  distance: widget.place.distance,
+                  onVerticalDrugUpdate: (DragUpdateDetails details){
+                    offset -= details.delta.dy;
+                    if(offset > MediaQuery.of(context).size.height - 100){
+                      offset = MediaQuery.of(context).size.height - 100;
+                    }else if (offset < 0){
+                      offset = 0;
+                    }
+                    if(mounted){
+                      setState(() {
+                        
+                      });
+                    }
+                  },
+                  panDown:() => animController?.stop(),
+                ),
+              ) : Container(),
+
+            viewState != 0 ?
+              Positioned.fill(
+                child: Shimmer.fromColors(
+                  baseColor: Theme.of(context).highlightColor,
+                  highlightColor: ColorCollections.shimmerHighlightColor,
+                  child: Stack(
+                    children: <Widget>[
+
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 35 + MediaQuery.of(context).padding.bottom,
+                          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10)
+                            )
+                          ),
+                        ),
+                      ),
+
+                      Positioned(
+                        bottom: 60,
+                        left: 20,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+
+                            Container(
+                              width: MediaQuery.of(context).size.width-100,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              width: MediaQuery.of(context).size.width-140,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              width: MediaQuery.of(context).size.width-160,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.white
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+
+                    ],
+                  ),
+                ),
+              ) : Container(),
+
+            viewState == 2 ? 
+              Positioned.fill(
+                child: ErrorPlaceholder(
+                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code : statusCoe),
+                  desc : CommonHelper.instance.getDescErrorByCode(context : context, code : statusCoe),
+                  buttonText: UserLanguage.of(context).button("retry") ,
+                  isNeedButton: true,
+                  callback: (){
+                    if(mounted){
+                      setState(() {
+                        isAlreadyReqeust = false;
+                        viewState = 1;
+                        initiateData();
+                      });
+                    }
+                  },
+                )
               )
-            ),
+            :Container(),
 
 
             Positioned(
@@ -201,32 +319,6 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                 ),
               ),
             ),
-
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: BottomDetailPlaces(
-                place: widget.place,
-                animate: animateExplorer,
-                currentOffsetPercent: currentOffsetPercent,
-                isOpen: isdetailExpand,
-                onVerticalDrugUpdate: (DragUpdateDetails details){
-                  offset -= details.delta.dy;
-                  if(offset > MediaQuery.of(context).size.height - 100){
-                    offset = MediaQuery.of(context).size.height - 100;
-                  }else if (offset < 0){
-                    offset = 0;
-                  }
-                  if(mounted){
-                    setState(() {
-                      
-                    });
-                  }
-                },
-                panDown:() => animController?.stop(),
-              ),
-            ),
-
           ],
         ),
       )

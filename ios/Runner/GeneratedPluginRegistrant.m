@@ -12,6 +12,7 @@
 #import <shared_preferences/SharedPreferencesPlugin.h>
 #import <sqflite/SqflitePlugin.h>
 #import <store_redirect/StoreRedirectPlugin.h>
+#import <url_launcher/UrlLauncherPlugin.h>
 
 @implementation GeneratedPluginRegistrant
 
@@ -25,6 +26,7 @@
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
   [StoreRedirectPlugin registerWithRegistrar:[registry registrarForPlugin:@"StoreRedirectPlugin"]];
+  [FLTUrlLauncherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTUrlLauncherPlugin"]];
 }
 
 @end

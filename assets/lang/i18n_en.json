@@ -39,7 +39,9 @@
         "version":"Version",
         "theme":"Theme",
         "wn":"What's new",
-        "choosePlace":"Choose your favorite place"
+        "choosePlace":"Choose your favorite place",
+        "publicTransportNearby": "Public Transport Nearby",
+        "nearby" : "Nearby"
     },
     "button":{
         "retry":"Retry",

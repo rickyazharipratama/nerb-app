@@ -38,6 +38,7 @@ dependencies:
   store_redirect: ^1.0.1
   crypto: ^2.1.2
   location_permissions: ^2.0.2
+  url_launcher: ^5.1.2
 
 dev_dependencies:
   flutter_test:
