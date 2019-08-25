@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 
@@ -170,8 +171,10 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
   onSuccessResponseFailed(Map<String,dynamic> data) {
     if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRetry){
-        isAlreadyRetry = true;
-        onRetrieveCategory();
+        Timer(const Duration(seconds: 2),(){
+          isAlreadyRetry = true;
+          onRetrieveCategory();
+        });
       }else{
         if(mounted){
           setState(() {

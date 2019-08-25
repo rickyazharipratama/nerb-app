@@ -13,6 +13,7 @@ class SpecificDetailPlaceResponse{
   SpecificDetailPlaceRelated related;
   SpecificDetailPlaceContact contact;
   SpecificDetailPlaceExtended extended;
+  List<SpecificDetailPlaceTag> tags;
 
   SpecificDetailPlaceResponse.fromJson(Map<String,dynamic> data){
     name = data['name'];
@@ -22,7 +23,9 @@ class SpecificDetailPlaceResponse{
       location = SpecificLocation.fromJson(data['location']);
     }
     if(data['contacts'] != null){
-      contact = SpecificDetailPlaceContact.fromJson(data['contacts'] as Map<String,dynamic>);
+      if(data['contacts'] is Map<String,dynamic>){
+        contact = SpecificDetailPlaceContact.fromJson(data['contacts'] as Map<String,dynamic>);
+      }
     }
     category = List();
     if(data['categories'] != null){
@@ -37,6 +40,12 @@ class SpecificDetailPlaceResponse{
     }
     if(data['extended'] != null){
       extended = SpecificDetailPlaceExtended.fromJson(data['extended']);
+    }
+    tags = List();
+    if(data['tags'] != null){
+      (data['tags'] as List<dynamic>).forEach((tg){
+        tags.add(SpecificDetailPlaceTag.fromJson(tg));
+      });
     }
   }
 }
@@ -205,5 +214,17 @@ class SpecificDetailPlaceExtendedOpeningHours{
     text = data['text'];
     label = data['label'];
     isOpen  = data['isOpen'];
+  }
+}
+
+class SpecificDetailPlaceTag{
+  String id;
+  String title;
+  String group;
+
+  SpecificDetailPlaceTag.fromJson(Map<String,dynamic> data){
+    id = data['id'];
+    title = data['title'];
+    group = data['group'];
   }
 }

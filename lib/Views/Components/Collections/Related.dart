@@ -78,9 +78,9 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
         )
         : Stack(
           children: <Widget>[
-            // Positioned.fill(
-            //   child: ShimmerPlaceNearYou(),
-            // ),
+            Positioned.fill(
+              child: ShimmerPlaceNearYou(),
+            ),
 
             viewState == 2 ?
             Positioned.fill(

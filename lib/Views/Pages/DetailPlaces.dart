@@ -15,6 +15,7 @@ import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 import 'package:nerb/Views/Components/misc/BottomDetailPlaces.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPlaces extends StatefulWidget {
   final DetailNearbyPlaceResponse place;
@@ -118,7 +119,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
           }else{
             Navigator.of(context).pop();
           }
-          return true;
+          return false;
         },
         child: Stack(
           children: <Widget>[
@@ -166,11 +167,108 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                       ),
                     ),
 
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(
-                        detailPlace.location.address.text.replaceAll("<br/>", "\n"),
-                        style: Theme.of(context).textTheme.body2,
+                    Container(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: Text(
+                                    detailPlace.location.address.text.replaceAll("<br/>", "\n"),
+                                    maxLines: 4,
+                                    style: Theme.of(context).textTheme.body2,
+                                  ),
+                                ),
+
+                                detailPlace.extended != null ?
+                                  detailPlace.extended.openingHours != null ?
+                                    Container(
+                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(30),
+                                        color: detailPlace.extended.openingHours.isOpen ? Colors.green : Colors.grey
+                                      ),
+                                      child: Text(
+                                          detailPlace.extended.openingHours.isOpen ?
+                                            UserLanguage.of(context).label("open")
+                                            : UserLanguage.of(context).label("close"),
+                                        style: TextStyle(
+                                          color: detailPlace.extended.openingHours.isOpen ? Colors.white : Color(0xff252525),
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 11
+                                        ),
+                                      ),
+                                    )
+                                  :Container()
+                                :Container()
+                              ],
+                            ),
+                          ),
+
+                          GestureDetector(
+                            onTap: () async{
+                               if(await canLaunch(detailPlace.view)){
+                                 launch(detailPlace.view,
+                                    forceSafariVC: false,
+                                    forceWebView: false
+                                 );
+                               }
+                            },
+                            child: Container(
+                              width: 150,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).backgroundColor,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30),
+                                  topLeft: Radius.circular(30)
+                                ),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+
+                                   Container(
+                                     width: 40,
+                                     height: 40,
+                                     decoration: BoxDecoration(
+                                       shape: BoxShape.circle,
+                                       color: Theme.of(context).highlightColor
+                                     ),
+                                     child: Center(
+                                       child: Icon(
+                                         Icons.map,
+                                         color: Theme.of(context).buttonColor,
+                                         size: 20,
+                                       ),
+                                     ),
+                                   ),
+
+                                   Flexible(
+                                     child: Padding(
+                                       padding: const EdgeInsets.only(left: 10, right: 15),
+                                       child: Text(
+                                         UserLanguage.of(context).label("lookOnMap"),
+                                         style: Theme.of(context).primaryTextTheme.body1,
+                                       ),
+                                     ),
+                                   )
+
+                                ],
+                              ),
+                            ),
+                          )
+
+                        ],
                       ),
                     )
                   ],
@@ -349,6 +447,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
         Timer(const Duration(seconds: 2), (){
            // request back
            isAlreadyReqeust = true;
+           initiateData();
         });
       }else{
         if(mounted){

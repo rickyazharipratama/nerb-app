@@ -159,13 +159,33 @@ class BottomDetailPlaces extends StatelessWidget  {
                           ),
 
                           Padding(
-                            padding: const EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(top: 5, bottom: 5),
                             child: Text(
                               place.location.address.text.replaceAll("<br/>", "\n"),
                               style: Theme.of(context).primaryTextTheme.body1,
                             ),
-                          )
+                          ),
 
+                          place.tags.length > 0 ?
+                            Wrap(
+                              crossAxisAlignment: WrapCrossAlignment.start,
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: place.tags.map((tg){
+                                return Container(
+                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Theme.of(context).highlightColor
+                                  ),
+                                  child: Text(
+                                    tg.title,
+                                    style: Theme.of(context).primaryTextTheme.body1,
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          :Container()
                         ],
                       )
                     ),
@@ -173,6 +193,21 @@ class BottomDetailPlaces extends StatelessWidget  {
                 ],
               ),
             ),
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15 , 5, 15, 5),
+              child: Separator(),
+            ),
+
+            place.extended != null ?
+              place.extended.openingHours != null ?
+                listBadge(context,
+                  title: UserLanguage.of(context).label("openingHour"),
+                  desc: place.extended.openingHours.text.replaceAll("<br/>", "\n"),
+                  icon: Icons.query_builder
+                )
+              :Container()
+            :Container(),
 
             Padding(
               padding: const EdgeInsets.fromLTRB(10 , 5, 10, 5),
@@ -285,6 +320,57 @@ class BottomDetailPlaces extends StatelessWidget  {
     );
   }
 
+  Widget listBadge(BuildContext context, {IconData icon, String title, String desc}){
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Theme.of(context).highlightColor,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Icon(
+                icon,
+                size: 20,
+                color: Theme.of(context).buttonColor,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 5),
+                  child: Text(
+                    title,
+                    style: Theme.of(context).primaryTextTheme.subhead,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 5),
+                  child: Text(
+                    desc,
+                    style: Theme.of(context).primaryTextTheme.body1,
+                  ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 
   Widget badge(BuildContext context,{ List<SpecificDetailPlaceDetailContact> val, IconData icon, EdgeInsets padding :const  EdgeInsets.all(7.5)}){
     return Padding(
@@ -324,7 +410,7 @@ class BottomDetailPlaces extends StatelessWidget  {
                           text: vl.label.toLowerCase() == "website" ?
                             TextSpan(
                               style: Theme.of(context).textTheme.button,
-                              text: vl.value,
+                              text: place.name,
                               recognizer: TapGestureRecognizer()..onTap = () async{
                                 if(await canLaunch(vl.value)){
                                   await launch(vl.value,

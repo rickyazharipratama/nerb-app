@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -189,8 +190,10 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
   onSuccessResponseFailed(Map<String,dynamic> data) {
     if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRetry){
-        isAlreadyRetry = true;
-        initiateData();
+        Timer(const Duration(seconds: 2),(){
+          isAlreadyRetry = true;
+          initiateData();
+        });
       }else{
         if(mounted){
           setState(() {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
@@ -343,9 +344,11 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
     if(requestMode == 0){
       if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
         if(!isAlreadyRetry){
-          isAlreadyRetry = true;
-          isProcessRequest = false;
-          initiateData();
+          Timer(const Duration(seconds:  2), (){
+            isAlreadyRetry = true;
+            isProcessRequest = false;
+            initiateData();
+          });
         }else{
           if(mounted){
             setState(() {

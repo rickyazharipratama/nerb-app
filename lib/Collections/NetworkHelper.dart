@@ -12,6 +12,7 @@ class NetworkHelper{
     dio = Dio(BaseOptions(
       baseUrl: APICollections.instance.baseMapEndpoint,
       connectTimeout: ConstantCollections.Connectiontimeout,
+      receiveTimeout: ConstantCollections.Connectiontimeout,
       responseType: ResponseType.json,
       receiveDataWhenStatusError: true,
     ));
@@ -25,7 +26,9 @@ class NetworkHelper{
       print("network error : " + e.type.toString());
       if(e.type == DioErrorType.RESPONSE){
         return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage:  e.response.statusMessage);
-      }else if(e.type == DioErrorType.CONNECT_TIMEOUT){
+      }else if(e.type == DioErrorType.CONNECT_TIMEOUT
+      || e.type == DioErrorType.SEND_TIMEOUT
+      || e.type == DioErrorType.RECEIVE_TIMEOUT){
         return checkExternalRequest();
       }
       return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
@@ -43,7 +46,9 @@ class NetworkHelper{
     }on DioError catch(e){
       if(e.type == DioErrorType.RESPONSE){
         return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage: e.response.statusMessage);
-      }else if(e.type == DioErrorType.CONNECT_TIMEOUT){
+      }else if(e.type == DioErrorType.CONNECT_TIMEOUT
+      || e.type == DioErrorType.SEND_TIMEOUT
+      || e.type == DioErrorType.RECEIVE_TIMEOUT){
         return Response(statusCode: 408, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
       }
       return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);

@@ -41,7 +41,11 @@
         "wn":"What's new",
         "choosePlace":"Choose your favorite place",
         "publicTransportNearby": "Public Transport Nearby",
-        "nearby" : "Nearby"
+        "nearby" : "Nearby",
+        "open" : "We're open now",
+        "close": "Sorry we're closed",
+        "openingHour": "Opening Hours",
+        "lookOnMap":"Look On Map"
     },
     "button":{
         "retry":"Retry",

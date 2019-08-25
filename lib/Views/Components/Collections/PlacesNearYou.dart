@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -182,8 +184,10 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
       setState((){
         if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
           if(!isAlreadyRetry){
-            isAlreadyRetry = true;
-            initiateData();
+            Timer(const Duration(seconds: 2),(){
+              isAlreadyRetry = true;
+              initiateData();
+            });
           }else{
             if(mounted){
               setState(() {

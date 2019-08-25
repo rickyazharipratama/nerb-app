@@ -41,7 +41,11 @@
         "wn":"Apa yang baru",
         "choosePlace":"Pilih tempat favorit kamu",
         "publicTransportNearby": "Transportasi Umum Terdekat",
-        "nearby" : "Sekitarnya"
+        "nearby" : "Sekitarnya",
+        "open" : "Kami buka sekarang",
+        "close": "Maaf, kami sudah tutup",
+        "openingHour": "Jam Buka",
+        "lookOnMap":"Lihat Di Peta"
     },
     "button":{
         "retry":"Coba Lagi",
