@@ -20,6 +20,7 @@ class _WrapperPermissionState extends State<WrapperPermission> {
   void initState() {
     super.initState();
     controller = PageController(initialPage: activeIndex);
+    CommonHelper.instance.settingSystemUi();
   }
 
   @override

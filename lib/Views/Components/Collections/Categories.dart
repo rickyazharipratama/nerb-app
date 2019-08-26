@@ -91,11 +91,11 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
                       }
                     },
                     title: CommonHelper.instance.getTitleErrorByCode(
-                      code: 500,
+                      code: statusCode,
                       context: context
                     ),
                     desc: CommonHelper.instance.getDescErrorByCode(
-                      code: 500,
+                      code: statusCode,
                       context: context
                     ),
                   )
@@ -168,8 +168,8 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
-    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+  onSuccessResponseFailed(Response res) {
+    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRetry){
         Timer(const Duration(seconds: 2),(){
           isAlreadyRetry = true;
@@ -178,7 +178,7 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
       }else{
         if(mounted){
           setState(() {
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
             viewState = 2;
           });
         }
@@ -186,7 +186,7 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
     }else{
       if(mounted){
         setState(() {
-          statusCode = data['statisCode'];
+          statusCode = res.statusCode;
           viewState = 2;
         });
       }

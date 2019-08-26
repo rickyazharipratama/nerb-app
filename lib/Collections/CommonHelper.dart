@@ -337,18 +337,24 @@ class CommonHelper{
   }
 
   Future<bool>checkMaintenance(BuildContext context) async{
-    print("maintenance request");
-    RemoteConfig rc = await fetchRemoteConfig();
-    bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
-    if(isMaintenance){
-      print("is maintenance");
-      NerbNavigator.instance.newClearRoute(context,
-        child: Maintenance()
-      );
+    try{
+      print("maintenance request");
+      RemoteConfig rc = await fetchRemoteConfig();
+      bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
+      if(isMaintenance){
+        print("is maintenance");
+        NerbNavigator.instance.newClearRoute(context,
+          child: Maintenance()
+        );
+      }
+      return isMaintenance;
+    }on Exception catch(e){
+      print("failed to fetch : "+ e.toString());
+      return false;
     }
-    return isMaintenance;
   }
   Future<bool> isMajorUpdateVersion(BuildContext context) async{
+    try{
     RemoteConfig rc = await fetchRemoteConfig();
     String tmp = rc.getString(ConstantCollections.REMOTE_CONFIG_UPDATE_VERSION);
     print(tmp);
@@ -369,5 +375,30 @@ class CommonHelper{
       }
     }
     return false;
+    }on Exception catch(e){
+      print("failed to fetch major version : "+e.toString());
+      return false;
+    }
+  }
+
+  settingSystemUi() async{
+    bool isDarkMode = await PreferenceHelper.instance.isHaveVal( key :ConstantCollections.PREF_IS_DARK_THEME);
+    if(isDarkMode){
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Color(0xff252525),
+        systemNavigationBarIconBrightness: Brightness.light
+      ));
+    }else{
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+        statusBarColor: Color(0x55000000),
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Color(0xfffefefe),
+        systemNavigationBarIconBrightness: Brightness.dark
+      ));
+    }
   }
 }

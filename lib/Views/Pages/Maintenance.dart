@@ -39,6 +39,7 @@ class MaintenanceState extends State<Maintenance>{
          );
        }
     });
+    CommonHelper.instance.settingSystemUi();
   }
 
   @override

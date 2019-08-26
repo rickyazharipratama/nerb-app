@@ -77,32 +77,40 @@ class _NerbAppState extends State<NerbApp> {
   }
 
   ThemeData toLightMode(){
-    isUsedDarkTheme = false;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Color(0xfffefefe),
-      systemNavigationBarIconBrightness: Brightness.dark
-    ));
+    print("light Theme");
+    PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: false);
+    if(mounted){
+      setState(() {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.light,
+          statusBarColor: Color(0x55000000),
+          statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Color(0xfffefefe),
+          systemNavigationBarIconBrightness: Brightness.dark
+        ));
+      });
+    }
     return NerbTheme.instance.lightTheme;
   }
 
   ThemeData toDarkMode(){
-    isUsedDarkTheme = true;
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.dark,
-      statusBarColor: Color(0x55000000),
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Color(0xff252525),
-      systemNavigationBarIconBrightness: Brightness.light
-    ));
+    print("dark Theme");
+    PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: true);
+    if(mounted){
+      setState(() {
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarBrightness: Brightness.dark,
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light,
+          systemNavigationBarColor: Color(0xff252525),
+          systemNavigationBarIconBrightness: Brightness.light
+        ));
+      });
+    }
     return NerbTheme.instance.darkTheme;
   }
 
   changingTheme(isDarkTHeme){
-    print("theme is dark : "+isDarkTHeme.toString());
-    PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: isDarkTHeme);
     if(mounted){
       setState(() {
         isUsedDarkTheme = isDarkTHeme;

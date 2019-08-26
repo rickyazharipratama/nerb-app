@@ -15,6 +15,7 @@ import 'package:nerb/Models/Names.dart';
 import 'package:nerb/Models/PlaceModel.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
+import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
 
 class PlacesListByCategoryModal extends StatefulWidget {
@@ -159,7 +160,36 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
                     ),
                   );
                 }).toList(),
-              ) : ShimmerListPlace(),
+              ) : Stack(
+                children: <Widget>[
+                  Positioned.fill(
+                    child: ShimmerListPlace(),
+                  ),
+                  viewState == 2 ?
+                    Positioned.fill(
+                      child: ErrorPlaceholder(
+                        desc: CommonHelper.instance.getTitleErrorByCode(
+                          code: statusCode,
+                          context: context
+                        ),
+                        title: CommonHelper.instance.getDescErrorByCode(
+                          code: statusCode,
+                          context: context
+                        ),
+                        buttonText: UserLanguage.of(context).button("retry"),
+                        callback: (){
+                          if(mounted){
+                            setState(() {
+                              viewState = 1;
+                              initiateData();
+                            });
+                          }
+                        },
+                      )
+                    )
+                  : Container()
+                ],
+              ),
             )
           ]
         ),
@@ -246,15 +276,15 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
-    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+  onSuccessResponseFailed(Response res) {
+    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRetry){
         isAlreadyRetry = true;
         initiateData();
       }else{
         if(mounted){
           setState(() {
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
             viewState = 2;
           });
         }
@@ -262,7 +292,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
     }else{
        if(mounted){
          setState(() {
-           statusCode = data['statusCode'];
+           statusCode = res.statusCode;
            viewState = 2;
          });
        }

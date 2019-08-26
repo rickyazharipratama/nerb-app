@@ -9,7 +9,7 @@ abstract class RequestResponseCallback{
 
   onSuccessResponseSuccess(Map<String,dynamic> data);
 
-  onSuccessResponseFailed(Map<String,dynamic> data);
+  onSuccessResponseFailed(Response data);
 
   onFailureWithResponse(Response res);
 

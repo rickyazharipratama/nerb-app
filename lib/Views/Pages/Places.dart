@@ -340,9 +340,9 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data){
+  onSuccessResponseFailed(Response res){
     if(requestMode == 0){
-      if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+      if(res.statusCode== ConstantCollections.STATUS_CODE_UNAUTHORIZE){
         if(!isAlreadyRetry){
           Timer(const Duration(seconds:  2), (){
             isAlreadyRetry = true;
@@ -354,7 +354,7 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
             setState(() {
               isProcessRequest = false;
               responseState = RequestResponseState.onSuccessResponseFailed;
-              statusCode = data['statusCode'];
+              statusCode = res.statusCode;
               viewState = 2;
             });
           }
@@ -364,13 +364,13 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
           setState(() {
             isProcessRequest = false;
             responseState = RequestResponseState.onSuccessResponseFailed;
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
             viewState = 2;
           });
         }
       }
     }else{
-      if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+      if(res.statusCode== ConstantCollections.STATUS_CODE_UNAUTHORIZE){
         if(!isAlreadyRetry){
           isAlreadyRetry = true;
           isProcessRequest = false;
@@ -392,8 +392,8 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
               showModalBottomSheet(
                 context: context,
                 builder: (context) => ErrorModal(
-                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code: data['statusCode']),
-                  desc: CommonHelper.instance.getDescErrorByCode(context: context, code: data['statusCode']),
+                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code: res.statusCode),
+                  desc: CommonHelper.instance.getDescErrorByCode(context: context, code: res.statusCode),
                 )
               );
             });
@@ -406,8 +406,8 @@ class _PlacesState extends State<Places> implements RequestResponseCallback{
             showModalBottomSheet(
               context: context,
               builder: (context) => ErrorModal(
-                title: CommonHelper.instance.getTitleErrorByCode(context: context, code: data['statusCode']),
-                desc: CommonHelper.instance.getDescErrorByCode(context: context, code: data['statusCode']),
+                title: CommonHelper.instance.getTitleErrorByCode(context: context, code: res.statusCode),
+                desc: CommonHelper.instance.getDescErrorByCode(context: context, code: res.statusCode),
               )
             );
           });

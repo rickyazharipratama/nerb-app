@@ -28,6 +28,7 @@ class _MajoUpdateState extends State<MajorUpdate> {
   void initState() {
     super.initState();
     initiateData();
+    CommonHelper.instance.settingSystemUi();
   }
 
   @override

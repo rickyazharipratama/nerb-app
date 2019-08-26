@@ -55,6 +55,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
         val: false
       );
     }
+    CommonHelper.instance.settingSystemUi();
   }
   
   @override

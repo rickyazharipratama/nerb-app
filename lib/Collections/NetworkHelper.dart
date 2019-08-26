@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -31,39 +30,35 @@ class NetworkHelper{
       || e.type == DioErrorType.RECEIVE_TIMEOUT){
         return checkExternalRequest();
       }
-      return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
+      return  Response(statusCode: ConstantCollections.STATUS_INTERNAL_SERVER_ERROR, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
     }
   }
 
-  Response checkExternalRequest() {
+  Future<Response<Map<String,dynamic>>> checkExternalRequest() async{
     try{
-      Response res;
-      dio.get("https://google.com")
+      return await dio.get("https://google.com")
       .then((res){
-        res = Response(statusCode:504, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
+        return Response(statusCode:ConstantCollections.STATUS_CODE_TIMEOUT_SERVER, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
       });
-      return res;
     }on DioError catch(e){
       if(e.type == DioErrorType.RESPONSE){
         return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage: e.response.statusMessage);
       }else if(e.type == DioErrorType.CONNECT_TIMEOUT
       || e.type == DioErrorType.SEND_TIMEOUT
       || e.type == DioErrorType.RECEIVE_TIMEOUT){
-        return Response(statusCode: 408, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
+        return Response(statusCode: ConstantCollections.STATUS_CODE_TIMEOUT_CLIENT, data: timeoutResopnse(), statusMessage: ConstantCollections.RESPONSE_TIMEOUT);
       }
-      return  Response(statusCode: 500, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
+      return  Response(statusCode: ConstantCollections.STATUS_INTERNAL_SERVER_ERROR, data: internalServerResponse(),statusMessage: ConstantCollections.RESPONSE_INTERNAL_SERVER_ERROR);
     }
   }
 
-  String timeoutResopnse(){
-    return json.encode({
+  Map<String,dynamic> timeoutResopnse(){
+    return {
       'status':'FAILED',
       'desc':'timeout',
       'code':'timeout'
-    });
+    };
   }
-
-
 
   Map<String,dynamic> internalServerResponse(){
     return {

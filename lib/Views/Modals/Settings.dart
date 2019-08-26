@@ -64,7 +64,7 @@ class _SettingsState extends State<Settings> {
               callback: changingTheme,
               title: UserLanguage.of(context).label("theme"),
               desc: UserLanguage.of(context).desc("themeSetting"),
-              isVal: MediaQuery.of(context).platformBrightness == Brightness.dark ? true : isDarkTheme,
+              isVal: isDarkTheme,
             ),
 
             Padding(

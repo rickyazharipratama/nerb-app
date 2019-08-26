@@ -127,8 +127,8 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
-    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+  onSuccessResponseFailed(Response res) {
+    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRequired){
         Timer(const Duration(seconds: 2), (){
           initiateData();
@@ -137,7 +137,7 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
         if(mounted){
           setState(() {
             isAlreadyRequired = false;
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
             viewState = 2;
           });
         }
@@ -146,7 +146,7 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
       if(mounted){
         setState(() {
           isAlreadyRequired = false;
-          statusCode = data['statusCode'];
+          statusCode = res.statusCode;
           viewState = 2;
         });
       }

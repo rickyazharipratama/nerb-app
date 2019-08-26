@@ -103,41 +103,19 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                 viewState == 2 ?
                   WrapperError(
                     buttonText: UserLanguage.of(context).button("retry"),
-                    title: responseState == RequestResponseState.onSuccessResponseFailed?
-                      CommonHelper.instance.getTitleErrorByStatus(
-                        context: context,
-                        status: errorStatus
-                      )
-                      : responseState == RequestResponseState.onFailureWithResponse
-                        || responseState == RequestResponseState.onfailure?
-                        CommonHelper.instance.getTitleErrorByCode(
-                          context: context,
-                          code: statusCode
-                        )
-                        : CommonHelper.instance.getTitleErrorByCode(
-                          context: context,
-                          code: statusCode
-                        )
-                    ,
-                    desc: responseState == RequestResponseState.onSuccessResponseFailed?
-                      CommonHelper.instance.getDescErrorByStatus(
-                        context: context,
-                        status: errorStatus
-                      )
-                      : responseState == RequestResponseState.onFailureWithResponse
-                        || responseState == RequestResponseState.onfailure ?
-                        CommonHelper.instance.getDescErrorByCode(
-                          context: context,
-                          code: statusCode
-                        )
-                        : CommonHelper.instance.getDescErrorByCode(
-                          context: context,
-                          code: statusCode
-                        ),
+                    title: CommonHelper.instance.getTitleErrorByCode(
+                      context: context,
+                      code: statusCode
+                    ),
+                    desc: CommonHelper.instance.getDescErrorByCode(
+                      context: context,
+                      code: statusCode
+                    ),
                     height: 140,
                     callback: (){
                       if(mounted){
                         setState(() {
+                          viewState = 1;
                           initiateData();
                         });
                       }
@@ -179,10 +157,10 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
+  onSuccessResponseFailed(Response res) {
     if(mounted){
       setState((){
-        if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+        if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
           if(!isAlreadyRetry){
             Timer(const Duration(seconds: 2),(){
               isAlreadyRetry = true;
@@ -191,7 +169,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
           }else{
             if(mounted){
               setState(() {
-                statusCode = data['statusCode'];
+                statusCode = res.statusCode;
                 responseState = RequestResponseState.onSuccessResponseFailed;
                 viewState = 2;
               });
@@ -200,7 +178,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
         }else{
           if(mounted){
             setState(() {
-              statusCode = data['statusCode'];
+              statusCode = res.statusCode;
               responseState = RequestResponseState.onSuccessResponseFailed;
               viewState = 2;
             });

@@ -441,8 +441,8 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
-    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+  onSuccessResponseFailed(Response res) {
+    if(res.statusCode== ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyReqeust){
         Timer(const Duration(seconds: 2), (){
            // request back
@@ -454,7 +454,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
           setState(() {
             isAlreadyReqeust = false;
             viewState = 2;
-            statusCoe = data['statusCode'];
+            statusCoe = res.statusCode;
           });
         }
       }
@@ -463,7 +463,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
         setState(() {
           isAlreadyReqeust = false;
           viewState = 2;
-          statusCoe = data['statusCode'];
+          statusCoe = res.statusCode;
         });
       }
     }

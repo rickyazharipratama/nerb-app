@@ -12,6 +12,7 @@ class SettingSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("switcher val : "+isVal.toString());
     return Container(
       padding: const EdgeInsets.fromLTRB(10,15,10,10),
       child: Column(

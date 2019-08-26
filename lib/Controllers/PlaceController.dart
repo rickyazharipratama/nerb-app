@@ -26,7 +26,7 @@ class PlaceController{
             callback.onSuccessResponseSuccess(json);
           }else{
             json['statusCode'] = res.statusCode;
-            callback.onSuccessResponseFailed(json);
+            callback.onSuccessResponseFailed(res);
           }
         }else{
           callback.onFailureWithResponse(res);
@@ -54,7 +54,7 @@ class PlaceController{
              callback.onSuccessResponseSuccess(data);
            }else{
              data['statusCode'] = res.statusCode;
-             callback.onSuccessResponseFailed(data);
+             callback.onSuccessResponseFailed(res);
            }
         }else{
           callback.onFailureWithResponse(res);
@@ -78,7 +78,7 @@ class PlaceController{
           if(res.data['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(res.data);
           }else{
-            callback.onSuccessResponseFailed(res.data);
+            callback.onSuccessResponseFailed(res);
           }
         }else{
           callback.onFailureWithResponse(res);
@@ -103,7 +103,7 @@ class PlaceController{
             callback.onSuccessResponseSuccess(res.data);
           }else{
             res.data['statusCode'] = res.statusCode;
-            callback.onSuccessResponseFailed(res.data);
+            callback.onSuccessResponseFailed(res);
           }
         }else{
           callback.onFailureWithResponse(res);

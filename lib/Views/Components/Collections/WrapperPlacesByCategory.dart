@@ -98,8 +98,14 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
           isNeedButton: false,
       )
     : viewState == 2 ? ErrorPlaceholder(
-      title: UserLanguage.of(context).errorTitle("general"),
-      desc: UserLanguage.of(context).errorDesc("general"),
+      title: CommonHelper.instance.getTitleErrorByCode(
+        code: statusCode,
+        context: context
+      ),
+      desc: CommonHelper.instance.getDescErrorByCode(
+        code: statusCode,
+        context: context
+      ),
       buttonText: UserLanguage.of(context).button("retry"),
       callback: (){
         viewState = 1;
@@ -187,8 +193,8 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
   }
 
   @override
-  onSuccessResponseFailed(Map<String,dynamic> data) {
-    if(data['statusCode'] == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
+  onSuccessResponseFailed(Response res) {
+    if(res.statusCode ==  ConstantCollections.STATUS_CODE_UNAUTHORIZE){
       if(!isAlreadyRetry){
         Timer(const Duration(seconds: 2),(){
           isAlreadyRetry = true;
@@ -198,7 +204,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
         if(mounted){
           setState(() {
             viewState = 2;
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
           });
         }
       }
@@ -206,7 +212,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
       if(mounted){
           setState(() {
             viewState = 2;
-            statusCode = data['statusCode'];
+            statusCode = res.statusCode;
           });
         }
     }
