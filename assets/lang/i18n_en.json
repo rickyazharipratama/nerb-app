@@ -25,7 +25,7 @@
         "maintenance":"Sorry for the inconvenience, we are currently making modifications in our system for better experiences using this application. Thanks for your patience!",
         "about":"nerb is an application that can help you to find interesting places or places that you want to discover.",
         "update":"The latest version of this application is available on the market, please update the application for better experience.",
-        "splash":"Discover interesting places around you",
+        "splash":"Discover interesting places in your nearby area",
         "emptyPlace":"we cannot find the places from this category around you.",
         "locationPermission":"In order to use this application's features, we need your permission to access location service on your device.",
         "locationService":"In order to use this application's features, we need you to enable the location service."

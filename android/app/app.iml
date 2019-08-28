@@ -113,7 +113,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../../build/app/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/app/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/app/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/../../build/app/reports" />
       <excludeFolder url="file://$MODULE_DIR$/../../build/app/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 28 Platform" jdkType="Android SDK" />
