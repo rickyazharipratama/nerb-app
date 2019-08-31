@@ -71,7 +71,6 @@ class _NerbAppState extends State<NerbApp> {
         const Locale(ConstantCollections.LANGUAGE_EN),
         const Locale(ConstantCollections.LANGUAGE_ID)
       ],
-      debugShowCheckedModeBanner: false,
     ): Material(
       color: Colors.white,
     );
