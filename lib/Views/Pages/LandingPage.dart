@@ -1,61 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
+import 'package:nerb/PresenterViews/LandingPageView.dart';
+import 'package:nerb/Presenters/LandingPagePresenter.dart';
 import 'package:nerb/Views/Components/Collections/Categories.dart';
 import 'package:nerb/Views/Components/Collections/Favorite.dart';
 import 'package:nerb/Views/Components/Collections/PlacesNearYou.dart';
-import 'package:nerb/Views/Modals/MinorUpdate.dart';
-import 'package:nerb/Views/Modals/Settings.dart';
 
 class LandingPage extends StatefulWidget {
+  final LandingPagePresenter presenter = LandingPagePresenter();
+
   @override
   _LandingPageState createState() => new _LandingPageState();
 }
 
-class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin{
+class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin, LandingPageView{
 
-  AnimationController animController;
-  Animation anim;
-  bool isSettingActive = false;
-  bool isPlaceActive = false;
-  BuildContext parentContext;
-  bool isCategoryRetrieve = false;
   @override
   void initState() {
     super.initState();
-    animController = AnimationController(
-      vsync: this, 
-      duration: const Duration(milliseconds: 700));
-    anim = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
-      curve: Curves.easeIn,
-      parent: animController
-    ))..addListener((){
-      if(mounted){
-        setState(() {
-          
-        });
-      }
-    });
-    initiateData();
-  }
-
-  initiateData() async{
-    bool isMaintenance = await CommonHelper.instance.checkMaintenance(context);
-    bool isMinorUpdate = await PreferenceHelper.instance.isHaveVal(
-      key: ConstantCollections.PREF_IS_MINOR_UPDATE
-    );
-    if(isMinorUpdate){
-      await showModalBottomSheet(
-        context: context,
-        builder: (context) => MinorUpdate()
-      );
-      PreferenceHelper.instance.setBoolValue(
-        key: ConstantCollections.PREF_IS_MINOR_UPDATE,
-        val: false
-      );
-    }
-    CommonHelper.instance.settingSystemUi();
+    widget.presenter.setView = this;
+    setAnimationController(this);
+    setAnimation(controller: animationController);
+    widget.presenter.initiateData();
   }
   
   @override
@@ -95,8 +61,8 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
               }else{
                 if(mounted){
                   setState(() {
-                    isSettingActive = true;
-                    animController.forward();
+                    setSettingActive = true;
+                    animationController.forward();
                     showSettingMenu();
                   });
                 }
@@ -111,8 +77,8 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
               child: Center(
                 child: AnimatedIcon(
                   icon: AnimatedIcons.menu_close,
-                  progress: anim,
-                  color: Color.lerp(Theme.of(context).buttonColor,Colors.red,anim.value),
+                  progress: animation,
+                  color: Color.lerp(Theme.of(context).buttonColor,Colors.red,animation.value),
                   size: 25,
                 ),
               ),
@@ -124,7 +90,7 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
       backgroundColor: Theme.of(context).backgroundColor,
       body:  Builder(
         builder: (childContext){
-          parentContext = childContext;
+          setContext = childContext;
           return ListView(
             children: <Widget>[
               Favorite(
@@ -137,8 +103,8 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
                 onDataRetrieved: (){
                   if(mounted){
                     setState(() {
-                      print("masuk sini");
-                      isCategoryRetrieve = true;
+                      debugPrint("masuk sini");
+                      setCategoryRetrieve = true;
                     });
                   }
                 },
@@ -151,43 +117,50 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
     );
   }
   
+  @override
   openingPlaceList(){
     if(mounted){
       setState(() {
-        isPlaceActive = true;
-        animController.forward();
+        setPlaceActive = true;
+        animationController.forward();
       });
     }
   }
 
+  @override
   closingPlaceList(){
     if(mounted){
       setState(() {
-        isPlaceActive = false;
-        animController.reverse();
+        setPlaceActive = false;
+        animationController.reverse();
         Navigator.of(context, rootNavigator: true).pop();
       });
     }
   }
 
-  showSettingMenu(){
-    showBottomSheet(
-      context: parentContext,
-      builder: (context){
-        return Settings();
-      },
-      backgroundColor: Colors.white,
-      elevation: 0,
-    );
-  }
-
+  @override
   closeSettingMenu(){
     if(mounted){
       setState(() {
-          isSettingActive = false;
-          animController.reverse();
+          setSettingActive = false;
+          animationController.reverse();
           Navigator.of(context, rootNavigator: true).pop();
       });
     }
+  }
+
+  @override
+  void onAnimationListening() {
+    super.onAnimationListening();
+    if(mounted){
+      setState(() {
+        
+      });
+    }
+  }
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 }

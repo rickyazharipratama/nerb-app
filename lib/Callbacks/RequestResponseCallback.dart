@@ -7,12 +7,12 @@ enum RequestResponseState{onSuccessResponseSuccess, onSuccessResponseFailed, onF
 
 abstract class RequestResponseCallback{
 
-  onSuccessResponseSuccess(Map<String,dynamic> data);
+  void onSuccessResponseSuccess(Map<String,dynamic> data);
 
-  onSuccessResponseFailed(Response data);
+  void onSuccessResponseFailed(Response data);
 
-  onFailureWithResponse(Response res);
+  void onFailureWithResponse(Response res);
 
-  onfailure();
+  void onfailure();
 
 }

@@ -61,8 +61,8 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            minifyEnabled true
-            useProguard true
+            minifyEnabled false
+            useProguard false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-nerb.pro'
         }
 

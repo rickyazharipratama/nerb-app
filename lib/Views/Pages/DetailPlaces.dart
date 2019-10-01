@@ -1,16 +1,12 @@
-import 'dart:async';
 import 'dart:math';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Models/Response/SpecificDetailPlaceResponse.dart';
+import 'package:nerb/PresenterViews/DetailPlaceView.dart';
+import 'package:nerb/Presenters/DetailPlacePresenter.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 import 'package:nerb/Views/Components/misc/BottomDetailPlaces.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
@@ -20,93 +16,54 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailPlaces extends StatefulWidget {
   final DetailNearbyPlaceResponse place;
   final String img;
+  final DetailPlacePresenter detailPlacePresenter = DetailPlacePresenter();
 
   DetailPlaces({@required this.place , this.img});
   @override
   _DetailPlacesState createState() => new _DetailPlacesState();
 }
 
-class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMixin implements RequestResponseCallback{
+class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMixin,DetailPlaceView{
 
 
-  AnimationController animController;
-  Animation anim;
-  double offset = 0;
-  double currentOffsetPercent = 0;
-  bool isdetailExpand = false;
-  String img;
- 
-  int viewState = 1;
-  int  statusCoe = 500;
-  bool isAlreadyReqeust = false;
-  SpecificDetailPlaceResponse detailPlace;
 
   @override
   void initState() {
     super.initState();
     print("src image : " + widget.img);
     if(widget.img == null){
-      img = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.id);
+      setImg = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.id);
       if(img == null){
         if(widget.place.category.title.contains("/")){
           List<String> plcs = widget.place.category.title.split("/");
           for(int i= 0; i < plcs.length; i++){
-            img = CommonHelper.instance.getPlaceImageByCategory(category: plcs[i].toLowerCase());
+            setImg = CommonHelper.instance.getPlaceImageByCategory(category: plcs[i].toLowerCase());
             if(img != null){
               i = plcs.length;
             }
           }
         }else{
-          img = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.title.toLowerCase());
+          setImg = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.title.toLowerCase());
         }
       }
     }else{
-      img = widget.img;
+      setImg = widget.img;
     }
-    initiateData();
+    widget.detailPlacePresenter.setView = this;
+    widget.detailPlacePresenter.setHref = widget.place.href;
+    widget.detailPlacePresenter.initiateData();
+  }
+
+  @override
+  void onAnimationListening() {
+    super.onAnimationListening();
+    debugPrint(anim.value.toString());
+    setOffset = anim.value;
+    setCurrentOffsetPercent = max(0, min(1,offset/((MediaQuery.of(context).size.height - 100)-35)));
     if(mounted){
       setState(() {
       });
     }
-  }
-
-  initiateData(){
-    PlaceController.instance.getNearbyPlaceByNext(
-      callback: this,
-      language: "en",
-      next: widget.place.href
-    );
-  }
-
-  animateExplorer(isOpen){
-    print("operating : "+ isOpen.toString());
-    print("initial offset : "+offset.toString());
-    animController = AnimationController(
-      vsync: this, 
-      duration: Duration(milliseconds: 1+(500 *(isdetailExpand ? currentOffsetPercent : (1 - currentOffsetPercent))).toInt()),
-    );
-    if(anim != null){
-      anim = null;
-    }
-    anim = Tween<double>(begin: offset, end: isOpen ? (MediaQuery.of(context).size.height - 100) - 35 : 0).animate(CurvedAnimation(
-      curve: Curves.ease,
-      parent: animController
-    ))..addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        print("anim Completed");
-        isdetailExpand = isOpen;
-      }
-    })..addListener((){
-      if(mounted){
-        setState(() {
-          offset = anim.value;
-          currentOffsetPercent =  max(0 , min(1,offset/((MediaQuery.of(context).size.height - 100) - 35)));
-          print(offset);
-          print(currentOffsetPercent);
-        });
-      }
-    });
-    animController.forward();
   }
 
   @override
@@ -114,8 +71,11 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
     return Material(
       child: WillPopScope(
         onWillPop: () async{
-          if(isdetailExpand){
-            animateExplorer(false);
+          if(isDetailExpanded){
+            animationExplorer(context,
+              isOpen: false,
+              tick: this
+            );
           }else{
             Navigator.of(context).pop();
           }
@@ -126,8 +86,11 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
             Positioned.fill(
               child : GestureDetector(
                 onTap: (){
-                  if(isdetailExpand){
-                    animateExplorer(false);
+                  if(isDetailExpanded){
+                    animationExplorer(context,
+                      isOpen: false,
+                      tick: this
+                    );
                   }
                 },
                 child: Hero(
@@ -162,7 +125,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       child: Text(
-                        detailPlace.name,
+                        widget.detailPlacePresenter.response.name,
                         style: Theme.of(context).textTheme.title,
                       ),
                     ),
@@ -182,26 +145,26 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Text(
-                                    detailPlace.location.address.text.replaceAll("<br/>", "\n"),
+                                    widget.detailPlacePresenter.response.location.address.text.replaceAll("<br/>", "\n"),
                                     maxLines: 4,
                                     style: Theme.of(context).textTheme.body2,
                                   ),
                                 ),
 
-                                detailPlace.extended != null ?
-                                  detailPlace.extended.openingHours != null ?
+                                widget.detailPlacePresenter.response.extended != null ?
+                                  widget.detailPlacePresenter.response.extended.openingHours != null ?
                                     Container(
                                       padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(30),
-                                        color: detailPlace.extended.openingHours.isOpen ? Colors.green : Colors.grey
+                                        color: widget.detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.green : Colors.grey
                                       ),
                                       child: Text(
-                                          detailPlace.extended.openingHours.isOpen ?
+                                          widget.detailPlacePresenter.response.extended.openingHours.isOpen ?
                                             UserLanguage.of(context).label("open")
                                             : UserLanguage.of(context).label("close"),
                                         style: TextStyle(
-                                          color: detailPlace.extended.openingHours.isOpen ? Colors.white : Color(0xff252525),
+                                          color: widget.detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.white : Color(0xff252525),
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11
                                         ),
@@ -215,8 +178,8 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
 
                           GestureDetector(
                             onTap: () async{
-                               if(await canLaunch(detailPlace.view)){
-                                 launch(detailPlace.view,
+                               if(await canLaunch(widget.detailPlacePresenter.response.view)){
+                                 launch(widget.detailPlacePresenter.response.view,
                                     forceSafariVC: false,
                                     forceWebView: false
                                  );
@@ -280,17 +243,22 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                 bottom: 0,
                 left: 0,
                 child: BottomDetailPlaces(
-                  place: detailPlace,
-                  animate: animateExplorer,
+                  place: widget.detailPlacePresenter.response,
+                  animate: (val){
+                    animationExplorer(context,
+                      isOpen: val,
+                      tick: this
+                    );
+                  },
                   currentOffsetPercent: currentOffsetPercent,
-                  isOpen: isdetailExpand,
+                  isOpen: isDetailExpanded,
                   distance: widget.place.distance,
                   onVerticalDrugUpdate: (DragUpdateDetails details){
-                    offset -= details.delta.dy;
+                    setOffset = offset - details.delta.dy;
                     if(offset > MediaQuery.of(context).size.height - 100){
-                      offset = MediaQuery.of(context).size.height - 100;
+                      setOffset = MediaQuery.of(context).size.height - 100;
                     }else if (offset < 0){
-                      offset = 0;
+                      setOffset = 0;
                     }
                     if(mounted){
                       setState(() {
@@ -298,7 +266,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                       });
                     }
                   },
-                  panDown:() => animController?.stop(),
+                  panDown:() => animationController?.stop(),
                 ),
               ) : Container(),
 
@@ -373,16 +341,14 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
             viewState == 2 ? 
               Positioned.fill(
                 child: ErrorPlaceholder(
-                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code : statusCoe),
-                  desc : CommonHelper.instance.getDescErrorByCode(context : context, code : statusCoe),
+                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code : widget.detailPlacePresenter.statusCode),
+                  desc : CommonHelper.instance.getDescErrorByCode(context : context, code : widget.detailPlacePresenter.statusCode),
                   buttonText: UserLanguage.of(context).button("retry") ,
                   isNeedButton: true,
                   callback: (){
                     if(mounted){
                       setState(() {
-                        isAlreadyReqeust = false;
-                        viewState = 1;
-                        initiateData();
+                        widget.detailPlacePresenter.reloadRequest();
                       });
                     }
                   },
@@ -424,68 +390,31 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
   }
 
   @override
-  void dispose() {
-    animController?.dispose();
-    super.dispose();
+  BuildContext getCurrentContext() {
+    return context;
   }
 
   @override
-  onFailureWithResponse(Response res) {
-     if(mounted){
-       setState(() {
-         isAlreadyReqeust = false;
-         statusCoe = res.statusCode;
-         viewState = 2;
-       });
-     }
-  }
-
-  @override
-  onSuccessResponseFailed(Response res) {
-    if(res.statusCode== ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-      if(!isAlreadyReqeust){
-        Timer(const Duration(seconds: 2), (){
-           // request back
-           isAlreadyReqeust = true;
-           initiateData();
-        });
-      }else{
-        if(mounted){
-          setState(() {
-            isAlreadyReqeust = false;
-            viewState = 2;
-            statusCoe = res.statusCode;
-          });
-        }
-      }
-    }else{
-      if(mounted){
-        setState(() {
-          isAlreadyReqeust = false;
-          viewState = 2;
-          statusCoe = res.statusCode;
-        });
-      }
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String,dynamic> data) {
-     detailPlace = SpecificDetailPlaceResponse.fromJson(data['result']);
-     if(mounted){
-       setState(() {
-         viewState = 0;
-         isAlreadyReqeust = false;
-       });
-     }
-  }
-
-  @override
-  onfailure() {
+  void onError() {
+    super.onError();
     if(mounted){
-      statusCoe = 500;
-      viewState = 2;
-      isAlreadyReqeust = false;
+      setState(() {
+      });
     }
+  }
+
+  @override
+  void onSuccess() {
+    super.onSuccess();
+    if(mounted){
+      setState(() {
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 }
