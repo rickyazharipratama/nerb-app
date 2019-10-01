@@ -4,44 +4,34 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Views/Pages/Splash.dart';
+import 'package:nerb/PresenterViews/MaintenanceView.dart';
+import 'package:nerb/Presenters/MaintenancePresenter.dart';
 
 class Maintenance extends StatefulWidget{
+  final MaintenancePresenter presenter = MaintenancePresenter();
 
   @override
   MaintenanceState createState() => MaintenanceState();
 
 }
 
-class MaintenanceState extends State<Maintenance>{
+class MaintenanceState extends State<Maintenance> with MaintenanceView{
 
   Timer timer;
   RemoteConfig rc;
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
   }
 
-  initiateData()async{
-    rc = await CommonHelper.instance.fetchRemoteConfig();
-    timer = Timer.periodic(const Duration(minutes: 3),(timer) async{
-       rc = await CommonHelper.instance.fetchRemoteConfig();
-       bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
-       print("timer running");
-       if(!isMaintenance){
-         print("navigate to splash");
-         NerbNavigator.instance.newClearRoute(context,
-            child: Splash()
-         );
-       }
-    });
-    CommonHelper.instance.settingSystemUi();
+  @override
+  BuildContext currentContext() {
+    return context;
   }
-
+  
   @override
   Widget build(BuildContext context) {
     CommonHelper.instance.forcePortraitOrientation();
@@ -54,8 +44,8 @@ class MaintenanceState extends State<Maintenance>{
             child: Center(
               child: Icon(
                 Icons.location_off,
-                color: Theme.of(context).brightness == Brightness.dark ? ColorCollections.titleColor : ColorCollections.shimmerBaseColor,
-                size: MediaQuery.of(context).size.width * 3 /  4,
+                color: getColorIcon(context),
+                size: getIconSize(context)
               ),
             ),
           ),
@@ -99,5 +89,4 @@ class MaintenanceState extends State<Maintenance>{
     timer.cancel();
     super.dispose();
   }
-
 }

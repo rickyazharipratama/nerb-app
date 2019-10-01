@@ -1,29 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:location_permissions/location_permissions.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Views/Pages/LandingPage.dart';
-import 'package:nerb/Views/Pages/WrapperPermission.dart';
+import 'package:nerb/PresenterViews/NoLocationServiceView.dart';
+import 'package:nerb/Presenters/NoLocationServicePresenter.dart';
 
 class NoLocationServices extends StatefulWidget {
-
+  final NoLocationServicePresenter presenter = NoLocationServicePresenter();
   @override
   _NoLocationServicesState createState() => new _NoLocationServicesState();
 
 }
 
-class _NoLocationServicesState extends State<NoLocationServices> {
+class _NoLocationServicesState extends State<NoLocationServices> with NoLocationServiceView{
 
   Timer timer;
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
+  }
+
+  @override
+  BuildContext currentContext() {
+    return context;
   }
 
   @override
@@ -38,8 +41,8 @@ class _NoLocationServicesState extends State<NoLocationServices> {
             child: Center(
               child: Icon(
                 Icons.location_off,
-                color: Theme.of(context).brightness == Brightness.dark ? ColorCollections.titleColor : ColorCollections.shimmerBaseColor,
-                size: MediaQuery.of(context).size.width * 3 /  4,
+                color: getIconColor(),
+                size: getIconSize(),
               ),
             ),
           ),
@@ -76,23 +79,6 @@ class _NoLocationServicesState extends State<NoLocationServices> {
         ],
       ),
     );
-  }
-
-  initiateData() async{
-    timer = Timer.periodic(const Duration(seconds: 5), (timer) async{
-       print("location service");
-       if(await LocationPermissions().checkServiceStatus() == ServiceStatus.enabled){
-         if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.granted){
-           NerbNavigator.instance.newClearRoute(context,
-              child: LandingPage()
-           );
-         }else{
-           NerbNavigator.instance.newClearRoute(context,
-            child: WrapperPermission()
-           );
-         }
-       }
-    });
   }
 
   @override

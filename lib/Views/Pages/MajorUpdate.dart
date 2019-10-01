@@ -7,19 +7,21 @@ import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/Response/AppVersion.dart';
+import 'package:nerb/PresenterViews/MajorUpdateView.dart';
+import 'package:nerb/Presenters/MajorUpdatePresenter.dart';
 import 'package:store_redirect/store_redirect.dart';
 
 class MajorUpdate extends StatefulWidget {
 
   final bool isMajor;
-
+  final MajorUpdatePresenter presenter = MajorUpdatePresenter();
   MajorUpdate({this.isMajor : true});
 
   @override
   _MajoUpdateState createState() => new _MajoUpdateState();
 }
 
-class _MajoUpdateState extends State<MajorUpdate> {
+class _MajoUpdateState extends State<MajorUpdate> with MajorUpdateView{
 
   RemoteConfig rc;
   AppVersion version;
@@ -27,8 +29,19 @@ class _MajoUpdateState extends State<MajorUpdate> {
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
     CommonHelper.instance.settingSystemUi();
+    if(mounted){
+      setState(() {
+        
+      });
+    }
+  }
+
+  @override
+  BuildContext currentContext() {
+    return context;
   }
 
   @override
@@ -43,8 +56,8 @@ class _MajoUpdateState extends State<MajorUpdate> {
             child: Center(
               child: Icon(
                 Icons.cloud_download,
-                color: Theme.of(context).brightness == Brightness.dark ? ColorCollections.titleColor : ColorCollections.shimmerBaseColor,
-                size: MediaQuery.of(context).size.width * 3 /  4,
+                color: getIconColor(),
+                size: getIconSize(),
               ),
             ),
           ),
@@ -138,11 +151,7 @@ class _MajoUpdateState extends State<MajorUpdate> {
                             highlightColor: ColorCollections.shimmerHighlightColor,
                             splashColor: ColorCollections.shimmerBaseColor,
                             borderRadius: BorderRadius.circular(5),
-                            onTap: (){
-                              StoreRedirect.redirect(
-                                androidAppId: "com.teamCoret.nerb",
-                              );
-                            },
+                            onTap: goToMarket,
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Theme.of(context).buttonColor,
@@ -169,17 +178,4 @@ class _MajoUpdateState extends State<MajorUpdate> {
       ),
     );
   }
-
-  initiateData() async{
-    rc = await CommonHelper.instance.fetchRemoteConfig();
-    String tmp = rc.getString(ConstantCollections.REMOTE_CONFIG_UPDATE_VERSION);
-    if(mounted){
-      setState(() {
-        if(tmp != null){
-          version = AppVersion.fromJson(jsonDecode(tmp));
-        }
-      });
-    }
-  }
-
 }
