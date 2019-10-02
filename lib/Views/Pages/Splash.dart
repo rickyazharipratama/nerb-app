@@ -1,38 +1,28 @@
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:location_permissions/location_permissions.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Views/Pages/LandingPage.dart';
-import 'package:nerb/Views/Pages/NoLocationServices.dart';
-import 'package:nerb/Views/Pages/WrapperPermission.dart';
+import 'package:nerb/PresenterViews/SplashView.dart';
+import 'package:nerb/Presenters/SplashPresenter.dart';
 
 class Splash extends StatefulWidget {
-
+  final SplashPresenter presenter = SplashPresenter();
   @override
   _SplashState createState() => new _SplashState();
 }
 
-class _SplashState extends State<Splash> {
-
-  bool isNeedGetKey = false;
-  bool isNeedGetCategory = false;
-  bool isNeedGetPlaces = false;
-
-  int hereApiVersion;
-  int lastSavedCategoriesVersion;
-  int lastSavedPlaceVersion;
-
-  bool isError = false;
-  RemoteConfig remoteConfig;
-  bool isNeedLoading = true;
+class _SplashState extends State<Splash> with SplashView{
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
+  }
+
+  @override
+  BuildContext currentContext() {
+    return context;
   }
 
   @override
@@ -81,36 +71,5 @@ class _SplashState extends State<Splash> {
         ]
       ) 
     );
-  }
-
-  initiateData() async{
-    bool isMaintenance = await CommonHelper.instance.checkMaintenance(context);
-    bool isMajorUpdate = await CommonHelper.instance.isMajorUpdateVersion(context);
-    if(!isMaintenance){
-      if(!isMajorUpdate){
-        await openLAstAct();
-      }
-    }
-  }
-
-  openLAstAct() async{
-    if(!isError){
-      if(await LocationPermissions().checkServiceStatus() == ServiceStatus.enabled){
-        if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.granted){
-          NerbNavigator.instance.newClearRoute(context,
-            child: LandingPage()
-          );   
-        }else{
-          NerbNavigator.instance.newClearRoute(context,
-            child: WrapperPermission()
-          );
-        }
-      }else{
-        //should request services
-        NerbNavigator.instance.newClearRoute(context,
-          child: NoLocationServices()
-        );
-      }
-    }
   }
 }

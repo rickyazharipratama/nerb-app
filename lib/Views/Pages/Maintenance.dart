@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/PresenterViews/MaintenanceView.dart';

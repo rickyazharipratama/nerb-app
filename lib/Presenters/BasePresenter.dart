@@ -15,6 +15,10 @@ class BasePresenter{
     return await CommonHelper.instance.checkMaintenance(context);
   }
 
+  Future<bool> isMajorUpdate(BuildContext context) async{
+    return await CommonHelper.instance.isMajorUpdateVersion(context);
+  }
+
   activateMinorUpdate(BuildContext context){
     PreferenceHelper.instance.setBoolValue(
       key: ConstantCollections.PREF_IS_MINOR_UPDATE,

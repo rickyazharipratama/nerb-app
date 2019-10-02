@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/PresenterViews/WebPageView.dart';
+import 'package:nerb/Presenters/WebPagePresenter.dart';
 import 'package:nerb/Views/Components/misc/WebviewPlaceholder.dart';
 import 'package:nerb/Views/Pages/BasePushPage.dart';
 
 class WebPage extends StatefulWidget {
   final String title;
   final String url;
+  final WebPagePresenter presenter = WebPagePresenter();
 
-  WebPage({@required this.title, @required this.url});
+  WebPage({@required this.title, @required this.url}){
+    presenter.setUrl = url;
+  }
 
   @override
   _WebPageState createState() => new _WebPageState();
 }
 
-class _WebPageState extends State<WebPage> {
+class _WebPageState extends State<WebPage> with WebPageView{
 
-  Rect _rect;
-  FlutterWebviewPlugin wv;
 
   @override
   void initState() {
     super.initState();
-    wv = FlutterWebviewPlugin()
-      ..onUrlChanged.listen(urlChanged)
-      ..onStateChanged.listen(onStateChanged);  
-    wv.launch(
-      widget.url,
-      clearCache: true,
-      clearCookies: true,
-      rect: Rect.zero 
-    );
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
   }
 
   @override
@@ -39,42 +34,28 @@ class _WebPageState extends State<WebPage> {
     return BasePushPage(
       title: widget.title,
       child: WebviewPlaceholder(
-        onRectChanged: onRectchanged,
+        onRectChanged: onRectChanged,
         child: Container(),
       ),
       closeAction: () async{
-        await wv.close();
-        wv.dispose();
+        await widget.presenter.webview.close();
+        widget.presenter.webview.dispose();
         Navigator.of(context).pop();
       },
     );
   }
 
-  urlChanged(url){
-    //url changed
+  @override
+  requestResize(){
+    super.requestResize();
+    widget.presenter.resizeWebview();
   }
 
-  onStateChanged(WebViewStateChanged state){
-    if(state.type == WebViewState.startLoad){
-      wv.resize(_rect);
-    }
-  }
-
-  onRectchanged(rect){
-    if(_rect == null){
-      _rect = rect;
-    }else{
-      if(_rect != rect){
-        _rect = rect;
-        wv.resize(_rect);
-      }
-    }
-  }
 
   @override
   void dispose() {
-    wv.close();
-    wv.dispose();
+    widget.presenter.webview.close();
+    widget.presenter.webview.dispose();
     super.dispose();
   }
 }

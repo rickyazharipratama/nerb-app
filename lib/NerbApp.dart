@@ -5,11 +5,15 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbTheme.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguageLocalizationDelegate.dart';
+import 'package:nerb/Presenters/NerbAppPresenter.dart';
 import 'package:nerb/Views/Pages/Splash.dart';
+
+import 'PresenterViews/NerbAppView.dart';
 
 class NerbApp extends StatefulWidget {
 
   final String language;
+  final NerbAppPresenter presenter = NerbAppPresenter();
   NerbApp({@required this.language});
 
   @visibleForTesting
@@ -21,52 +25,42 @@ class NerbApp extends StatefulWidget {
   static _NerbAppState of(BuildContext context) => context.ancestorStateOfType(const TypeMatcher<_NerbAppState>());
 }
 
-class _NerbAppState extends State<NerbApp> {
-
-  UserLanguageLocalizationDelegate ulDelegate;
-  bool isUsedDarkTheme = false;
+class _NerbAppState extends State<NerbApp> with NerbAppView{
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
   }
 
-  initiateData() async{
-    String lang = await PreferenceHelper.instance.getStringValue(key: ConstantCollections.PREF_LANGUAGE);
-    bool theme = await PreferenceHelper.instance.isHaveVal(key: ConstantCollections.PREF_IS_DARK_THEME);
+  @override
+  BuildContext currentContext(){
+    return context;
+  }
+
+  @override
+  notifyChange(){
     if(mounted){
       setState(() {
-        ulDelegate = UserLanguageLocalizationDelegate(locale: Locale(lang));
-        isUsedDarkTheme = theme;
-        setStyleStatusAndNavigation();
+        
       });
     }
   }
 
-  setStyleStatusAndNavigation(){
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarBrightness: isUsedDarkTheme ? Brightness.dark : Brightness.light,
-      statusBarColor: isUsedDarkTheme ? Colors.transparent : Color(0x55000000),
-      statusBarIconBrightness: isUsedDarkTheme ? Brightness.light : Brightness.dark,
-      systemNavigationBarColor: isUsedDarkTheme ? Color(0xff252525) : Color(0xfffefefe),
-      systemNavigationBarIconBrightness: isUsedDarkTheme? Brightness.light : Brightness.dark
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ulDelegate != null ?
+    return widget.presenter.ul != null ?
     MaterialApp(
-      locale: ulDelegate.locale,
+      locale: widget.presenter.ul.locale,
       home: Splash(),
       localizationsDelegates: [
-        ulDelegate,
+        widget.presenter.ul,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate
       ],
-      theme: isUsedDarkTheme ? toDarkMode() : toLightMode(),
+      theme: widget.presenter.isUsedDarkTheme ? turnOffTheLight(widget.presenter.setToDarkMode) : bringTheLight(widget.presenter.setToLightMode),
       supportedLocales: [
         const Locale(ConstantCollections.LANGUAGE_EN),
         const Locale(ConstantCollections.LANGUAGE_ID)
@@ -76,53 +70,21 @@ class _NerbAppState extends State<NerbApp> {
     );
   }
 
-  ThemeData toLightMode(){
-    print("light Theme");
-    PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: false);
-    if(mounted){
-      setState(() {
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.light,
-          statusBarColor: Color(0x55000000),
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Color(0xfffefefe),
-          systemNavigationBarIconBrightness: Brightness.dark
-        ));
-      });
-    }
-    return NerbTheme.instance.lightTheme;
-  }
-
-  ThemeData toDarkMode(){
-    print("dark Theme");
-    PreferenceHelper.instance.setBoolValue(key: ConstantCollections.PREF_IS_DARK_THEME, val: true);
-    if(mounted){
-      setState(() {
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.light,
-          systemNavigationBarColor: Color(0xff252525),
-          systemNavigationBarIconBrightness: Brightness.light
-        ));
-      });
-    }
-    return NerbTheme.instance.darkTheme;
-  }
-
+  @override
   changingTheme(isDarkTHeme){
     if(mounted){
       setState(() {
-        isUsedDarkTheme = isDarkTHeme;
+        widget.presenter.setUsedDarkTheme = isDarkTHeme;
       });
     }
   }
 
+  @override
   onLocaleChanged(Locale lc){
-    print("masuk disini");
+    debugPrint("masuk disini");
     if(mounted){
       setState(() {
-        ulDelegate = UserLanguageLocalizationDelegate(locale: lc);
+        widget.presenter.setUl = UserLanguageLocalizationDelegate(locale: lc);
       });
     }
   }

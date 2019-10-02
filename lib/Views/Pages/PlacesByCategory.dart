@@ -7,12 +7,15 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbTheme.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
+import 'package:nerb/PresenterViews/PlaceByCategoryView.dart';
+import 'package:nerb/Presenters/PlaceByCategoryPresenter.dart';
 import 'package:nerb/Views/Components/Collections/WrapperPlacesByCategory.dart';
 
 class PlacesByCategory extends StatefulWidget {
 
   final String imageUrl;
   final FirestoreCategory category;
+  final PlaceByCategoryPresenter presenter = PlaceByCategoryPresenter();
 
   PlacesByCategory({@required this.imageUrl, @required this.category});
 
@@ -20,14 +23,13 @@ class PlacesByCategory extends StatefulWidget {
   _PlacesByCategoryState createState() => new _PlacesByCategoryState();
 }
 
-class _PlacesByCategoryState extends State<PlacesByCategory> {
-
-  String image;
+class _PlacesByCategoryState extends State<PlacesByCategory> with PlaceByCategoryView{
 
   @override
   void initState() {
     super.initState();
-    image = widget.imageUrl;
+    widget.presenter.setView = this;
+    setImage = widget.imageUrl;
   }
 
   @override

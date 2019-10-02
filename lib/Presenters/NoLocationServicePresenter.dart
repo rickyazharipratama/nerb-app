@@ -25,6 +25,7 @@ class NoLocationServicePresenter extends BasePresenter{
            view.goToWrapperPermission();
          }
        }
+      }
+    );
   }
-
 }

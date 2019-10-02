@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/Response/AppVersion.dart';
 import 'package:nerb/PresenterViews/MajorUpdateView.dart';
 import 'package:nerb/Presenters/MajorUpdatePresenter.dart';
-import 'package:store_redirect/store_redirect.dart';
 
 class MajorUpdate extends StatefulWidget {
 
