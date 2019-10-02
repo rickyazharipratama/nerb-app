@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/NerbTheme.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguageLocalizationDelegate.dart';
 import 'package:nerb/Presenters/NerbAppPresenter.dart';
 import 'package:nerb/Views/Pages/Splash.dart';
