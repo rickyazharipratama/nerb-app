@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/NerbApp.dart';
+import 'package:nerb/PresenterViews/Modal/SettingView.dart';
+import 'package:nerb/Presenters/Modal/SettingPresenter.dart';
 import 'package:nerb/Views/Components/Buttons/SettingButton.dart';
 import 'package:nerb/Views/Components/misc/Language.dart';
 import 'package:nerb/Views/Components/misc/Radius.dart';
@@ -13,27 +12,28 @@ import 'package:nerb/Views/Pages/WebPage.dart';
 
 class Settings extends StatefulWidget {
 
+  final SettingPresenter presenter = SettingPresenter();
   Settings();
 
   @override
   _SettingsState createState() => new _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
-
-  bool isDarkTheme = false;
+class _SettingsState extends State<Settings> with SettingView{
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
   }
 
-  initiateData() async{
-    bool isTheme = await PreferenceHelper.instance.isHaveVal(key: ConstantCollections.PREF_IS_DARK_THEME);
+  @override
+  void notifyState() {
+    super.notifyState();
     if(mounted){
       setState(() {
-        isDarkTheme = isTheme;
+        
       });
     }
   }
@@ -61,7 +61,7 @@ class _SettingsState extends State<Settings> {
             Language(),
 
             SettingSwitcher(
-              callback: changingTheme,
+              callback: widget.presenter.changingTheme,
               title: UserLanguage.of(context).label("theme"),
               desc: UserLanguage.of(context).desc("themeSetting"),
               isVal: isDarkTheme,
@@ -92,7 +92,7 @@ class _SettingsState extends State<Settings> {
             ),
 
             Padding(
-              padding: const prefix0.EdgeInsets.fromLTRB(10, 10, 10, 10),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Text(
                 UserLanguage.of(context).desc("about"),
                 softWrap: true,
@@ -138,19 +138,8 @@ class _SettingsState extends State<Settings> {
                 );
               },
             )
-
         ],
       ),
     );
   }
-
-  changingTheme(isVal){
-    if(mounted){
-      setState(() {
-        isDarkTheme = isVal;
-        NerbApp.of(context).changingTheme(isVal);
-      });
-    }
-  }
-
 }

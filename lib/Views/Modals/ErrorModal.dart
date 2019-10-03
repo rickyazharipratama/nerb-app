@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/FontSizeHelper.dart';
 
-class ErrorModal extends StatelessWidget {
+class ErrorModal extends StatelessWidget{
 
   final String title;
   final String desc;

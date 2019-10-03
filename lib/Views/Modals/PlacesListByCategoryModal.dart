@@ -1,18 +1,11 @@
-
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
-import 'package:nerb/Models/FirestoreCategory.dart';
 import 'package:nerb/Models/Names.dart';
 import 'package:nerb/Models/PlaceModel.dart';
+import 'package:nerb/PresenterViews/Modal/PlaceListByCategoryModalView.dart';
+import 'package:nerb/Presenters/Modal/PlaceListByCategoryModalPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerListPlace.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
@@ -22,29 +15,24 @@ class PlacesListByCategoryModal extends StatefulWidget {
 
   final ValueChanged<List<PlaceModel>> onSelected;
   final PlaceModel placeHolder;
+  final PlaceListByCategoryModalPresenter presenter = PlaceListByCategoryModalPresenter();
 
-  PlacesListByCategoryModal({@required this.onSelected, @required this.placeHolder});
+  PlacesListByCategoryModal({@required this.onSelected, @required this.placeHolder}){
+    presenter.setPlaceholder = placeHolder;
+    presenter.setSelected = onSelected;
+  }
 
   @override
   _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
 }
 
-class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> implements RequestResponseCallback{
-
-
-  List<FirestoreCategory> categories;
-  List<PlaceModel> places;
-
-  int viewState = 1;
-  bool isAlreadyRetry = false;
-  int statusCode = 500;
-  int currPlaceVersion = -1;
-  bool isNeedUpdate = false;
+class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> with PlaceListByCategoryModalView{
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
   }
 
   @override
@@ -73,9 +61,9 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
 
             Expanded(
               child:  viewState == 0 ? ListView(
-                children: categories.map((item){
+                children: widget.presenter.categories.map((item){
                   List<PlaceModel> plcs = List();
-                  plcs.addAll(places.where((plc)=> plc.categories.contains(item.id)));
+                  plcs.addAll(widget.presenter.places.where((plc)=> plc.categories.contains(item.id)));
                   List<Names> sections;
                   
                   if(plcs != null){
@@ -141,7 +129,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
                                             spacing: 5,
                                             children: sctPlace.map((pct){
                                               return PlaceItem(
-                                                callback: onTappedPlaceItem,
+                                                callback: widget.presenter.onTappedPlaceItem,
                                                 place: pct,
                                               );
                                             }).toList(),
@@ -169,19 +157,19 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
                     Positioned.fill(
                       child: ErrorPlaceholder(
                         desc: CommonHelper.instance.getTitleErrorByCode(
-                          code: statusCode,
+                          code: widget.presenter.statusCode,
                           context: context
                         ),
                         title: CommonHelper.instance.getDescErrorByCode(
-                          code: statusCode,
+                          code: widget.presenter.statusCode,
                           context: context
                         ),
                         buttonText: UserLanguage.of(context).button("retry"),
                         callback: (){
                           if(mounted){
                             setState(() {
-                              viewState = 1;
-                              initiateData();
+                              setViewState = 1;
+                              widget.presenter.initiateData();
                             });
                           }
                         },
@@ -196,164 +184,27 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> i
       ),
     );
   }
-  
-  initiateData() async{
-    RemoteConfig rc = await CommonHelper.instance.fetchRemoteConfig();
-    int lastPlacesVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_PLACE_VERSION
-    );
-    if(lastPlacesVersion > 0){
-      currPlaceVersion = rc.getInt(ConstantCollections.REMOTE_CONFIG_PLACES_VERSION);
-      if(lastPlacesVersion  < currPlaceVersion){
-        isNeedUpdate = true;
-      }
-    }
 
-    if(!isNeedUpdate){
-      List<String> plcs = await PreferenceHelper.instance.getStringListValue(
-        key: ConstantCollections.PREF_LAST_PLACE
-      );
-      if(plcs.length > 0){
-        List<FirestoreCategory> tmpCategories = List();
-        List<String> cat = await PreferenceHelper.instance.getStringListValue(
-          key: ConstantCollections.PREF_LAST_CATEGORY
-        );
-        cat.forEach((ct){
-          tmpCategories.add(FirestoreCategory(jsonDecode(ct)));
-        });
-        List<PlaceModel> tmpPlace = List();
-        plcs.forEach((plc){
-          tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
-        });
-        if(mounted){
-          setState(() {
-            if(categories == null){
-              categories = List();
-            }else{
-              categories.clear();
-            }
-
-            if(places == null){
-              places = List();
-            }else{
-              places.clear();
-            }
-
-            categories.addAll(tmpCategories);
-            places.addAll(tmpPlace);
-            viewState = 0;
-          });
-        }
-      }else{
-        PlaceController.instance.getPlacesCategory(
-          callback: this,
-          lang: UserLanguage.of(context).currentLanguage
-        );
-      }
-    }else{
-      PlaceController.instance.getPlacesCategory(
-        callback: this,
-        lang: UserLanguage.of(context).currentLanguage
-      );
-    }
-  }
-
-  onTappedPlaceItem(item){
-    List<PlaceModel>lst = List();
-    lst.add(widget.placeHolder);
-    lst.add(item);
-    widget.onSelected(lst);
+  @override
+  BuildContext currentContext(){
+    return context;
   }
 
   @override
-  onFailureWithResponse(Response res) {
+  onSuccess(){
+    super.onSuccess();
     if(mounted){
       setState(() {
-        statusCode = res.statusCode;
-        viewState = 2;
+          setViewState = 0;
       });
     }
   }
 
   @override
-  onSuccessResponseFailed(Response res) {
-    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-      if(!isAlreadyRetry){
-        isAlreadyRetry = true;
-        initiateData();
-      }else{
-        if(mounted){
-          setState(() {
-            statusCode = res.statusCode;
-            viewState = 2;
-          });
-        }
-      }
-    }else{
-       if(mounted){
-         setState(() {
-           statusCode = res.statusCode;
-           viewState = 2;
-         });
-       }
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String,dynamic> data) async{
-    List<String>strTmp = List();
-    for(Map<String, dynamic> dt in data['result'] as List<dynamic>){
-      strTmp.add(jsonEncode(dt));
-    }
-
-    PreferenceHelper.instance.setStringListValue(
-      key: ConstantCollections.PREF_LAST_PLACE,
-      value: strTmp
-    );
-
-    if(isNeedUpdate){
-      PreferenceHelper.instance.setIntValue(
-        key: ConstantCollections.PREF_LAST_PLACE,
-        value: currPlaceVersion
-      );
-    }
-
-    if(places == null){
-      places = List();
-    }else{
-      places.clear();
-    }
-
-    List<String> cat = await PreferenceHelper.instance.getStringListValue(
-      key: ConstantCollections.PREF_LAST_CATEGORY
-    );
-
-    if(categories == null){
-      categories = List();
-    }else{
-      categories.clear();
-    }
-
-    cat.forEach((ct){
-      categories.add(FirestoreCategory(jsonDecode(ct)));
-    });
-
-    strTmp.forEach((st){
-      places.add(PlaceModel.fromStore(jsonDecode(st)));
-    });
+  onError(){
     if(mounted){
       setState(() {
-        viewState = 0;
-      });
-    }
-  }
-
-  @override
-  onfailure() {
-    if(mounted){
-      setState(() {
-        statusCode = 500;
-        viewState = 2;
+        setViewState = 2;
       });
     }
   }
