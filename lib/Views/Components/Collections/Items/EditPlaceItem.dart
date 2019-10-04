@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Models/PlaceModel.dart';
+import 'package:nerb/PresenterViews/Components/Collections/Items/EditPlaceItemView.dart';
+import 'package:nerb/Presenters/Components/Collections/Items/EditPlaceItemPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 
 class EditPlaceItem extends StatefulWidget {
 
-  final PlaceModel place;
-  final ValueChanged onDeleteClick;
 
-  EditPlaceItem({this.place,this.onDeleteClick});
+  final EditPlaceItemPresenter presenter = EditPlaceItemPresenter();
+
+  EditPlaceItem({PlaceModel place, @required ValueChanged onDeleteClick}){
+    presenter.setPlace = place;
+    presenter.setOnDeleteClick = onDeleteClick;
+  }
 
   @override
   _EditPlaceItemState createState() => new _EditPlaceItemState();
 }
 
-class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProviderStateMixin{
+class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProviderStateMixin,EditPlaceItemView{
 
-  AnimationController animController;
-  Animation anim;
-  
   @override
   void initState() {
     super.initState();
-    animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 120));
-    anim = Tween<double>(begin: -0.02 , end: 0.02).animate(CurvedAnimation(
-      parent: animController,
-      curve: Curves.easeIn,
-      reverseCurve: Curves.easeOut
-    ))..addListener((){
-      if(mounted){
-        setState((){
-          
-        });
-      }
-    })..addStatusListener((status){
-      if(status == AnimationStatus.completed){
-        animController.reverse();
-      }else if(status == AnimationStatus.dismissed){
-        animController.forward();
-      }
-    });
-    animController.forward();
+    widget.presenter.setView = this;
+    widget.presenter.initiateData();
+    setAnimController(this);
+  }
+
+  @override
+  notifyState() {
+    if(mounted){
+      setState(() {
+        
+      });
+    }
   }
 
   @override
@@ -52,14 +47,14 @@ class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProvider
         child: Stack(
           children: <Widget>[
             Positioned.fill(
-              child: PlaceItem(place: widget.place, callback: (place){}),
+              child: PlaceItem(place: widget.presenter.place, callback: (place){}),
             ),
             Positioned(
               top: 0,
               right: 0,
               child: InkWell(
                 onTap: (){
-                  widget.onDeleteClick(widget.place);
+                  widget.presenter.onDeleteClick(widget.presenter.place);
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(

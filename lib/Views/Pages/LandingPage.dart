@@ -103,7 +103,6 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
                 onDataRetrieved: (){
                   if(mounted){
                     setState(() {
-                      debugPrint("masuk sini");
                       setCategoryRetrieve = true;
                     });
                   }

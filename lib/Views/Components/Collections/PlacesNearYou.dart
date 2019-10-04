@@ -1,17 +1,11 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
-import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
+import 'package:nerb/PresenterViews/Components/Collections/PlaceNearYouView.dart';
+import 'package:nerb/Presenters/Components/PlaceNearYouPresenter.dart';
 import 'package:nerb/Views/Components/Buttons/FlexibleButton.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
@@ -27,21 +21,15 @@ class PlacesNearYou extends StatefulWidget {
   _PlacesNearYouState createState() => new _PlacesNearYouState();
 }
 
-class _PlacesNearYouState extends State<PlacesNearYou> implements RequestResponseCallback {
+class _PlacesNearYouState extends State<PlacesNearYou> with PlaceNearYouView{
 
-  int viewState = 1;
-  bool isAlreadyRetry = false;
-  int statusCode = 500;
-  String errorStatus;
-  NearbyPlaceResponse nearbyPlace;
-
-  RequestResponseState responseState;
-  Location currLoc;
+  PlaceNearYouPresenter presenter = PlaceNearYouPresenter();
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -65,7 +53,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
             height: 230,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              children: nearbyPlace.nearbyPlaces.map((place){
+              children: presenter.nearby.nearbyPlaces.map((place){
                 if(place.id == ConstantCollections.SEE_ALL){
                   return FlexibleButton(
                     title: UserLanguage.of(context).button("seeAll"),
@@ -74,7 +62,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                     height: 230,
                     callback: (){
                       List<DetailNearbyPlaceResponse> tmp = List();
-                      tmp.addAll(nearbyPlace.nearbyPlaces);
+                      tmp.addAll(presenter.nearby.nearbyPlaces);
                       tmp.removeLast();
                       NerbNavigator.instance.push(context,
                         child: Places(
@@ -105,18 +93,18 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
                     buttonText: UserLanguage.of(context).button("retry"),
                     title: CommonHelper.instance.getTitleErrorByCode(
                       context: context,
-                      code: statusCode
+                      code: presenter.statusCode
                     ),
                     desc: CommonHelper.instance.getDescErrorByCode(
                       context: context,
-                      code: statusCode
+                      code: presenter.statusCode
                     ),
                     height: 140,
                     callback: (){
                       if(mounted){
                         setState(() {
-                          viewState = 1;
-                          initiateData();
+                          setViewState = 1;
+                          presenter.initiateData();
                         });
                       }
                     },
@@ -130,91 +118,26 @@ class _PlacesNearYouState extends State<PlacesNearYou> implements RequestRespons
     );
   }
 
-
-  initiateData() async{
-    currLoc = Location();
-    LocationData  dt = await currLoc.getLocation();
-    print("fetch from request");
-    int radius = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
-    await PlaceController.instance.getNearbyPlace(
-      callback: this,
-      location: dt.latitude.toString()+","+dt.longitude.toString(),
-      language: UserLanguage.of(context).currentLanguage,
-      radius: radius.toString()
-    );
-    
-  }
+  @override
+  BuildContext currentContext() => context;
 
   @override
-  onFailureWithResponse(Response res) {
+  void onError(){
+    super.onError();
     if(mounted){
       setState(() {
-        statusCode = res.statusCode;
-        viewState = 2;
-        responseState = RequestResponseState.onFailureWithResponse;
+        setViewState = 2;
       });
     }
   }
 
   @override
-  onSuccessResponseFailed(Response res) {
-    if(mounted){
-      setState((){
-        if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-          if(!isAlreadyRetry){
-            Timer(const Duration(seconds: 2),(){
-              isAlreadyRetry = true;
-              initiateData();
-            });
-          }else{
-            if(mounted){
-              setState(() {
-                statusCode = res.statusCode;
-                responseState = RequestResponseState.onSuccessResponseFailed;
-                viewState = 2;
-              });
-            }
-          }
-        }else{
-          if(mounted){
-            setState(() {
-              statusCode = res.statusCode;
-              responseState = RequestResponseState.onSuccessResponseFailed;
-              viewState = 2;
-            });
-          }
-        }
-      });
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String,dynamic> data) async{
-    print("masuk sini");
-    nearbyPlace = NearbyPlaceResponse.fromJson(data['result']);
-    nearbyPlace.setLastFetch = DateTime.now().millisecondsSinceEpoch;
-
-    LocationData dt = await currLoc.getLocation();
-    PreferenceHelper.instance.setStringValue(
-      key: ConstantCollections.PREF_LAST_LOCATION,
-      value: dt.latitude.toString()+","+dt.longitude.toString()
-    );
-    isAlreadyRetry = false;
+  void onSuccess() {
+    super.onSuccess();
     if(mounted){
       setState(() {
-        viewState = 0;
-        responseState = RequestResponseState.onSuccessResponseSuccess;
-      });
-    }
-  }
-
-  @override
-  onfailure() {
-    if(mounted){
-      setState(() {
-        viewState = 2;
-        statusCode = 500;
-        responseState = RequestResponseState.onfailure;
+        debugPrint("success fetch nearby place");
+        setViewState = 0;
       });
     }
   }

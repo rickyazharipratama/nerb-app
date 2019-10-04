@@ -1,19 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
+import 'package:nerb/PresenterViews/Components/Collections/FavoriteView.dart';
+import 'package:nerb/Presenters/Components/FavoritePresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/AddFavoritesItem.dart';
 import 'package:nerb/Views/Components/Collections/Items/EditPlaceItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimerFavorite.dart';
 import 'package:nerb/Views/Components/misc/Separator.dart';
-import 'package:nerb/Views/Modals/ErrorModal.dart';
-import 'package:nerb/Views/Modals/PlacesListByCategoryModal.dart';
 import 'package:nerb/Views/Pages/Places.dart';
 
 import 'Items/PlaceItem.dart';
@@ -30,17 +27,17 @@ class Favorite extends StatefulWidget {
   _FavoriteState createState() => new _FavoriteState();
 }
 
-class _FavoriteState extends State<Favorite> {
+class _FavoriteState extends State<Favorite> with FavoriteView{
 
-  List<PlaceModel> favorites = new List();
-  int viewState = 1;
-
-  bool isEditMode = false;
+  FavoritePresenter presenter = FavoritePresenter();
 
   @override
   void initState() {
     super.initState();
-        initiateData();
+      presenter.setView = this;
+      presenter.setOpeningPlace = widget.openingPlace;
+      presenter.setClosingPlace = widget.closingPlace;
+      presenter.initiateData();
     }
     
   @override
@@ -69,15 +66,15 @@ class _FavoriteState extends State<Favorite> {
                   children: <Widget>[
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: favorites.getRange(0, 4).map((fav){
+                      children: presenter.favorites.getRange(0, 4).map((fav){
                         return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ?
                             AddFavoritesItem(
-                              callback: showPlaceList,
+                              callback: presenter.showPlaceList,
                               place: fav,
                             )
                             : isEditMode ?
                                 EditPlaceItem(
-                                  onDeleteClick: onDeletePlaceClicked,
+                                  onDeleteClick: presenter.onDeletePlaceClicked,
                                   place: fav,
                                 )
                               : PlaceItem(
@@ -98,16 +95,16 @@ class _FavoriteState extends State<Favorite> {
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: favorites.getRange(4, favorites.length).map((fav){
+                      children: presenter.favorites.getRange(4, presenter.favorites.length).map((fav){
                         
                         return fav.id.startsWith(ConstantCollections.EMPTY_FAVORITE) ? 
                               AddFavoritesItem(
-                                callback: showPlaceList,
+                                callback: presenter.showPlaceList,
                                 place: fav,
                               )
                             : fav.id == ConstantCollections.OPERATOR_FAVORITE ?
                               InkWell(
-                                onTap: isEditMode ? turnOffEditMode : turnOnEditMode,
+                                onTap: isEditMode ? presenter.turnOffEditMode : presenter.turnOnEditMode,
                                 borderRadius: BorderRadius.circular(25),
                                 splashColor: ColorCollections.shimmerHighlightColor,
                                 highlightColor: ColorCollections.shimmerBaseColor,
@@ -133,7 +130,7 @@ class _FavoriteState extends State<Favorite> {
                               )
                               : isEditMode ?
                                 EditPlaceItem(
-                                  onDeleteClick: onDeletePlaceClicked,
+                                  onDeleteClick: presenter.onDeletePlaceClicked,
                                   place: fav,
                                 )
                                 : PlaceItem(
@@ -160,156 +157,34 @@ class _FavoriteState extends State<Favorite> {
     );
   }
 
-  void initiateData()async{
-    List<PlaceModel> tmpFavorites = new List();
-    List<String> savedFavorites =  await PreferenceHelper.instance.getStringListValue(key: ConstantCollections.PREF_MY_FAVORITE);
-    if(savedFavorites.length > 0){
-      for(String fav in savedFavorites){
-        tmpFavorites.add(PlaceModel.fromStore(json.decode(fav)));
-      }
-      updateFavorites(
-        items: tmpFavorites
-      );
-    }else{
-      if(favorites == null){
-        favorites = List();
-      }else{
-        favorites.clear();
-      }
-      for(int i = favorites.length; i < 8;i++){
-        if(i == 7){
-          favorites.add(PlaceModel.forOperator());
-        }else{
-          favorites.add(PlaceModel.emptyPlace(prefix: i.toString()));
-        }
-      }
-      if(mounted){
-        setState(() {
-          viewState = 0;
-        });
-      }
-    }
-  }
+  @override
+  BuildContext currentContext() => context;
 
-  updateFavorites({List<PlaceModel> items}){
+  @override
+  onSuccess(){
+    super.onSuccess();
     if(mounted){
       setState(() {
-        if(favorites == null){
-          favorites = List();
-        }else{
-          favorites.clear();
-        }
-        favorites.addAll(items);
-        print("before length : "+ favorites.length.toString());
-        if(favorites.length < 7){
-          for(int i = favorites.length; i < 8;i++){
-            if(i == 7){
-              favorites.add(PlaceModel.forOperator());
-            }else{
-              favorites.add(PlaceModel.emptyPlace(prefix: i.toString()));
-            }
-          }
-        }else if(favorites.length > 8){
-          List<PlaceModel> tmp = List()..addAll(favorites.getRange(0, 7));
-          favorites.clear();
-          favorites.addAll(tmp);
-          favorites.add(PlaceModel.forOperator());
-        }else{
-          if(favorites.last.id != ConstantCollections.OPERATOR_FAVORITE){
-            favorites.last.id = ConstantCollections.OPERATOR_FAVORITE;
-          }
-        }
-        savingToStore();
-        viewState = 0;
+        setViewState = 0;
       });
     }
   }
 
-  onDeletePlaceClicked(data){
-    int idx = favorites.indexOf(data);
-    if(idx >=0 && idx < favorites.length){
-      if(mounted){
-        setState(() {
-          favorites[idx] = PlaceModel.emptyPlace(prefix: DateTime.now().millisecondsSinceEpoch.toString());
-          savingToStore();
-        });
-      }
-    }
-  }
-
-  savingToStore(){
-    List<String> saved = List();
-    favorites.forEach((place){
-      saved.add(json.encode(place.getMap()));
-    });
-    PreferenceHelper.instance.setStringListValue(
-      key: ConstantCollections.PREF_MY_FAVORITE,
-      value: saved
-    );
-  }
-
-  turnOnEditMode(){
-    int diff = favorites.length - favorites.where((place) => place.id.startsWith(ConstantCollections.EMPTY_FAVORITE)).length;
-    if(diff > 1){
-      if(mounted){
-        setState(() {
-          isEditMode = true;
-        });
-      }
-    }else{
-      showModalBottomSheet(
-        context: context,
-        builder: (_) => ErrorModal(
-          title: UserLanguage.of(context).errorTitle("favoriteIsEmpty"),
-          desc: UserLanguage.of(context).errorDesc("favoriteIsEmpty"),
-        )
-      );
-    }
-  }
-
-  turnOffEditMode(){
+  @override
+  void onError() {
+    super.onError();
     if(mounted){
       setState(() {
-        isEditMode = false;
+        setViewState = 2;
       });
     }
   }
 
-  showPlaceList(trigger) async{
-    if(!isEditMode){
-      widget.openingPlace();
-      showBottomSheet(
-        context: context,
-        builder: (context){
-          return PlacesListByCategoryModal(
-            onSelected: onSelectedPlace,
-            placeHolder: trigger,
-          );
-        }
-      );
-    }
-  }
-
-  onSelectedPlace(List<PlaceModel> item){
-    if(item != null){
-      if(favorites.where((place)=> place.forSearch == item[1].forSearch).length > 0){
-        showModalBottomSheet(
-          context: context,
-          builder: (_) => ErrorModal(
-            title: UserLanguage.of(context).errorTitle('placeIsAlreadyExist'),
-            desc: UserLanguage.of(context).errorDesc('placeIsAlreadyExist')
-          )
-        );
-      }else{
-        int idx = favorites.indexOf(item[0]);
-        if(mounted){
-          setState(() {
-            favorites[idx] = item[1];
-            savingToStore();
-            widget.closingPlace();
-          });
-        }
-      }
+  @override
+  void notifyState(){
+    super.notifyState();
+    if(mounted){
+      setState(() {});
     }
   }
 }

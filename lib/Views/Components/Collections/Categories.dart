@@ -1,18 +1,10 @@
-import 'dart:async';
-import 'dart:convert';
-
-
 import 'package:dio/dio.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
-import 'package:nerb/Models/FirestoreCategory.dart';
+import 'package:nerb/PresenterViews/Components/Collections/CategoriesView.dart';
+import 'package:nerb/Presenters/Components/Collections/CategoriesPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/CategoryItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerCategories.dart';
@@ -20,28 +12,29 @@ import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class Categories extends StatefulWidget {
   final VoidCallback onDataRetrieved;
+
   Categories({@required this.onDataRetrieved});
   @override
   _CategoriesState createState() => new _CategoriesState();
 }
 
-class _CategoriesState extends State<Categories> implements RequestResponseCallback{
-
-  int viewState = 1;
-  int statusCode = 500;
-  bool isAlreadyRetry = false;
-  bool isNeedUpdate = false;
-  int currCategoryVersion = -1;
-  List<FirestoreCategory> categories;
+class _CategoriesState extends State<Categories> with CategoriesView{
+  final CategoriesPresenter presenter = CategoriesPresenter();
 
   @override
   void initState() {
     super.initState();
-    initializationData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
-    
+
   @override
   Widget build(BuildContext context) {
+    if(presenter.categories != null){
+      debugPrint("categories length : "+presenter.categories.length.toString());
+    }else{
+      debugPrint("Categories is null");
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
       child: Column(
@@ -62,7 +55,7 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
               height: 115,
               child:  ListView(
                 scrollDirection: Axis.horizontal,
-                children: categories.map((category){
+                children: presenter.categories.map((category){
                   return CategoryItem(
                     category: category
                   );
@@ -85,17 +78,17 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
                     callback: (){
                       if(mounted){
                         setState(() {
-                          viewState = 1;
-                          onRetrieveCategory();
+                          setViewState = 1;
+                          presenter.initiateData();
                         });
                       }
                     },
                     title: CommonHelper.instance.getTitleErrorByCode(
-                      code: statusCode,
+                      code: presenter.statusCode,
                       context: context
                     ),
                     desc: CommonHelper.instance.getDescErrorByCode(
-                      code: statusCode,
+                      code: presenter.statusCode,
                       context: context
                     ),
                   )
@@ -107,125 +100,28 @@ class _CategoriesState extends State<Categories> implements RequestResponseCallb
       ),
     );
   }
-    
-  initializationData() async{
-    await onRetrieveCategory(); 
-  }
-
-  onRetrieveCategory() async{
-    RemoteConfig rc = await CommonHelper.instance.fetchRemoteConfig();
-    int lastCategoryVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_CATEGORY_VERSION
-    );
-    if(lastCategoryVersion > 0){
-      currCategoryVersion = rc.getInt(ConstantCollections.REMOTE_CONFIG_CATEGORY_VERSION);
-      if(lastCategoryVersion < currCategoryVersion){
-        isNeedUpdate = true;
-      }
-    }
-    if(!isNeedUpdate){
-      List<String> prefCat = await PreferenceHelper.instance.getStringListValue(key: ConstantCollections.PREF_LAST_CATEGORY);
-      if(prefCat.length > 0){
-        List<FirestoreCategory> tmpCategories = new List();
-        prefCat.forEach((cat){
-          tmpCategories.add(FirestoreCategory(jsonDecode(cat)));
-        });
-        if(mounted){
-          setState(() {
-            if(categories == null){
-              categories = List<FirestoreCategory>();
-            } else{
-              categories.clear();
-            }
-            categories.addAll(tmpCategories);
-            categories.sort((a,b)=> UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
-            widget.onDataRetrieved();
-            viewState = 0;
-          });
-        }
-      }else{
-        PlaceController.instance.getCategories(
-          callback: this,
-          lang: UserLanguage.of(context).currentLanguage
-        );
-      }
-    }else{
-      PlaceController.instance.getCategories(
-        callback: this,
-        lang: UserLanguage.of(context).currentLanguage
-      );
-    }
-  }
-
+  
   @override
-  onFailureWithResponse(Response res) {
+  BuildContext currentContext() => context;
+  
+  @override
+  onSuccess(){
+    super.onSuccess();
     if(mounted){
       setState(() {
-        statusCode = res.statusCode;
-        viewState = 2;
-      });
-    }
-  }
-
-  @override
-  onSuccessResponseFailed(Response res) {
-    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-      if(!isAlreadyRetry){
-        Timer(const Duration(seconds: 2),(){
-          isAlreadyRetry = true;
-          onRetrieveCategory();
-        });
-      }else{
-        if(mounted){
-          setState(() {
-            statusCode = res.statusCode;
-            viewState = 2;
-          });
-        }
-      }
-    }else{
-      if(mounted){
-        setState(() {
-          statusCode = res.statusCode;
-          viewState = 2;
-        });
-      }
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String, dynamic> data) {
-    List<String> tmp = List();
-    for(Map<String,dynamic> dt in data['result'] as List<dynamic>){
-      tmp.add(jsonEncode(dt));
-    }
-    PreferenceHelper.instance.setStringListValue(
-      key: ConstantCollections.PREF_LAST_CATEGORY,
-      value: tmp
-    );
-    if(categories != null){
-      categories.clear();
-    }else{
-      categories = List();
-    }
-    tmp.forEach((tp){
-      categories.add(FirestoreCategory(jsonDecode(tp)));
-    });
-    if(mounted){
-      setState(() {
-        categories.sort((a,b)=> UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
+        debugPrint("categories onSuccess called");
+        setViewState = 0;
         widget.onDataRetrieved();
-        viewState = 0;
       });
     }
   }
 
   @override
-  onfailure() {
+  onError(){
+    super.onError();
     if(mounted){
       setState(() {
-        statusCode = 500;
-        viewState = 2;
+        setViewState = 2;
       });
     }
   }

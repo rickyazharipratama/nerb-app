@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/FirestoreCategory.dart';
-import 'package:nerb/Views/Pages/PlacesByCategory.dart';
+import 'package:nerb/PresenterViews/Components/Collections/Items/CategoryItemView.dart';
+import 'package:nerb/Presenters/Components/Collections/Items/CategoryItemPresenter.dart';
 
 class CategoryItem extends StatefulWidget {
 
   final FirestoreCategory category;
+  final CategoryItemPresenter presenter = CategoryItemPresenter();
 
-  CategoryItem({this.category});
+  CategoryItem({this.category}){
+    presenter.setCategory = category;
+  }
 
   @override
   _CategoryItemState createState() => new _CategoryItemState();
 }
 
-class _CategoryItemState extends State<CategoryItem> {
+class _CategoryItemState extends State<CategoryItem> with CategoryItemView{
 
-
-  String image = "";
-  int viewState = 1;
 
   @override
   void initState() {
     super.initState();
+    widget.presenter.setView = this;
   }
+
+  @override
+  BuildContext currentContext() => context;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        NerbNavigator.instance.push(context,
-          child: PlacesByCategory(
-            category: widget.category,
-            imageUrl: widget.category.imageStorage,
-          )
-        );
+        goToPlacesByCategory(widget.presenter.category);
       },
       child: Container(
         width: 220,
@@ -108,7 +107,7 @@ class _CategoryItemState extends State<CategoryItem> {
                    child: Hero(
                      tag: "title-"+widget.category.id,
                      child: Text(
-                       UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.category.name.id : widget.category.name.en,
+                       UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.presenter.category.name.id : widget.presenter.category.name.en,
                        textAlign: TextAlign.left,
                        style: Theme.of(context).textTheme.headline
                      ),

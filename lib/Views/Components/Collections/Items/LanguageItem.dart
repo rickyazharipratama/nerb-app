@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 
-class LanguageItem extends StatelessWidget {
+class LanguageItem extends StatelessWidget{
 
   final String language;
   final String selected;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
-import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
+import 'package:nerb/PresenterViews/Components/Collections/Items/DetailPlaceItemView.dart';
+import 'package:nerb/Presenters/Components/Collections/Items/DetailPlaceItemPresenter.dart';
 import 'package:nerb/Views/Components/Images/ImagePlaceholder.dart';
 import 'package:nerb/Views/Pages/DetailPlaces.dart';
 
@@ -12,45 +12,36 @@ class DetailPlace extends StatefulWidget {
 
   final DetailNearbyPlaceResponse place;
   final double mode;
+  final DetailPlaceItemPresenter presenter = DetailPlaceItemPresenter();
 
-  DetailPlace({@required this.place, this.mode:0});
+  DetailPlace({@required this.place, this.mode:0}){
+    presenter.setDetailNearbyPlace = place;
+    presenter.setMode = mode;
+  }
 
   @override
   _DetailPlaceState createState() => new _DetailPlaceState();
 }
 
-class _DetailPlaceState extends State<DetailPlace> {
-
-  LocationData myLoc;
+class _DetailPlaceState extends State<DetailPlace> with DetailPlaceItemView{
 
   @override
   void initState() {
     super.initState();
+    widget.presenter.setView = this;
   }
+
+  @override
+  BuildContext currentContext() => context;
+
   @override
   Widget build(BuildContext context) {
-    String img = CommonHelper.instance.getPlaceImageByCategory(
-      category: widget.place.category.id
-    );
-    if(img == null){
-      if(widget.place.category.title.contains("/")){
-        List<String> plcs = widget.place.category.title.split("/");
-        for(int i= 0; i < plcs.length; i++){
-          img = CommonHelper.instance.getPlaceImageByCategory(category: plcs[i].toLowerCase());
-          if(img != null){
-            i = plcs.length;
-          }
-        }
-      }else{
-        img = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.title.toLowerCase());
-      }
-    }
     return GestureDetector(
       onTap: (){
         NerbNavigator.instance.push(context,
           child: DetailPlaces(
             place: widget.place,
-            img : img
+            img : widget.presenter.img
           )
         );
       },
@@ -69,17 +60,17 @@ class _DetailPlaceState extends State<DetailPlace> {
                 tag: "detailImage-"+widget.place.id,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: img != null ? Image.asset(
-                    img,
+                  child: widget.presenter.img != null ? Image.asset(
+                    widget.presenter.img,
                     fit: BoxFit.cover,
                     color: ColorCollections.wrapperCategory,
                     colorBlendMode: BlendMode.srcATop,
-                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
-                    width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                    height: getHeight(widget.presenter.mode),
+                    width: getWidth(widget.presenter.mode)
                   )
                   : Container(
-                    height: widget.mode == 0 ? ((MediaQuery.of(context).size.width - 20) * 9) / 16 : (((MediaQuery.of(context).size.width - 25)/2)*16)/9,
-                    width: widget.mode == 0 ? MediaQuery.of(context).size.width - 20 : (MediaQuery.of(context).size.width - 25) / 2,
+                    height: getHeight(widget.presenter.mode),
+                    width: getWidth(widget.presenter.mode),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Theme.of(context).highlightColor
