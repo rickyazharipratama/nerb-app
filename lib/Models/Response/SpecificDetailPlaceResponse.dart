@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/rendering.dart';
 import 'package:nerb/Models/Response/CategoryPlaceResponse.dart';
 
 class SpecificDetailPlaceResponse{
@@ -30,7 +31,7 @@ class SpecificDetailPlaceResponse{
     category = List();
     if(data['categories'] != null){
       (data['categories'] as List<dynamic>).forEach((cat){
-        print(jsonEncode(cat));
+        debugPrint(jsonEncode(cat));
         category.add(CategoryPlaceResponse.fromJson(cat));
       });
     }
