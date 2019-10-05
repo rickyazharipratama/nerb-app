@@ -35,7 +35,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      print(error);
+      debugPrint(error);
       callback.onfailure();
     });
   }
@@ -49,7 +49,7 @@ class PlaceController{
       if(res != null){
         if(res.data != null){
            Map<String,dynamic> data = res.data;
-           print(jsonEncode(res.data));
+           debugPrint(jsonEncode(res.data));
            if(data['status'] == ConstantCollections.STATUS_SUCCESS){
              callback.onSuccessResponseSuccess(data);
            }else{
@@ -63,7 +63,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      print(error);
+      debugPrint(error);
       callback.onfailure();
     });
   }
@@ -74,7 +74,7 @@ class PlaceController{
     ).then((res){
       if(res != null){
         if(res.data != null){
-          print(jsonEncode(res.data));
+          debugPrint(jsonEncode(res.data));
           if(res.data['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(res.data);
           }else{
@@ -87,7 +87,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      print(error);
+      debugPrint(error);
       callback.onfailure();
     });
   }
@@ -98,7 +98,7 @@ class PlaceController{
     ).then((res){
       if(res != null){
         if(res.data != null){
-          print(jsonEncode(res.data));
+          debugPrint(jsonEncode(res.data));
           if(res.data['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(res.data);
           }else{
@@ -110,7 +110,7 @@ class PlaceController{
         }
       }
     }).catchError((error){
-      print(error);
+      debugPrint(error);
       callback.onfailure();
     });
   }

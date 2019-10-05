@@ -29,7 +29,7 @@ class PlaceNearYouItem extends StatelessWidget {
         plc = CommonHelper.instance.getPlaceImageByCategory(category: place.category.title.toLowerCase());
       }
     }
-    print(plc);
+    debugPrint(plc);
     return Container(
       width: 180,
       height: 230,

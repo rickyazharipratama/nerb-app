@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/APICollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 
@@ -18,11 +19,11 @@ class NetworkHelper{
   }
 
   Future<Response<Map<String,dynamic>>> requestGet({String path}) async{
-    print(path);
+    debugPrint(path);
     try{
       return await dio.get(path);
     }on DioError catch(e){
-      print("network error : " + e.type.toString());
+      debugPrint("network error : " + e.type.toString());
       if(e.type == DioErrorType.RESPONSE){
         return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage:  e.response.statusMessage);
       }else if(e.type == DioErrorType.CONNECT_TIMEOUT
@@ -67,5 +68,4 @@ class NetworkHelper{
       'code':'internal_server_error'
     };
   }
-
 }

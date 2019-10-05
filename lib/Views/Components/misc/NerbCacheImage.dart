@@ -55,18 +55,6 @@ class NerbCacheImage extends StatelessWidget {
               child: ImagePlaceholder(),
             ),
           ),
-
-        // Positioned.fill(
-        //   child: placeholder != null ?
-        //     Center(
-        //       child: Icon(
-        //         Icons.broken_image,
-        //         size: 45,
-        //         color: ColorCollections.blenBrokenImage,
-        //       ),
-        //     )
-        //   : Container(),
-        // )
       ],
     );
   }

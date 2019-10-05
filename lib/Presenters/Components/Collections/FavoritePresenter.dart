@@ -67,7 +67,7 @@ class FavoritePresenter extends BaseComponentPresenter{
 
   updateFavorites({List<PlaceModel> items}){
     setFavorites = items;
-    print("before length : "+ favorites.length.toString());
+    debugPrint("before length : "+ favorites.length.toString());
     if(favorites.length < 7){
       for(int i = favorites.length; i < 8;i++){
         if(i == 7){

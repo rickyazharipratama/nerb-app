@@ -30,7 +30,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
-    print("src image : " + widget.img);
+    debugPrint("src image : " + widget.img);
     if(widget.img == null){
       setImg = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.id);
       if(img == null){
