@@ -1,0 +1,5 @@
+class PermissionsView{
+
+   void notifyState(){}
+
+}

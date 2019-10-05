@@ -1,18 +1,11 @@
-import 'dart:async';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
-import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
+import 'package:nerb/PresenterViews/Components/Collections/RelatedView.dart';
+import 'package:nerb/Presenters/Components/Collections/RelatedPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
 import 'package:nerb/Views/Components/Shimmers/ShimmerPlaceNearYou.dart';
 import 'package:nerb/Views/Components/misc/WrapperError.dart';
-import 'package:nerb/Views/Pages/DetailPlaces.dart';
 
 class Related extends StatefulWidget {
 
@@ -23,18 +16,18 @@ class Related extends StatefulWidget {
   _RelatedState createState() => new _RelatedState();
 }
 
-class _RelatedState extends State<Related> implements RequestResponseCallback{
+class _RelatedState extends State<Related> with RelatedView{
 
-  int statusCode = 500;
-  bool isAlreadyRequired = false;
-  int viewState = 1;
-
-  NearbyPlaceResponse places;
+  RelatedPresenter presenter;
 
   @override
   void initState() {
     super.initState();
-    initiateData();
+    presenter = RelatedPresenter(
+      href: widget.href
+    );
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -48,29 +41,14 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
           shrinkWrap: true,
           addRepaintBoundaries: true,
           scrollDirection: Axis.horizontal,
-          children: places.nearbyPlaces.map((plc){
-            String img = CommonHelper.instance.getPlaceImageByCategory(category: plc.category.id.toLowerCase());
-            if(img == null){
-              if(plc.category.title.contains("/")){
-                List<String> plcs = plc.category.title.split("/");
-                for(int i= 0; i < plcs.length; i++){
-                  img = CommonHelper.instance.getPlaceImageByCategory(category: plcs[i].toLowerCase());
-                  if(plc != null){
-                    i = plcs.length;
-                  }
-                }
-              }else{
-                img = CommonHelper.instance.getPlaceImageByCategory(category: plc.category.title.toLowerCase());
-              }
-            }
+          children: presenter.places.nearbyPlaces.map((plc){
+            String img = presenter.getImage(plc);
             return PlaceNearYouItem(
               place: plc,
               callback: (){
-                NerbNavigator.instance.removeThenPush(context,
-                  child : DetailPlaces(
-                    place: plc,
-                    img: img,
-                  )
+                remNPushToDetailPlace(
+                  img: img,
+                  place: plc
                 );
               },
             );
@@ -85,16 +63,16 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
             viewState == 2 ?
             Positioned.fill(
               child: WrapperError(
-                title: CommonHelper.instance.getTitleErrorByCode(context: context, code: statusCode),
-                desc: CommonHelper.instance.getDescErrorByCode(context: context, code: statusCode),
+                title: CommonHelper.instance.getTitleErrorByCode(context: context, code: presenter.statusCode),
+                desc: CommonHelper.instance.getDescErrorByCode(context: context, code: presenter.statusCode),
                 buttonText: UserLanguage.of(context).button("retry"),
                 height: 230,
                 callback: (){
                   if(mounted){
                     setState(() {
-                      isAlreadyRequired = false;
-                      viewState = 1;
-                      initiateData();
+                      presenter.setAlreadyRequired = false;
+                      setViewState = 1;
+                      presenter.initiateData();
                     });
                   }
                 },
@@ -107,71 +85,32 @@ class _RelatedState extends State<Related> implements RequestResponseCallback{
     );
   }
 
-  initiateData(){
-    PlaceController.instance.getNearbyPlaceByNext(
-      callback: this,
-      language: "en",
-      next: widget.href
-    );
-  }
-
   @override
-  onFailureWithResponse(Response res) {
+  void onSuccess(){
+    super.onSuccess();
     if(mounted){
       setState(() {
-        isAlreadyRequired = false;
-        statusCode = res.statusCode;
-        viewState = 2;
+        setViewState = 0;
       });
     }
   }
 
   @override
-  onSuccessResponseFailed(Response res) {
-    if(res.statusCode == ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-      if(!isAlreadyRequired){
-        Timer(const Duration(seconds: 2), (){
-          initiateData();
-        });
-      }else{
-        if(mounted){
-          setState(() {
-            isAlreadyRequired = false;
-            statusCode = res.statusCode;
-            viewState = 2;
-          });
-        }
-      }
-    }else{
-      if(mounted){
-        setState(() {
-          isAlreadyRequired = false;
-          statusCode = res.statusCode;
-          viewState = 2;
-        });
-      }
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String,dynamic> data) {
-    places = NearbyPlaceResponse.fromNextResponse(data['result']);
+  void onError(){
+    super.onError();
     if(mounted){
       setState(() {
-        isAlreadyRequired = false;
-        viewState = 0;
+        setViewState = 2;
       });
     }
   }
 
   @override
-  onfailure() {
-    if(mounted){
-      setState(() {
-        isAlreadyRequired = false;
-        statusCode = 500;
-        viewState = 2;
-      });
-    }
+  void notifyState() {
+    super.notifyState();
   }
+
+  @override
+  BuildContext currentContext() => context;
+
 }

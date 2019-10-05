@@ -3,6 +3,8 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/NerbApp.dart';
+import 'package:nerb/PresenterViews/Components/Miscs/LanguageView.dart';
+import 'package:nerb/Presenters/Components/Misc/LanguagePresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/LanguageItem.dart';
 
 class Language extends StatefulWidget {
@@ -13,14 +15,15 @@ class Language extends StatefulWidget {
   _LanguageState createState() => new _LanguageState();
 }
 
-class _LanguageState extends State<Language> {
+class _LanguageState extends State<Language> with LanguageView{
 
-  List<String> langs = [ConstantCollections.LANGUAGE_EN, ConstantCollections.LANGUAGE_ID];
-  List<String> images = ["assets/ic_usa.png","assets/ic_id.png"];
+  LanguagePresenter presenter;
+  
   @override
   void initState() {
     super.initState();
-    
+    presenter = LanguagePresenter();
+    presenter.setView = this;
   }
 
   @override
@@ -49,9 +52,9 @@ class _LanguageState extends State<Language> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: langs.map((lg){
+            children: presenter.langs.map((lg){
               return LanguageItem(
-                image: images[langs.indexOf(lg)],
+                image: presenter.images[presenter.langs.indexOf(lg)],
                 language: lg,
                 selected: UserLanguage.of(context).currentLanguage,
                 callback: onSelectedLanguage,

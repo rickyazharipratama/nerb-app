@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:location_permissions/location_permissions.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/PresenterViews/Components/Miscs/PermissionsView.dart';
+import 'package:nerb/Presenters/Components/Misc/PermissionsPresenter.dart';
 
 class Permissions extends StatefulWidget {
 
@@ -22,47 +20,27 @@ class Permissions extends StatefulWidget {
   _PermissionsState createState() => new _PermissionsState();
 }
 
-class _PermissionsState extends State<Permissions> with WidgetsBindingObserver{
+class _PermissionsState extends State<Permissions> with WidgetsBindingObserver,PermissionsView{
 
-  bool isNeedOpenSetting = false;
+  PermissionsPresenter presenter;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    initiateData();
+    presenter = PermissionsPresenter(
+      forPermission: widget.forPermission,
+      grantListener: widget.grantListener
+    );
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async{
       if(state == AppLifecycleState.resumed){
-         PermissionStatus perm = await LocationPermissions().checkPermissionStatus();
-         if(perm == PermissionStatus.granted){
-           widget.grantListener();
-         } 
+         presenter.checkGrantPermission();
       }
-  }
-
-  initiateData() async{
-    if(widget.forPermission == ConstantCollections.PERMISSION_LOCATION){
-      if(Platform.isAndroid){
-        // if(!(await LocationPermissions().shouldShowRequestPermissionRationale())){
-        //   if(mounted){
-        //     setState(() {
-        //       isNeedOpenSetting = true;
-        //     });
-        //   }
-        // }
-      }else if(Platform.isIOS){
-        if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.denied){
-          if(mounted){
-            setState(() {
-              isNeedOpenSetting = true;
-            });
-          }
-        }
-      }
-    }
   }
 
   @override
@@ -108,14 +86,14 @@ class _PermissionsState extends State<Permissions> with WidgetsBindingObserver{
           Container(
             child : Center(
               child: InkWell(
-                onTap: doPermission,
+                onTap: presenter.doPermission,
                 splashColor: ColorCollections.shimmerBaseColor,
                 highlightColor: ColorCollections.shimmerHighlightColor,
                 child: Container(
                   color: Theme.of(context).buttonColor,
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: Text(
-                    isNeedOpenSetting ? UserLanguage.of(context).button("openAppSetting") : UserLanguage.of(context).button("requestPermission"),
+                    presenter.isNeedOpenSetting ? UserLanguage.of(context).button("openAppSetting") : UserLanguage.of(context).button("requestPermission"),
                     style: Theme.of(context).primaryTextTheme.button,
                   ),
                 ),
@@ -127,39 +105,12 @@ class _PermissionsState extends State<Permissions> with WidgetsBindingObserver{
     );
   }
 
-  doPermission() async{
-    if(isNeedOpenSetting){
-      await LocationPermissions().openAppSettings();
-    }else{
-      if(widget.forPermission == ConstantCollections.PERMISSION_LOCATION){
-        print("requesting permission");
-        PermissionStatus perm = await LocationPermissions().requestPermissions(
-          permissionLevel: LocationPermissionLevel.locationWhenInUse
-        );
-        if(perm == PermissionStatus.granted){
-           widget.grantListener();
-        }else{
-          print(perm.toString());
-          if(Platform.isAndroid){
-            bool isShown = await LocationPermissions().shouldShowRequestPermissionRationale();
-            if(!isShown){
-              if(mounted){
-                setState(() {
-                  isNeedOpenSetting = true;
-                });
-              }
-            }
-          }else if(Platform.isIOS){
-            if(mounted){
-              setState(() {
-                isNeedOpenSetting = true;
-              });
-            }
-          }else{
-            //prob fuchsia
-          }
-        }
-      }
+  @override
+  notifyState(){
+    if(mounted){
+      setState(() {
+        
+      });
     }
   }
 

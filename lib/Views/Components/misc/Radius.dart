@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
+import 'package:nerb/PresenterViews/Components/Miscs/RadiusView.dart';
+import 'package:nerb/Presenters/Components/Misc/RadiusPresenter.dart';
 
 class Radius extends StatefulWidget {
 
@@ -11,23 +11,15 @@ class Radius extends StatefulWidget {
   _RadiusState createState() => new _RadiusState();
 }
 
-class _RadiusState extends State<Radius> {
-
-  int rad = 0;
+class _RadiusState extends State<Radius> with RadiusView{
+  RadiusPresenter presenter;
 
   @override
   void initState() {
     super.initState();
-    initiateData();
-  }
-
-  initiateData() async{
-    rad = await PreferenceHelper.instance.getIntValue(key: ConstantCollections.PREF_RADIUS);
-    print("rad : "+rad.toString());
-    if(mounted){
-      setState(() { 
-      });
-    }
+    presenter = RadiusPresenter();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -67,14 +59,14 @@ class _RadiusState extends State<Radius> {
 
               Expanded(
                 child: Slider(
-                  value: rad.toDouble(),
+                  value: presenter.radius.toDouble(),
                   activeColor: Theme.of(context).buttonColor,
                   inactiveColor: Theme.of(context).highlightColor,
-                  label: rad.toString()+" m",
+                  label: presenter.radius.toString()+" m",
                   min: 100,
                   max: 1000,
-                  onChanged: onChanged,
-                  onChangeEnd: onValueChangeEnd,
+                  onChanged: presenter.onChanged,
+                  onChangeEnd: presenter.onValueChangeEnd,
                 ),
               ),
 
@@ -87,26 +79,22 @@ class _RadiusState extends State<Radius> {
 
           Center(
             child: Text(
-              rad == 1000 ? "1 KM": rad.toString()+" M",
+              presenter.radius == 1000 ? "1 KM": presenter.radius.toString()+" M",
               textAlign: TextAlign.center,
               style: Theme.of(context).primaryTextTheme.subhead
             ),
           )
-
         ],
       ),
     );
   }
 
-  onChanged(double val){
+  @override
+  notifyState(){
     if(mounted){
       setState(() {
-        rad  = val.floor();
+        
       });
     }
-  }
-
-  onValueChangeEnd(double val){
-    PreferenceHelper.instance.setIntValue(key: ConstantCollections.PREF_RADIUS, value: rad);
   }
 }

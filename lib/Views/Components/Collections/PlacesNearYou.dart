@@ -5,7 +5,7 @@ import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/PresenterViews/Components/Collections/PlaceNearYouView.dart';
-import 'package:nerb/Presenters/Components/PlaceNearYouPresenter.dart';
+import 'package:nerb/Presenters/Components/Collections/PlaceNearYouPresenter.dart';
 import 'package:nerb/Views/Components/Buttons/FlexibleButton.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceNearYouItem.dart';
 import 'package:nerb/Views/Components/Labels/SectionTitle.dart';

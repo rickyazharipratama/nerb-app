@@ -1,19 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
-import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
-import 'package:nerb/Controllers/PlaceController.dart';
-import 'package:nerb/Models/Names.dart';
-import 'package:nerb/Models/PlaceModel.dart';
+import 'package:nerb/PresenterViews/Components/Collections/WrapperPlacesByCategoryView.dart';
+import 'package:nerb/Presenters/Components/Collections/WrapperPlacesByCategoryPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/Items/ShimmerPlace.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
@@ -30,31 +22,26 @@ class WrapperPlacesBycategory extends StatefulWidget {
   _WrapperPlacesBycategoryState createState() => new _WrapperPlacesBycategoryState();
 }
 
-class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> implements RequestResponseCallback{
+class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> with WrapperPlacesByCategoryView{
 
-  // 0 main
-  // 1 load
-  // 2 error
-  int viewState = 1;
-  bool isAlreadyRetry = false;
-  int statusCode = 500;
-
-  List<PlaceModel> places;
-  List<Names> sections;
-  bool isNeedUpdate = false;
-  int currPlaceVersion =-1;
+  WrapperPlacesByCategoryPresenter presenter;
+  
   @override
   void initState() {
     super.initState();
-    initiateData();
+    presenter = WrapperPlacesByCategoryPresenter(
+      category: widget.category
+    );
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
   Widget build(BuildContext context) {
     return viewState == 0 ?
-      places.length > 0 ?
+      presenter.places.length > 0 ?
         ListView(
-          children: sections.map((sct){
+          children: presenter.sections.map((sct){
             return Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
               child: Column(
@@ -73,7 +60,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
                   Wrap(
                     spacing: 10,
                     runSpacing: 15,
-                    children: places.where((plc) => plc.section.id == sct.id && plc.section.en == sct.en).map((place){
+                    children: presenter.places.where((plc) => plc.section.id == sct.id && plc.section.en == sct.en).map((place){
                       return PlaceItem(
                         place: place,
                         callback: (place){
@@ -99,17 +86,17 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
       )
     : viewState == 2 ? ErrorPlaceholder(
       title: CommonHelper.instance.getTitleErrorByCode(
-        code: statusCode,
+        code: presenter.statusCode,
         context: context
       ),
       desc: CommonHelper.instance.getDescErrorByCode(
-        code: statusCode,
+        code: presenter.statusCode,
         context: context
       ),
       buttonText: UserLanguage.of(context).button("retry"),
       callback: (){
-        viewState = 1;
-        initiateData();
+        setViewState = 1;
+        presenter.initiateData();
       },
     ) : Shimmer.fromColors(
           baseColor: Theme.of(context).highlightColor,
@@ -124,156 +111,25 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> imple
       );
   }
 
-  initiateData() async{
-    RemoteConfig rc = await CommonHelper.instance.fetchRemoteConfig();
-    int lastPlacesVersion = await PreferenceHelper.instance.getIntValue(
-      key: ConstantCollections.PREF_LAST_PLACE_VERSION
-    );
-    if(lastPlacesVersion > 0){
-       currPlaceVersion = rc.getInt(ConstantCollections.REMOTE_CONFIG_PLACES_VERSION);
-       if(lastPlacesVersion < currPlaceVersion){
-          isNeedUpdate = true;
-       }
-    }
-    if(!isNeedUpdate){
-      List<String> plcs = await PreferenceHelper.instance.getStringListValue(
-        key: ConstantCollections.PREF_LAST_PLACE
-      );
-      if(plcs.length > 0){
-        List<PlaceModel> tmpPlace = List();
-        plcs.forEach((plc){
-          tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
-        });
-        if(mounted){
-          setState((){
-            if(places == null){
-              places = List();
-            }else{
-              places.clear();
-            }
-            places.addAll(tmpPlace.where((pm)=> pm.categories.contains(widget.category)).toList());
-            places.sort((a,b) => UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.section.id.compareTo(b.section.id) : a.section.en.compareTo(b.section.en));
-
-            if(sections == null){
-              sections = List();
-            }else{
-              sections.clear();
-            }
-            sections.add(places[0].section);
-            places.forEach((plc){
-              if(sections.where((sct) => (sct.id == plc.section.id && sct.en == plc.section.en)).toList().length == 0){
-                  sections.add(plc.section);
-              }
-            });
-            viewState = 0;
-          });
-        }
-      }else{
-        PlaceController.instance.getPlacesCategory(
-          callback: this,
-          lang: UserLanguage.of(context).currentLanguage
-        );
-      }
-    }else{
-      PlaceController.instance.getPlacesCategory(
-        callback: this,
-        lang: UserLanguage.of(context).currentLanguage
-      );
-    }
-  }
+  @override
+  BuildContext currentContext() => context;
 
   @override
-  onFailureWithResponse(Response res) {
+  onSuccess(){
+    super.onSuccess();
     if(mounted){
       setState(() {
-        statusCode = res.statusCode;
-        viewState =2;
+        setViewState = 0;
       });
     }
   }
 
   @override
-  onSuccessResponseFailed(Response res) {
-    if(res.statusCode ==  ConstantCollections.STATUS_CODE_UNAUTHORIZE){
-      if(!isAlreadyRetry){
-        Timer(const Duration(seconds: 2),(){
-          isAlreadyRetry = true;
-          initiateData();
-        });
-      }else{
-        if(mounted){
-          setState(() {
-            viewState = 2;
-            statusCode = res.statusCode;
-          });
-        }
-      }
-    }else{
-      if(mounted){
-          setState(() {
-            viewState = 2;
-            statusCode = res.statusCode;
-          });
-        }
-    }
-  }
-
-  @override
-  onSuccessResponseSuccess(Map<String,dynamic> data) {
-    List<String>strTmp = List();
-    for(Map<String, dynamic> dt in data['result'] as List<dynamic>){
-      strTmp.add(jsonEncode(dt));
-    }
-
-    PreferenceHelper.instance.setStringListValue(
-      key: ConstantCollections.PREF_LAST_PLACE,
-      value: strTmp
-    );
-
-      if(isNeedUpdate){
-        PreferenceHelper.instance.setIntValue(
-          key: ConstantCollections.PREF_LAST_PLACE,
-          value: currPlaceVersion
-        );
-      }
-    List<PlaceModel> tmpPlace = List();
-    strTmp.forEach((plc){
-      tmpPlace.add(PlaceModel.fromStore(jsonDecode(plc)));
-    });
-    
-
-    if(places == null){
-      places = List();
-    }else{
-      places.clear();
-    }
-
-    places.addAll(tmpPlace.where((tmp) => tmp.categories.contains(widget.category)));
-    places.sort((a,b) => UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.section.id.compareTo(b.section.id) : a.section.en.compareTo(b.section.en));
-    if(sections == null){
-      sections = List();
-    }else{
-      sections.clear();
-    }
-    sections.add(places[0].section);
-    places.forEach((plc){
-      if(sections.where((sct) => (sct.id == plc.section.id && sct.en == plc.section.en)).toList().length == 0){
-        sections.add(plc.section);
-      }
-    });
+  void onError() {
+    super.onError();
     if(mounted){
       setState(() {
-        viewState = 0;
-      });
-    }
-  }
-
-  @override
-  onfailure() {
-    if(mounted){
-      setState(() {
-        viewState = 2;
-        statusCode = 500;
+        setViewState = 2;
       });
     }
   }
