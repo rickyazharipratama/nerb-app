@@ -4,7 +4,7 @@ static const String VERSION = "1.0.0+1";
 static const int VERSION_INT = 1;
 static const int DEFAULT_RADIUS = 500;
 static const String PREFIX = "nerb-mobile";
-static const ENVIRONMENT = PROD;
+static const ENVIRONMENT = DEV;
 
 
 //env
@@ -12,7 +12,7 @@ static const String DEV = "development";
 static const String PROD = "production";
 
 //network
- static const int Connectiontimeout = 8000;
+ static const int Connectiontimeout = 25000;
   
 //permission
   static const String PERMISSION_LOCATION = "permissionLocation";
@@ -24,11 +24,11 @@ static const String PROD = "production";
   static const String FIRESTORE_HERE_KEY = "hereApiKey";
 
 //RemoteConfig
-  static const String REMOTE_CONFIG_HERE_API_VERSION = "hereApiVersion";
+  static const String REMOTE_CONFIG_HERE_API_VERSION = ENVIRONMENT == PROD ? "hereApiVersion" : "hereApiVersionDevelopment";
   static const String REMOTE_CONFIG_PLACES_VERSION = "placesVersion";
   static const String REMOTE_CONFIG_CATEGORY_VERSION = "categoryVersion";
-  static const String REMOTE_CONFIG_IS_MAINTENANCE = "isMaintenance";
-  static const String REMOTE_CONFIG_UPDATE_VERSION = "versionProduction";
+  static const String REMOTE_CONFIG_IS_MAINTENANCE = ENVIRONMENT == PROD ? "isMaintenance" : "isMaintenanceDevelopment";
+  static const String REMOTE_CONFIG_UPDATE_VERSION = ENVIRONMENT == PROD ? "versionProduction" : "versionDevelopment";
 
 
 //preferences
@@ -54,6 +54,8 @@ static const String PROD = "production";
   static const String SEE_ALL = "seeAll";
   static const String LANGUAGE_ID = "id";
   static const String LANGUAGE_EN = "en";
+  static const String RELATED_NEARBY = "nearby";
+  static const String RELATED_TRANSPORTATION = "transportation";
   
 
 //status response
@@ -71,4 +73,22 @@ static const String PROD = "production";
   static const int STATUS_INTERNAL_SERVER_ERROR = 500;
   static const int STATUS_BAD_GATEWAY = 400;
 
+//event analytical
+  static const String EVENT_OPEN_DETAIL_PLACES = "open_detail_places";
+  static const String EVENT_OPEN_DETAIL_PLACES_BY_NEAR_YOU = " open_detail_places_by_near_you";
+  static const String EVENT_LOOK_ON_MAP = "look_on_map";
+  static const String EVENT_OPEN_DETAIL_PLACES_BY_NEARBY = "open_detail_places_by_nearby";
+  static const String EVENT_OPEN_DETAIL_PLACES_BY_TRANSPORT = "open_detail_places_by_transport";
+  static const String EVENT_OPEN_DETAIL_PLACES_BY_PLACE_LIST = "open_detail_places_by_places_list";
+  static const String EVENT_OPEN_SECTION_BY_CATEGORY = "open_sections_by_category";
+  static const String EVENT_SECTION_CLICKED = "section_clicked";
+  static const String EVENT_PLACE_LIST_MODE = "place_list_mode";
+  static const String EVENT_SELECT_FAVORITE_SECTION = "select_favorite_section";
+  static const String EVENT_REMOVE_FAVORITE_SECTION = "remove_favorite_section";
+  static const String EVENT_START_UPDATING_FAVORITE = "start_updating_favorite";
+  static const String EVENT_FINISH_UPDATING_FAVORITE = "finish_updating_favorite";
+  static const String EVENT_UPDATING_RADIUS = "updating_radius";
+  static const String EVENT_SELECT_LANGUAGE = "select_language";
+  static const String EVENT_USING_THEME = "using_theme";
+  static const String EVENT_OPENING_WEB = "opening_web";
 }

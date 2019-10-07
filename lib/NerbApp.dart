@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguageLocalizationDelegate.dart';
 import 'package:nerb/Presenters/NerbAppPresenter.dart';
 import 'package:nerb/Views/Pages/Splash.dart';
@@ -69,6 +70,14 @@ class _NerbAppState extends State<NerbApp> with NerbAppView{
 
   @override
   changingTheme(isDarkTHeme){
+    debugPrint("change dark theme is "+isDarkTHeme.toString());
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: ConstantCollections.EVENT_USING_THEME,
+      params: {
+        "date": DateTime.now().toString(),
+        "theme":isDarkTHeme ? "dark" : "light" 
+      }
+    );
     if(mounted){
       setState(() {
         widget.presenter.setUsedDarkTheme = isDarkTHeme;
@@ -79,6 +88,13 @@ class _NerbAppState extends State<NerbApp> with NerbAppView{
   @override
   onLocaleChanged(Locale lc){
     debugPrint("masuk disini");
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: ConstantCollections.EVENT_SELECT_LANGUAGE,
+      params: {
+        'date': DateTime.now().toString(),
+        'language':lc.languageCode
+      }
+    );
     if(mounted){
       setState(() {
         widget.presenter.setUl = UserLanguageLocalizationDelegate(locale: lc);

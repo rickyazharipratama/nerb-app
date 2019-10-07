@@ -7,7 +7,7 @@ import 'package:nerb/Collections/ConstantCollections.dart';
 class APICollections{
 
   
-  final String baseMapEndpoint = ConstantCollections.ENVIRONMENT == ConstantCollections.PROD ? "https://api.nerb-app.fun": "http://127.0.0.1/nerb-api";
+  final String baseMapEndpoint = ConstantCollections.ENVIRONMENT == ConstantCollections.PROD ? "https://api.nerb-app.fun": "https://api.nerb-app.fun";
 
   static APICollections instance = APICollections();
 

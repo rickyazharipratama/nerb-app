@@ -7,7 +7,6 @@ import 'package:nerb/PresenterViews/NoLocationServiceView.dart';
 import 'package:nerb/Presenters/NoLocationServicePresenter.dart';
 
 class NoLocationServices extends StatefulWidget {
-  final NoLocationServicePresenter presenter = NoLocationServicePresenter();
   @override
   _NoLocationServicesState createState() => new _NoLocationServicesState();
 
@@ -16,12 +15,12 @@ class NoLocationServices extends StatefulWidget {
 class _NoLocationServicesState extends State<NoLocationServices> with NoLocationServiceView{
 
   Timer timer;
-
+  NoLocationServicePresenter presenter = NoLocationServicePresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override

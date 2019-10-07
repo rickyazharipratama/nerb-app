@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/PresenterViews/Components/Collections/Items/DetailPlaceItemView.dart';
@@ -12,12 +14,8 @@ class DetailPlace extends StatefulWidget {
 
   final DetailNearbyPlaceResponse place;
   final double mode;
-  final DetailPlaceItemPresenter presenter = DetailPlaceItemPresenter();
 
-  DetailPlace({@required this.place, this.mode:0}){
-    presenter.setDetailNearbyPlace = place;
-    presenter.setMode = mode;
-  }
+  DetailPlace({@required this.place, this.mode:0});
 
   @override
   _DetailPlaceState createState() => new _DetailPlaceState();
@@ -25,10 +23,14 @@ class DetailPlace extends StatefulWidget {
 
 class _DetailPlaceState extends State<DetailPlace> with DetailPlaceItemView{
 
+  DetailPlaceItemPresenter presenter = DetailPlaceItemPresenter();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
+    presenter.setView = this;
+    presenter.setDetailNearbyPlace = widget.place;
+    presenter.setMode = widget.mode;
   }
 
   @override
@@ -38,10 +40,18 @@ class _DetailPlaceState extends State<DetailPlace> with DetailPlaceItemView{
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        FirebaseAnalyticHelper.instance.sendEvent(
+          event: ConstantCollections.EVENT_OPEN_DETAIL_PLACES_BY_PLACE_LIST,
+          params: {
+            "date": DateTime.now().toString(),
+            "category":widget.place.category != null ? widget.place.category.id != null ? widget.place.category.id : "-" : "-",
+            "name":widget.place.title
+          }
+        );
         NerbNavigator.instance.push(context,
           child: DetailPlaces(
             place: widget.place,
-            img : widget.presenter.img
+            img : presenter.img
           )
         );
       },
@@ -60,17 +70,17 @@ class _DetailPlaceState extends State<DetailPlace> with DetailPlaceItemView{
                 tag: "detailImage-"+widget.place.id,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: widget.presenter.img != null ? Image.asset(
-                    widget.presenter.img,
+                  child: presenter.img != null ? Image.asset(
+                    presenter.img,
                     fit: BoxFit.cover,
                     color: ColorCollections.wrapperCategory,
                     colorBlendMode: BlendMode.srcATop,
-                    height: getHeight(widget.presenter.mode),
-                    width: getWidth(widget.presenter.mode)
+                    height: getHeight(presenter.mode),
+                    width: getWidth(presenter.mode)
                   )
                   : Container(
-                    height: getHeight(widget.presenter.mode),
-                    width: getWidth(widget.presenter.mode),
+                    height: getHeight(presenter.mode),
+                    width: getWidth(presenter.mode),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: Theme.of(context).highlightColor

@@ -16,7 +16,6 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailPlaces extends StatefulWidget {
   final DetailNearbyPlaceResponse place;
   final String img;
-  final DetailPlacePresenter detailPlacePresenter = DetailPlacePresenter();
 
   DetailPlaces({@required this.place , this.img});
   @override
@@ -25,12 +24,11 @@ class DetailPlaces extends StatefulWidget {
 
 class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMixin,DetailPlaceView{
 
-
+  DetailPlacePresenter detailPlacePresenter = DetailPlacePresenter();
 
   @override
   void initState() {
     super.initState();
-    debugPrint("src image : " + widget.img);
     if(widget.img == null){
       setImg = CommonHelper.instance.getPlaceImageByCategory(category: widget.place.category.id);
       if(img == null){
@@ -49,9 +47,9 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
     }else{
       setImg = widget.img;
     }
-    widget.detailPlacePresenter.setView = this;
-    widget.detailPlacePresenter.setHref = widget.place.href;
-    widget.detailPlacePresenter.initiateData();
+    detailPlacePresenter.setView = this;
+    detailPlacePresenter.setHref = widget.place.href;
+    detailPlacePresenter.initiateData();
   }
 
   @override
@@ -125,7 +123,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                     Padding(
                       padding: const EdgeInsets.only(top: 10, bottom: 5),
                       child: Text(
-                        widget.detailPlacePresenter.response.name,
+                        detailPlacePresenter.response.name,
                         style: Theme.of(context).textTheme.title,
                       ),
                     ),
@@ -145,31 +143,33 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Text(
-                                    widget.detailPlacePresenter.response.location.address.text.replaceAll("<br/>", "\n"),
+                                    detailPlacePresenter.response.location.address.text.replaceAll("<br/>", "\n"),
                                     maxLines: 4,
                                     style: Theme.of(context).textTheme.body2,
                                   ),
                                 ),
 
-                                widget.detailPlacePresenter.response.extended != null ?
-                                  widget.detailPlacePresenter.response.extended.openingHours != null ?
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
-                                        color: widget.detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.green : Colors.grey
-                                      ),
-                                      child: Text(
-                                          widget.detailPlacePresenter.response.extended.openingHours.isOpen ?
-                                            UserLanguage.of(context).label("open")
-                                            : UserLanguage.of(context).label("close"),
-                                        style: TextStyle(
-                                          color: widget.detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.white : Color(0xff252525),
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11
+                                detailPlacePresenter.response.extended != null ?
+                                  detailPlacePresenter.response.extended.openingHours != null ?
+                                    detailPlacePresenter.response.extended.openingHours.isOpen != null ?
+                                      Container(
+                                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(30),
+                                          color:  detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.green : Colors.grey
                                         ),
-                                      ),
-                                    )
+                                        child: Text(
+                                            detailPlacePresenter.response.extended.openingHours.isOpen ?
+                                              UserLanguage.of(context).label("open")
+                                              : UserLanguage.of(context).label("close"),
+                                          style: TextStyle(
+                                            color: detailPlacePresenter.response.extended.openingHours.isOpen ? Colors.white : Color(0xff252525),
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 11
+                                          ),
+                                        ),
+                                      )
+                                    :Container()
                                   :Container()
                                 :Container()
                               ],
@@ -178,8 +178,8 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
 
                           GestureDetector(
                             onTap: () async{
-                               if(await canLaunch(widget.detailPlacePresenter.response.view)){
-                                 launch(widget.detailPlacePresenter.response.view,
+                               if(await canLaunch(detailPlacePresenter.response.view)){
+                                 launch(detailPlacePresenter.response.view,
                                     forceSafariVC: false,
                                     forceWebView: false
                                  );
@@ -243,7 +243,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
                 bottom: 0,
                 left: 0,
                 child: BottomDetailPlaces(
-                  place: widget.detailPlacePresenter.response,
+                  place: detailPlacePresenter.response,
                   animate: (val){
                     animationExplorer(context,
                       isOpen: val,
@@ -341,14 +341,14 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
             viewState == 2 ? 
               Positioned.fill(
                 child: ErrorPlaceholder(
-                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code : widget.detailPlacePresenter.statusCode),
-                  desc : CommonHelper.instance.getDescErrorByCode(context : context, code : widget.detailPlacePresenter.statusCode),
+                  title: CommonHelper.instance.getTitleErrorByCode(context: context, code : detailPlacePresenter.statusCode),
+                  desc : CommonHelper.instance.getDescErrorByCode(context : context, code : detailPlacePresenter.statusCode),
                   buttonText: UserLanguage.of(context).button("retry") ,
                   isNeedButton: true,
                   callback: (){
                     if(mounted){
                       setState(() {
-                        widget.detailPlacePresenter.reloadRequest();
+                        detailPlacePresenter.reloadRequest();
                       });
                     }
                   },
@@ -362,7 +362,14 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
               right: 10,
               child: InkWell(
                 onTap: (){
-                  Navigator.of(context).pop();
+                  if(isDetailExpanded){
+                    animationExplorer(context,
+                      isOpen: false,
+                      tick: this
+                    );
+                  }else{
+                    Navigator.of(context).pop();
+                  }
                 },
                 borderRadius: BorderRadius.circular(20),
                 splashColor: ColorCollections.shimmerBaseColor,

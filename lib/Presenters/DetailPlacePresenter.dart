@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/SpecificDetailPlaceResponse.dart';
 import 'package:nerb/PresenterViews/DetailPlaceView.dart';
@@ -47,6 +48,9 @@ class DetailPlacePresenter extends BasePresenter implements RequestResponseCallb
   @override
   void initiateData() {
     super.initiateData();
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "Detail Place"
+    );
     PlaceController.instance.getNearbyPlaceByNext(
       callback: this,
       language: "en",
@@ -81,6 +85,14 @@ class DetailPlacePresenter extends BasePresenter implements RequestResponseCallb
   @override
   void onSuccessResponseSuccess(Map<String,dynamic> data) {
     _response = SpecificDetailPlaceResponse.fromJson(data['result']);
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: ConstantCollections.EVENT_OPEN_DETAIL_PLACES,
+      params: {
+        "date": DateTime.now().toString(),
+        "name":response.name,
+        "category":response.category != null ? response.category.length > 0 ? response.category[0].id != null ? response.category[0].id : "-" : "-" : "-",
+      }
+    );
     setAlreadyRequest = false;
     view.setViewState = 0;
     view.onSuccess();

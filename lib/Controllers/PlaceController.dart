@@ -87,7 +87,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      debugPrint(error);
+      debugPrint(error.toString());
       callback.onfailure();
     });
   }

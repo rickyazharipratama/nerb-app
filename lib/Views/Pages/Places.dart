@@ -17,11 +17,8 @@ class Places extends StatefulWidget {
 
   final String title;
   final String forSearch;
-  final PlacePresenter presenter = PlacePresenter();
 
-  Places({@required this.title, @required this.forSearch}){
-    presenter.setForSearch = forSearch;
-  }
+  Places({@required this.title, @required this.forSearch});
 
   @override
   _PlacesState createState() => new _PlacesState();
@@ -29,12 +26,15 @@ class Places extends StatefulWidget {
 
 class _PlacesState extends State<Places> with PlaceView{
 
+  PlacePresenter presenter = PlacePresenter();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    setScrollController = widget.presenter.requestAffectByScroll;
-    widget.presenter.initiateData();
+    presenter.setForSearch = widget.forSearch;
+    presenter.setView = this;
+    setScrollController = presenter.requestAffectByScroll;
+    presenter.initiateData();
   }
 
   @override
@@ -46,7 +46,7 @@ class _PlacesState extends State<Places> with PlaceView{
   void onEndScrolling() {
     if(mounted){
       setState(() {
-         widget.presenter.getPlaceRequestByScroll();
+         presenter.getPlaceRequestByScroll();
       });
     }
   }
@@ -65,12 +65,12 @@ class _PlacesState extends State<Places> with PlaceView{
             child: Stack(
               children: <Widget>[
                 viewState == 0 ?
-                  widget.presenter.response.nearbyPlaces.length > 0?
+                  presenter.response.nearbyPlaces.length > 0?
                     Positioned.fill(
                       child: mode == 0 ?
                           ListView(
                             controller: scrollController,
-                            children: widget.presenter.response.nearbyPlaces.map((place){
+                            children: presenter.response.nearbyPlaces.map((place){
                               return Padding(
                                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                 child: DetailPlace(
@@ -86,7 +86,7 @@ class _PlacesState extends State<Places> with PlaceView{
                           crossAxisSpacing: 5,
                           childAspectRatio: 9/16,
                           controller: scrollController,
-                          children: widget.presenter.response.nearbyPlaces.map((place){
+                          children: presenter.response.nearbyPlaces.map((place){
                             return DetailPlace(
                               place: place,
                               mode: 1,
@@ -125,21 +125,21 @@ class _PlacesState extends State<Places> with PlaceView{
                       Positioned.fill(
                         child: ErrorPlaceholder(
                           title: CommonHelper.instance.getTitleErrorByCode(
-                            code: widget.presenter.statusCode,
+                            code: presenter.statusCode,
                             context: context
                           ),
                           desc: CommonHelper.instance.getDescErrorByCode(
-                            code: widget.presenter.statusCode,
+                            code: presenter.statusCode,
                             context: context
                           ),
                           isNeedButton: true,
                           buttonText: UserLanguage.of(context).button('retry'),
                           callback: (){
-                            widget.presenter.setAlreadyRetry = false;
+                            presenter.setAlreadyRetry = false;
                             if(mounted){
                               setState(() {
                                 setViewState = 1;
-                                widget.presenter.initiateData();
+                                presenter.initiateData();
                               });
                             }
                           },
@@ -149,7 +149,7 @@ class _PlacesState extends State<Places> with PlaceView{
                   ],
                 ),
                 viewState == 0 ?
-                widget.presenter.response.nearbyPlaces.length > 0 ?
+                presenter.response.nearbyPlaces.length > 0 ?
                   Positioned(
                     top: 0,
                     left: 0,
@@ -233,7 +233,7 @@ class _PlacesState extends State<Places> with PlaceView{
             ),
           ),
           AnimatedCrossFade(
-            crossFadeState: widget.presenter.requestMode == 1 && widget.presenter.isProcessRequest ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            crossFadeState: presenter.requestMode == 1 && presenter.isProcessRequest ? CrossFadeState.showFirst : CrossFadeState.showSecond,
             firstChild: Container(
               padding: EdgeInsets.only(top: 5, bottom: MediaQuery.of(context).padding.bottom + 10),
               child: Center(
@@ -261,7 +261,7 @@ class _PlacesState extends State<Places> with PlaceView{
     super.onError();
     if(mounted){
       setState(() {
-        if(widget.presenter.requestMode == 0){
+        if(presenter.requestMode == 0){
           setViewState= 2;
         }
       });

@@ -10,7 +10,6 @@ import 'package:nerb/Presenters/MajorUpdatePresenter.dart';
 class MajorUpdate extends StatefulWidget {
 
   final bool isMajor;
-  final MajorUpdatePresenter presenter = MajorUpdatePresenter();
   MajorUpdate({this.isMajor : true});
 
   @override
@@ -21,12 +20,13 @@ class _MajoUpdateState extends State<MajorUpdate> with MajorUpdateView{
 
   RemoteConfig rc;
   AppVersion version;
+  MajorUpdatePresenter presenter = MajorUpdatePresenter();
 
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
     CommonHelper.instance.settingSystemUi();
     if(mounted){
       setState(() {

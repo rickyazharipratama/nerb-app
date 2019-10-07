@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
@@ -71,6 +72,9 @@ class PlacePresenter extends BasePresenter implements RequestResponseCallback{
       key: ConstantCollections.PREF_RADIUS
     );
     setProcessRequest = true;
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "Places"
+    );
     PlaceController.instance.getNearbyPlace(
       callback: this,
       language: UserLanguage.of(view.currentContext()).currentLanguage,

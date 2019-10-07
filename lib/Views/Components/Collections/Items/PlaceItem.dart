@@ -7,7 +7,7 @@ import 'package:nerb/Models/PlaceModel.dart';
 class PlaceItem extends StatelessWidget {
 
   final PlaceModel place;
-  final ValueChanged callback;
+  final ValueChanged<PlaceModel> callback;
 
   PlaceItem({this.place, this.callback});
 

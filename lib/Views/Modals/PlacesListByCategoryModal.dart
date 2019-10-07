@@ -15,12 +15,8 @@ class PlacesListByCategoryModal extends StatefulWidget {
 
   final ValueChanged<List<PlaceModel>> onSelected;
   final PlaceModel placeHolder;
-  final PlaceListByCategoryModalPresenter presenter = PlaceListByCategoryModalPresenter();
 
-  PlacesListByCategoryModal({@required this.onSelected, @required this.placeHolder}){
-    presenter.setPlaceholder = placeHolder;
-    presenter.setSelected = onSelected;
-  }
+  PlacesListByCategoryModal({@required this.onSelected, @required this.placeHolder});
 
   @override
   _PlacesListByCategoryModalState createState() => new _PlacesListByCategoryModalState();
@@ -28,11 +24,15 @@ class PlacesListByCategoryModal extends StatefulWidget {
 
 class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> with PlaceListByCategoryModalView{
 
+
+  PlaceListByCategoryModalPresenter presenter = PlaceListByCategoryModalPresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setPlaceholder = widget.placeHolder;
+    presenter.setSelected = widget.onSelected;
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -61,9 +61,9 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> w
 
             Expanded(
               child:  viewState == 0 ? ListView(
-                children: widget.presenter.categories.map((item){
+                children: presenter.categories.map((item){
                   List<PlaceModel> plcs = List();
-                  plcs.addAll(widget.presenter.places.where((plc)=> plc.categories.contains(item.id)));
+                  plcs.addAll(presenter.places.where((plc)=> plc.categories.contains(item.id)));
                   List<Names> sections;
                   
                   if(plcs != null){
@@ -129,7 +129,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> w
                                             spacing: 5,
                                             children: sctPlace.map((pct){
                                               return PlaceItem(
-                                                callback: widget.presenter.onTappedPlaceItem,
+                                                callback: presenter.onTappedPlaceItem,
                                                 place: pct,
                                               );
                                             }).toList(),
@@ -157,11 +157,11 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> w
                     Positioned.fill(
                       child: ErrorPlaceholder(
                         desc: CommonHelper.instance.getTitleErrorByCode(
-                          code: widget.presenter.statusCode,
+                          code: presenter.statusCode,
                           context: context
                         ),
                         title: CommonHelper.instance.getDescErrorByCode(
-                          code: widget.presenter.statusCode,
+                          code: presenter.statusCode,
                           context: context
                         ),
                         buttonText: UserLanguage.of(context).button("retry"),
@@ -169,7 +169,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> w
                           if(mounted){
                             setState(() {
                               setViewState = 1;
-                              widget.presenter.initiateData();
+                              presenter.initiateData();
                             });
                           }
                         },

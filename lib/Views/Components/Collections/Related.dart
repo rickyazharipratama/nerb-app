@@ -10,7 +10,8 @@ import 'package:nerb/Views/Components/misc/WrapperError.dart';
 class Related extends StatefulWidget {
 
   final String href;
-  Related({@required this.href});
+  final String type;
+  Related({@required this.href, this.type});
 
   @override
   _RelatedState createState() => new _RelatedState();
@@ -24,7 +25,8 @@ class _RelatedState extends State<Related> with RelatedView{
   void initState() {
     super.initState();
     presenter = RelatedPresenter(
-      href: widget.href
+      href: widget.href,
+      type: widget.type
     );
     presenter.setView = this;
     presenter.initiateData();
@@ -42,14 +44,10 @@ class _RelatedState extends State<Related> with RelatedView{
           addRepaintBoundaries: true,
           scrollDirection: Axis.horizontal,
           children: presenter.places.nearbyPlaces.map((plc){
-            String img = presenter.getImage(plc);
             return PlaceNearYouItem(
               place: plc,
               callback: (){
-                remNPushToDetailPlace(
-                  img: img,
-                  place: plc
-                );
+                presenter.goToDetailPlace(plc);
               },
             );
           }).toList(),

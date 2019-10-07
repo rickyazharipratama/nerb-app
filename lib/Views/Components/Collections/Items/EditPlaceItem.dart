@@ -6,13 +6,10 @@ import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 
 class EditPlaceItem extends StatefulWidget {
 
+  final PlaceModel place;
+  final ValueChanged onDeleteClick;
 
-  final EditPlaceItemPresenter presenter = EditPlaceItemPresenter();
-
-  EditPlaceItem({PlaceModel place, @required ValueChanged onDeleteClick}){
-    presenter.setPlace = place;
-    presenter.setOnDeleteClick = onDeleteClick;
-  }
+  EditPlaceItem({this.place, @required this.onDeleteClick});
 
   @override
   _EditPlaceItemState createState() => new _EditPlaceItemState();
@@ -20,11 +17,15 @@ class EditPlaceItem extends StatefulWidget {
 
 class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProviderStateMixin,EditPlaceItemView{
 
+  EditPlaceItemPresenter presenter = EditPlaceItemPresenter();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.setPlace = widget.place;
+    presenter.setOnDeleteClick = widget.onDeleteClick;
+    presenter.initiateData();
     setAnimController(this);
   }
 
@@ -47,14 +48,14 @@ class _EditPlaceItemState extends State<EditPlaceItem> with SingleTickerProvider
         child: Stack(
           children: <Widget>[
             Positioned.fill(
-              child: PlaceItem(place: widget.presenter.place, callback: (place){}),
+              child: PlaceItem(place: presenter.place, callback: (place){}),
             ),
             Positioned(
               top: 0,
               right: 0,
               child: InkWell(
                 onTap: (){
-                  widget.presenter.onDeleteClick(widget.presenter.place);
+                  presenter.onDeleteClick(presenter.place);
                 },
                 borderRadius: BorderRadius.circular(10),
                 child: Container(

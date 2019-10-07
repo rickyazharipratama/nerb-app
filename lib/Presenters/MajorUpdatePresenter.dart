@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Models/Response/AppVersion.dart';
 import 'package:nerb/PresenterViews/MajorUpdateView.dart';
 import 'package:nerb/Presenters/BasePresenter.dart';
@@ -25,6 +26,9 @@ class MajorUpdatePresenter extends BasePresenter{
   @override
   void initiateData()async{
     super.initiateData();
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "Major Update"
+    );
     _rc = await CommonHelper.instance.fetchRemoteConfig();
     String tmp = rc.getString(ConstantCollections.REMOTE_CONFIG_UPDATE_VERSION);
     _version = AppVersion.fromJson(jsonDecode(tmp));

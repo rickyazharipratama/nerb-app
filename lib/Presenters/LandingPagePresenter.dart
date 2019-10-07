@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/PresenterViews/LandingPageView.dart';
 import 'package:nerb/Views/Modals/MinorUpdate.dart';
 import 'BasePresenter.dart';
@@ -24,6 +25,9 @@ class LandingPagePresenter extends BasePresenter{
   @override
   void initiateData() {
     super.initiateData();
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "Landing Page"
+    );
     decisionForMinorUpdate();
     CommonHelper.instance.settingSystemUi();
   }

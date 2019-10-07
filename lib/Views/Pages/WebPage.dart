@@ -8,11 +8,8 @@ import 'package:nerb/Views/Pages/BasePushPage.dart';
 class WebPage extends StatefulWidget {
   final String title;
   final String url;
-  final WebPagePresenter presenter = WebPagePresenter();
 
-  WebPage({@required this.title, @required this.url}){
-    presenter.setUrl = url;
-  }
+  WebPage({@required this.title, @required this.url});
 
   @override
   _WebPageState createState() => new _WebPageState();
@@ -20,12 +17,14 @@ class WebPage extends StatefulWidget {
 
 class _WebPageState extends State<WebPage> with WebPageView{
 
+  WebPagePresenter presenter = WebPagePresenter();
 
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setUrl = widget.url;
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -38,8 +37,8 @@ class _WebPageState extends State<WebPage> with WebPageView{
         child: Container(),
       ),
       closeAction: () async{
-        await widget.presenter.webview.close();
-        widget.presenter.webview.dispose();
+        await presenter.webview.close();
+        presenter.webview.dispose();
         Navigator.of(context).pop();
       },
     );
@@ -48,14 +47,14 @@ class _WebPageState extends State<WebPage> with WebPageView{
   @override
   requestResize(){
     super.requestResize();
-    widget.presenter.resizeWebview();
+    presenter.resizeWebview();
   }
 
 
   @override
   void dispose() {
-    widget.presenter.webview.close();
-    widget.presenter.webview.dispose();
+    presenter.webview.close();
+    presenter.webview.dispose();
     super.dispose();
   }
 }

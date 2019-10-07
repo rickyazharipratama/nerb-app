@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
@@ -115,6 +116,18 @@ class WrapperPlacesByCategoryPresenter extends BaseComponentPresenter implements
         lang: UserLanguage.of(view.currentContext()).currentLanguage
       );
     }
+  }
+
+  goToPlaces(PlaceModel plc){
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: ConstantCollections.EVENT_SECTION_CLICKED,
+      params: {
+        'date':DateTime.now().toString(),
+        'category':plc.categories[0],
+        'name':plc.name
+      }
+    );
+    view.goToPlace(plc);
   }
 
   @override

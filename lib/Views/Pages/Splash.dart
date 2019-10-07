@@ -6,18 +6,18 @@ import 'package:nerb/PresenterViews/SplashView.dart';
 import 'package:nerb/Presenters/SplashPresenter.dart';
 
 class Splash extends StatefulWidget {
-  final SplashPresenter presenter = SplashPresenter();
   @override
   _SplashState createState() => new _SplashState();
 }
 
 class _SplashState extends State<Splash> with SplashView{
 
+  SplashPresenter presenter = SplashPresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override

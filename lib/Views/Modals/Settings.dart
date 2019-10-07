@@ -12,7 +12,7 @@ import 'package:nerb/Views/Pages/WebPage.dart';
 
 class Settings extends StatefulWidget {
 
-  final SettingPresenter presenter = SettingPresenter();
+  
   Settings();
 
   @override
@@ -21,11 +21,12 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> with SettingView{
 
+  SettingPresenter presenter = SettingPresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -37,6 +38,9 @@ class _SettingsState extends State<Settings> with SettingView{
       });
     }
   }
+
+  @override
+  BuildContext currentContext() => context;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +65,7 @@ class _SettingsState extends State<Settings> with SettingView{
             Language(),
 
             SettingSwitcher(
-              callback: widget.presenter.changingTheme,
+              callback: presenter.changingTheme,
               title: UserLanguage.of(context).label("theme"),
               desc: UserLanguage.of(context).desc("themeSetting"),
               isVal: isDarkTheme,

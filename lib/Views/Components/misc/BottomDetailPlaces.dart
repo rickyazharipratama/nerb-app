@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/DistanceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/Response/SpecificDetailPlaceResponse.dart';
@@ -209,10 +210,11 @@ class BottomDetailPlaces extends StatelessWidget  {
               :Container()
             :Container(),
 
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10 , 5, 10, 5),
-              child: Separator(),
-            ),
+            place.extended != null ?
+              Padding(
+                padding: const EdgeInsets.fromLTRB(10 , 5, 10, 5),
+                child: Separator(),
+              ) : Container(),
 
             Padding(
               padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -275,6 +277,7 @@ class BottomDetailPlaces extends StatelessWidget  {
                       place.related.publicTransport.href != null ?
                         Related(
                           href: place.related.publicTransport.href,
+                          type: ConstantCollections.RELATED_TRANSPORTATION,
                         )
                       :Container()
                     :Container() 
@@ -308,6 +311,7 @@ class BottomDetailPlaces extends StatelessWidget  {
                       place.related.recommended.href != null ?
                         Related(
                           href: place.related.recommended.href,
+                          type: ConstantCollections.RELATED_NEARBY,
                         )
                       :Container()
                     :Container()

@@ -9,11 +9,8 @@ import 'package:nerb/Presenters/Components/Collections/Items/CategoryItemPresent
 class CategoryItem extends StatefulWidget {
 
   final FirestoreCategory category;
-  final CategoryItemPresenter presenter = CategoryItemPresenter();
 
-  CategoryItem({this.category}){
-    presenter.setCategory = category;
-  }
+  CategoryItem({this.category});
 
   @override
   _CategoryItemState createState() => new _CategoryItemState();
@@ -21,11 +18,12 @@ class CategoryItem extends StatefulWidget {
 
 class _CategoryItemState extends State<CategoryItem> with CategoryItemView{
 
-
+  CategoryItemPresenter presenter = CategoryItemPresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
+    presenter.setView = this;
+    presenter.setCategory = widget.category;
   }
 
   @override
@@ -34,9 +32,7 @@ class _CategoryItemState extends State<CategoryItem> with CategoryItemView{
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        goToPlacesByCategory(widget.presenter.category);
-      },
+      onTap: presenter.goToCategorySection,
       child: Container(
         width: 220,
         height: 115,
@@ -107,7 +103,7 @@ class _CategoryItemState extends State<CategoryItem> with CategoryItemView{
                    child: Hero(
                      tag: "title-"+widget.category.id,
                      child: Text(
-                       UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? widget.presenter.category.name.id : widget.presenter.category.name.en,
+                       UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? presenter.category.name.id : presenter.category.name.en,
                        textAlign: TextAlign.left,
                        style: Theme.of(context).textTheme.headline
                      ),

@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
-import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/PresenterViews/Components/Collections/WrapperPlacesByCategoryView.dart';
 import 'package:nerb/Presenters/Components/Collections/WrapperPlacesByCategoryPresenter.dart';
 import 'package:nerb/Views/Components/Collections/Items/PlaceItem.dart';
 import 'package:nerb/Views/Components/Shimmers/Items/ShimmerPlace.dart';
 import 'package:nerb/Views/Components/misc/ErrorPlaceholder.dart';
-import 'package:nerb/Views/Pages/Places.dart';
 import 'package:shimmer/shimmer.dart';
 
 class WrapperPlacesBycategory extends StatefulWidget {
@@ -63,14 +61,7 @@ class _WrapperPlacesBycategoryState extends State<WrapperPlacesBycategory> with 
                     children: presenter.places.where((plc) => plc.section.id == sct.id && plc.section.en == sct.en).map((place){
                       return PlaceItem(
                         place: place,
-                        callback: (place){
-                          NerbNavigator.instance.push(context,
-                            child: Places(
-                              title: UserLanguage.of(context).currentLanguage == ConstantCollections.LANGUAGE_ID ? place.name.id : place.name.en,
-                              forSearch: place.forSearch,
-                            )
-                          );
-                        },
+                        callback: presenter.goToPlaces
                       );
                     }).toList(),
                   )

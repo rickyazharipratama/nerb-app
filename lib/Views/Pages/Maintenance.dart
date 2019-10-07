@@ -8,8 +8,7 @@ import 'package:nerb/PresenterViews/MaintenanceView.dart';
 import 'package:nerb/Presenters/MaintenancePresenter.dart';
 
 class Maintenance extends StatefulWidget{
-  final MaintenancePresenter presenter = MaintenancePresenter();
-
+  
   @override
   MaintenanceState createState() => MaintenanceState();
 
@@ -17,13 +16,14 @@ class Maintenance extends StatefulWidget{
 
 class MaintenanceState extends State<Maintenance> with MaintenanceView{
 
+  MaintenancePresenter presenter = MaintenancePresenter();
   Timer timer;
   RemoteConfig rc;
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override
@@ -85,7 +85,7 @@ class MaintenanceState extends State<Maintenance> with MaintenanceView{
 
   @override
   void dispose() {
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 }

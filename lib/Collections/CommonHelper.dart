@@ -67,7 +67,7 @@ class CommonHelper{
     List<String> outdoorRecreation = ["outdoor-recreation","park-recreation area","sports field","garden","beach","recreation center","ski lift","scenic point","off road trailhead","trailhead","off-road vehicle area","campsite","outdoor service","ranger station","bicycle service"];//done
     List<String> leisure = ["leisure","amusement park","theme park","zoo","wild animal park","wildlife refuge","aquarium","ski resort","animal park","water park"];//done
 
-    List<String> generalStore = ["store","convenience store","shopping mall","department store,mall-shopping complex","mall-shopping","mall","shopping center","shop"];//done
+    List<String> generalStore = ["store","convenience store","shopping mall","department-store","department store,mall-shopping complex","mall-shopping","mall","shopping center","shop"];//done
     List<String> foodnDrink =["food & drink","food-beverage specialty store","food-beverage","grocery","specialty food store","wine & liquor","bakery & baked goods store","sweet shop","butcher","dairy goods"];//done
     List<String> drugStorePharmacy =["drugstore-pharmacy","drugstore or pharmacy","drugstore","pharmacy"];//done
     List<String> electronic=["electronics","consumer electronics store","hardware-house-garden-shop","mobile retailer","mobile service center","computer & software","entertainment electronics"];//done

@@ -7,7 +7,7 @@ import 'package:nerb/Views/Components/Collections/Favorite.dart';
 import 'package:nerb/Views/Components/Collections/PlacesNearYou.dart';
 
 class LandingPage extends StatefulWidget {
-  final LandingPagePresenter presenter = LandingPagePresenter();
+  
 
   @override
   _LandingPageState createState() => new _LandingPageState();
@@ -15,13 +15,14 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> with SingleTickerProviderStateMixin, LandingPageView{
 
+  LandingPagePresenter presenter = LandingPagePresenter();
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
+    presenter.setView = this;
     setAnimationController(this);
     setAnimation(controller: animationController);
-    widget.presenter.initiateData();
+    presenter.initiateData();
   }
   
   @override

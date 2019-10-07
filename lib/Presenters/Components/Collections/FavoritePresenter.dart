@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 import 'package:nerb/Models/PlaceModel.dart';
@@ -104,6 +105,14 @@ class FavoritePresenter extends BaseComponentPresenter{
   onDeletePlaceClicked(data){
     int idx = favorites.indexOf(data);
     if(idx >=0 && idx < favorites.length){
+      FirebaseAnalyticHelper.instance.sendEvent(
+        event: ConstantCollections.EVENT_REMOVE_FAVORITE_SECTION,
+        params: {
+          "date": DateTime.now().toString(),
+          "section-name": favorites[idx].name,
+          "category": favorites[idx].categories
+        }
+      );
       favorites[idx] = PlaceModel.emptyPlace(prefix: DateTime.now().millisecondsSinceEpoch.toString());
       savingToStore();
       view.notifyState();
@@ -114,6 +123,12 @@ class FavoritePresenter extends BaseComponentPresenter{
     int diff = favorites.length - favorites.where((place) => place.id.startsWith(ConstantCollections.EMPTY_FAVORITE)).length;
     if(diff > 1){
       view.setEditMode = true;
+      FirebaseAnalyticHelper.instance.sendEvent(
+        event: ConstantCollections.EVENT_START_UPDATING_FAVORITE,
+        params: {
+          "date": DateTime.now().toString()
+        }
+      );
       view.notifyState();
     }else{
       view.showErrorModal(
@@ -125,6 +140,12 @@ class FavoritePresenter extends BaseComponentPresenter{
 
   turnOffEditMode(){
     view.setEditMode = false;
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: ConstantCollections.EVENT_FINISH_UPDATING_FAVORITE,
+      params: {
+        "date": DateTime.now().toString()
+      }
+    );
     view.notifyState();
   }
 
@@ -150,10 +171,17 @@ class FavoritePresenter extends BaseComponentPresenter{
         int idx = favorites.indexOf(item[0]);
         favorites[idx] = item[1];
         savingToStore();
+        FirebaseAnalyticHelper.instance.sendEvent(
+          event: ConstantCollections.EVENT_SELECT_FAVORITE_SECTION,
+          params: {
+            "date": DateTime.now().toString(),
+            "category":(item[1] as PlaceModel).categories,
+            "section-name":(item[1] as PlaceModel).name
+          }
+        );
         closingPlace();
         view.notifyState();
       }
     }
   }
-
 }

@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/NerbNavigator.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Views/Components/misc/NerbCacheImage.dart';
@@ -37,6 +39,16 @@ class PlaceNearYouItem extends StatelessWidget {
       child : GestureDetector(
         onTap: (){
           if(this.callback == null){
+            debugPrint("category : "+place.category.id);
+            debugPrint("name : "+place.title);
+            FirebaseAnalyticHelper.instance.sendEvent(
+              event: ConstantCollections.EVENT_OPEN_DETAIL_PLACES_BY_NEAR_YOU,
+              params: {
+                "date": DateTime.now().toString(),
+                "category": place.category.id,
+                "name":place.title
+              }
+            );
             NerbNavigator.instance.push(context,
               child: DetailPlaces(
                 place: place,

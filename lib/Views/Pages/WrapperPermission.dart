@@ -8,18 +8,19 @@ import 'package:nerb/Views/Components/misc/Permissions.dart';
 
 class WrapperPermission extends StatefulWidget {
   
-  final WrapperPermissionPresenter presenter = WrapperPermissionPresenter();
   @override
   _WrapperPermissionState createState() => new _WrapperPermissionState();
 }
 
 class _WrapperPermissionState extends State<WrapperPermission> with WrapperPermissionView{
 
+  WrapperPermissionPresenter presenter = WrapperPermissionPresenter();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
-    widget.presenter.initiateData();
+    presenter.setView = this;
+    presenter.initiateData();
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:nerb/Collections/CommonHelper.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/PresenterViews/WrapperPermissionView.dart';
 import 'package:nerb/Presenters/BasePresenter.dart';
 
@@ -16,5 +17,8 @@ class WrapperPermissionPresenter extends BasePresenter{
     super.initiateData();
     view.initiatePageController();
     CommonHelper.instance.settingSystemUi();
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "Wrapper Permission"
+    );
   }
 }

@@ -15,7 +15,7 @@ class PlacesByCategory extends StatefulWidget {
 
   final String imageUrl;
   final FirestoreCategory category;
-  final PlaceByCategoryPresenter presenter = PlaceByCategoryPresenter();
+  
 
   PlacesByCategory({@required this.imageUrl, @required this.category});
 
@@ -25,10 +25,13 @@ class PlacesByCategory extends StatefulWidget {
 
 class _PlacesByCategoryState extends State<PlacesByCategory> with PlaceByCategoryView{
 
+  PlaceByCategoryPresenter presenter = PlaceByCategoryPresenter();
+
   @override
   void initState() {
     super.initState();
-    widget.presenter.setView = this;
+    presenter.setView = this;
+    presenter.initiateData();
     setImage = widget.imageUrl;
   }
 

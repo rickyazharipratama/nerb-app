@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/PresenterViews/WebPageView.dart';
 import 'package:nerb/Presenters/BasePresenter.dart';
 
@@ -28,6 +29,9 @@ class WebPagePresenter extends BasePresenter{
     _webview = FlutterWebviewPlugin()
     ..onUrlChanged.listen(onUrlChanged)
     ..onStateChanged.listen(onWebViewStateChanged);
+    FirebaseAnalyticHelper.instance.setScreen(
+      screen: "webview"
+    );
     launchWebview();
   }
 

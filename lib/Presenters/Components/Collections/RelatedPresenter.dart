@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
+import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Controllers/PlaceController.dart';
 import 'package:nerb/Models/Response/DetailNearbyPlaceResponse.dart';
 import 'package:nerb/Models/Response/NearbyPlaceResponse.dart';
@@ -17,9 +18,10 @@ class RelatedPresenter extends BaseComponentPresenter implements RequestResponse
   int _statusCode = 500;
   bool _isAlreadyRequired = false;
   NearbyPlaceResponse _places;
+  final String type;
   final String href;
 
-  RelatedPresenter({this.href});
+  RelatedPresenter({this.href, this.type});
 
   RelatedView get view => _view;
   set setView(RelatedView vw){
@@ -99,5 +101,22 @@ class RelatedPresenter extends BaseComponentPresenter implements RequestResponse
   @override
   void onfailure() {
     onFailureWithResponse(Response(statusCode: 500));
+  }
+
+  void goToDetailPlace(DetailNearbyPlaceResponse plc){
+    FirebaseAnalyticHelper.instance.sendEvent(
+      event: type == ConstantCollections.RELATED_NEARBY ?
+        ConstantCollections.EVENT_OPEN_DETAIL_PLACES_BY_NEARBY
+        : ConstantCollections.EVENT_OPEN_DETAIL_PLACES_BY_TRANSPORT,
+      params: {
+        'date': DateTime.now().toString(),
+        'category':plc.category.title,
+        'name':plc.title
+      }
+    );
+    view.remNPushToDetailPlace(
+      img: getImage(plc),
+      place: plc
+    );
   }
 }
