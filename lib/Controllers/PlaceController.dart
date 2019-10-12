@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/APICollections.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/NetworkHelper.dart';
 
@@ -21,7 +22,7 @@ class PlaceController{
       if(res != null){
         if(res.data != null){
           Map<String,dynamic> json = res.data;
-          print(jsonEncode(res.data));
+          CommonHelper.instance.showLog(jsonEncode(res.data));
           if(json['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(json);
           }else{
@@ -35,7 +36,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      debugPrint(error);
+      CommonHelper.instance.showLog(error.toString());
       callback.onfailure();
     });
   }
@@ -49,7 +50,7 @@ class PlaceController{
       if(res != null){
         if(res.data != null){
            Map<String,dynamic> data = res.data;
-           debugPrint(jsonEncode(res.data));
+           CommonHelper.instance.showLog(jsonEncode(res.data));
            if(data['status'] == ConstantCollections.STATUS_SUCCESS){
              callback.onSuccessResponseSuccess(data);
            }else{
@@ -63,7 +64,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      debugPrint(error);
+      CommonHelper.instance.showLog(error.toString());
       callback.onfailure();
     });
   }
@@ -74,7 +75,7 @@ class PlaceController{
     ).then((res){
       if(res != null){
         if(res.data != null){
-          debugPrint(jsonEncode(res.data));
+          CommonHelper.instance.showLog(jsonEncode(res.data));
           if(res.data['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(res.data);
           }else{
@@ -87,7 +88,7 @@ class PlaceController{
         callback.onfailure();
       }
     }).catchError((error){
-      debugPrint(error.toString());
+      CommonHelper.instance.showLog(error.toString());
       callback.onfailure();
     });
   }
@@ -98,7 +99,7 @@ class PlaceController{
     ).then((res){
       if(res != null){
         if(res.data != null){
-          debugPrint(jsonEncode(res.data));
+          CommonHelper.instance.showLog(jsonEncode(res.data));
           if(res.data['status'] == ConstantCollections.STATUS_SUCCESS){
             callback.onSuccessResponseSuccess(res.data);
           }else{
@@ -110,7 +111,7 @@ class PlaceController{
         }
       }
     }).catchError((error){
-      debugPrint(error);
+      CommonHelper.instance.showLog(error.toString());
       callback.onfailure();
     });
   }

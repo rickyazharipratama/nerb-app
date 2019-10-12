@@ -107,7 +107,7 @@ class _PlacesListByCategoryModalState extends State<PlacesListByCategoryModal> w
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: sections.map((plc){
                                 List<PlaceModel> sctPlace = plcs.where((pc) => pc.section.id == plc.id && pc.section.en == plc.en).toList();
-                                print("sctPlace : "+sctPlace.length.toString());
+                                CommonHelper.instance.showLog("sctPlace : "+sctPlace.length.toString());
                               return Padding(
                                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
                                 child: Column(

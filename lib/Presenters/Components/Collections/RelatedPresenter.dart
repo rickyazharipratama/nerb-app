@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/rendering.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -92,7 +91,7 @@ class RelatedPresenter extends BaseComponentPresenter implements RequestResponse
 
   @override
   void onSuccessResponseSuccess(Map<String,dynamic> data) {
-    debugPrint("gather related is success");
+    CommonHelper.instance.showLog("gather related is success");
     _places = NearbyPlaceResponse.fromNextResponse(data['result']);
     setAlreadyRequired = false;
     view.onSuccess();

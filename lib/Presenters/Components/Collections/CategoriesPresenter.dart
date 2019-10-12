@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/rendering.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -22,6 +21,12 @@ class CategoriesPresenter extends BaseComponentPresenter implements RequestRespo
   bool _isNeedUpdate = false;
   int _currCategoryVersion = -1;
   List<FirestoreCategory> _categories;
+  StreamSink _sinker;
+
+
+  CategoriesPresenter(StreamSink sinker){
+    _sinker = sinker;
+  }
   
   CategoriesView get view => _view;
   set setView(CategoriesView vw){
@@ -80,7 +85,8 @@ class CategoriesPresenter extends BaseComponentPresenter implements RequestRespo
         });
         setCategories = tmpCategories;
         categories.sort((a,b)=> UserLanguage.of(view.currentContext()).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
-        debugPrint("leng categories : "+categories.length.toString());
+        CommonHelper.instance.showLog("leng categories : "+categories.length.toString());
+        _sinker.add(true);
         view.onSuccess();
       }else{
         PlaceController.instance.getCategories(
@@ -138,7 +144,8 @@ class CategoriesPresenter extends BaseComponentPresenter implements RequestRespo
     });
     setCategories = tmpCat;
     this.categories.sort((a,b)=> UserLanguage.of(view.currentContext()).currentLanguage == ConstantCollections.LANGUAGE_ID ? a.name.id.compareTo(b.name.id) : a.name.en.compareTo(b.name.en));
-    debugPrint("categories leng : "+this.categories.length.toString());
+    CommonHelper.instance.showLog("categories leng : "+this.categories.length.toString());
+    _sinker.add(true);
     view.onSuccess();
   }
 

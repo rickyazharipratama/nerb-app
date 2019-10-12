@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/APICollections.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 
 class NetworkHelper{
@@ -19,11 +19,11 @@ class NetworkHelper{
   }
 
   Future<Response<Map<String,dynamic>>> requestGet({String path}) async{
-    debugPrint(path);
+    CommonHelper.instance.showLog(path);
     try{
       return await dio.get(path);
     }on DioError catch(e){
-      debugPrint("network error : " + e.type.toString());
+      CommonHelper.instance.showLog("network error : " + e.type.toString());
       if(e.type == DioErrorType.RESPONSE){
         return Response(statusCode: e.response.statusCode, data: e.response.data, statusMessage:  e.response.statusMessage);
       }else if(e.type == DioErrorType.CONNECT_TIMEOUT

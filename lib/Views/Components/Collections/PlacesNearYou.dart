@@ -136,7 +136,7 @@ class _PlacesNearYouState extends State<PlacesNearYou> with PlaceNearYouView{
     super.onSuccess();
     if(mounted){
       setState(() {
-        debugPrint("success fetch nearby place");
+        CommonHelper.instance.showLog("success fetch nearby place");
         setViewState = 0;
       });
     }

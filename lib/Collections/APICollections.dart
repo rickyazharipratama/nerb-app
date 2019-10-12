@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 
 class APICollections{
@@ -36,10 +37,10 @@ class APICollections{
   String _provideToken(){
     DateTime dt = DateTime.now().toUtc();
     String plain = ConstantCollections.PREFIX+"-"+dt.year.toString()+(dt.month > 9 ?dt.month.toString() : "0"+dt.month.toString())+(dt.day > 9 ? dt.day.toString() : "0"+dt.day.toString())+(dt.hour > 9 ?dt.hour.toString() : "0"+dt.hour.toString())+(dt.minute > 9 ? dt.minute.toString() :"0"+dt.minute.toString());
-    debugPrint(plain);
+    CommonHelper.instance.showLog(plain);
     var bytes = utf8.encode(plain);
     var hash = sha256.convert(bytes);
-    debugPrint(hash.toString());
+    CommonHelper.instance.showLog(hash.toString());
     return hash.toString();
   }
 }

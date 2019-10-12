@@ -1,4 +1,5 @@
-import 'package:dio/dio.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
@@ -11,29 +12,29 @@ import 'package:nerb/Views/Components/Shimmers/ShimmerCategories.dart';
 import 'package:nerb/Views/Components/misc/WrapperError.dart';
 
 class Categories extends StatefulWidget {
-  final VoidCallback onDataRetrieved;
+  final StreamSink sinker;
 
-  Categories({@required this.onDataRetrieved});
+  Categories({@required this.sinker});
   @override
   _CategoriesState createState() => new _CategoriesState();
 }
 
 class _CategoriesState extends State<Categories> with CategoriesView{
-  final CategoriesPresenter presenter = CategoriesPresenter();
+  CategoriesPresenter presenter;
 
   @override
   void initState() {
     super.initState();
-    presenter.setView = this;
+    presenter = CategoriesPresenter(widget.sinker)..setView = this;
     presenter.initiateData();
   }
 
   @override
   Widget build(BuildContext context) {
     if(presenter.categories != null){
-      debugPrint("categories length : "+presenter.categories.length.toString());
+      CommonHelper.instance.showLog("categories length : "+presenter.categories.length.toString());
     }else{
-      debugPrint("Categories is null");
+      CommonHelper.instance.showLog("Categories is null");
     }
     return Padding(
       padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -109,9 +110,7 @@ class _CategoriesState extends State<Categories> with CategoriesView{
     super.onSuccess();
     if(mounted){
       setState(() {
-        debugPrint("categories onSuccess called");
         setViewState = 0;
-        widget.onDataRetrieved();
       });
     }
   }

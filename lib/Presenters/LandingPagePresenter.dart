@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
@@ -7,6 +9,15 @@ import 'BasePresenter.dart';
 
 class LandingPagePresenter extends BasePresenter{
   LandingPageView _view;
+
+  StreamController<bool> _categoryController = StreamController.broadcast();
+  StreamController<int> _actionMenuController = StreamController.broadcast();
+
+  StreamSink get categorySinker => _categoryController.sink;
+  Stream get categoryStream => _categoryController.stream;
+
+  StreamSink get amController => _actionMenuController.sink;
+  Stream get amStream => _actionMenuController.stream;
 
   LandingPageView get view => _view;
   set setView(LandingPageView vw){_view = vw;}
@@ -30,5 +41,10 @@ class LandingPagePresenter extends BasePresenter{
     );
     decisionForMinorUpdate();
     CommonHelper.instance.settingSystemUi();
+  }
+
+  dispose(){
+    _categoryController?.close();
+    _actionMenuController.close();
   }
 }

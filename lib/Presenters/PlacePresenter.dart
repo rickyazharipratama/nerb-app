@@ -2,10 +2,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:location/location.dart';
 import 'package:nerb/Callbacks/RequestResponseCallback.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
@@ -92,10 +91,10 @@ class PlacePresenter extends BasePresenter implements RequestResponseCallback{
             view.onEndScrolling();
           }
         }else{
-          debugPrint("There is no data");
+          CommonHelper.instance.showLog("There is no data");
         }
       }else{
-        debugPrint("there is another request running");
+        CommonHelper.instance.showLog("there is another request running");
       }
     }
   }

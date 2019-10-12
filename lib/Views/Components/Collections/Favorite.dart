@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:nerb/Collections/ColorCollections.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
@@ -16,11 +18,10 @@ import 'Items/PlaceItem.dart';
 
 class Favorite extends StatefulWidget {
 
-  final VoidCallback openingPlace;
-  final VoidCallback closingPlace;
-  final bool isCategoryRetrieve;
+  final Stream categoryStream;
+  final StreamSink amSinker;
 
-  Favorite({@required this.openingPlace, @required this.closingPlace,  this.isCategoryRetrieve : false});
+  Favorite({@required this.categoryStream, @required this.amSinker});
 
   @override
   _FavoriteState createState() => new _FavoriteState();
@@ -28,16 +29,14 @@ class Favorite extends StatefulWidget {
 
 class _FavoriteState extends State<Favorite> with FavoriteView{
 
-  FavoritePresenter presenter = FavoritePresenter();
+  FavoritePresenter presenter;
 
   @override
   void initState() {
     super.initState();
-      presenter.setView = this;
-      presenter.setOpeningPlace = widget.openingPlace;
-      presenter.setClosingPlace = widget.closingPlace;
-      presenter.initiateData();
-    }
+    presenter = FavoritePresenter(widget.categoryStream, widget.amSinker)..setView = this;
+    presenter.initiateData();
+  }
     
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class _FavoriteState extends State<Favorite> with FavoriteView{
 
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-              child: widget.isCategoryRetrieve ?
+              child: presenter.isCategoryRetrieved ?
                 viewState == 0 ? 
                 Column(
                   children: <Widget>[

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/rendering.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
@@ -25,9 +24,9 @@ class MaintenancePresenter extends BasePresenter{
     _timer = Timer.periodic(Duration(minutes: minutes),(time) async{
       await setRemoteConfig();
       bool isMaintenance  = remoteConfig.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
-      debugPrint("is running");
+      CommonHelper.instance.showLog("is running");
       if(!isMaintenance){
-        debugPrint("go to splash");
+        CommonHelper.instance.showLog("go to splash");
         view.alreadyDoneMaintenance();
       }
     });

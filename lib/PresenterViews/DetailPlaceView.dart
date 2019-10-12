@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nerb/Callbacks/ViewCallback.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 
 class DetailPlaceView implements ViewCallback{
 
@@ -27,7 +28,7 @@ class DetailPlaceView implements ViewCallback{
         duration: duration
       );
     }else{
-      debugPrint("Ticker provider is missing");
+      CommonHelper.instance.showLog("Ticker provider is missing");
     }
   }
 
@@ -45,7 +46,7 @@ class DetailPlaceView implements ViewCallback{
       })
       ..addListener(onAnimationListening);
     }else{
-      debugPrint("animation controller is null");
+      CommonHelper.instance.showLog("animation controller is null");
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/translations/UserLanguage.dart';
 
 class SettingSwitcher extends StatelessWidget {
@@ -12,7 +13,7 @@ class SettingSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("switcher val : "+isVal.toString());
+    CommonHelper.instance.showLog("switcher val : "+isVal.toString());
     return Container(
       padding: const EdgeInsets.fromLTRB(10,15,10,10),
       child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/PresenterViews/LandingPageView.dart';
 import 'package:nerb/Presenters/LandingPagePresenter.dart';
+import 'package:nerb/Views/Components/Buttons/ActionMenuButton.dart';
 import 'package:nerb/Views/Components/Collections/Categories.dart';
 import 'package:nerb/Views/Components/Collections/Favorite.dart';
 import 'package:nerb/Views/Components/Collections/PlacesNearYou.dart';
@@ -20,8 +21,6 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
   void initState() {
     super.initState();
     presenter.setView = this;
-    setAnimationController(this);
-    setAnimation(controller: animationController);
     presenter.initiateData();
   }
   
@@ -44,48 +43,9 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
             fit: BoxFit.contain,
           ),
         actions: <Widget>[
-
-          InkWell(
-            onTap: (){
-              if(isSettingActive){
-                if(mounted){
-                  setState(() {
-                      closeSettingMenu();
-                  });
-                }
-              }else if(isPlaceActive){
-                if(mounted){
-                  setState(() {
-                    closingPlaceList();
-                  });
-                }
-              }else{
-                if(mounted){
-                  setState(() {
-                    setSettingActive = true;
-                    animationController.forward();
-                    showSettingMenu();
-                  });
-                }
-              }
-            },
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20)
-              ),
-              child: Center(
-                child: AnimatedIcon(
-                  icon: AnimatedIcons.menu_close,
-                  progress: animation,
-                  color: Color.lerp(Theme.of(context).buttonColor,Colors.red,animation.value),
-                  size: 25,
-                ),
-              ),
-            ),
+          ActionMenuButton(
+            stream: presenter.amStream,
           )
-
         ],
       ),
       backgroundColor: Theme.of(context).backgroundColor,
@@ -95,19 +55,12 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
           return ListView(
             children: <Widget>[
               Favorite(
-                closingPlace: closingPlaceList,
-                openingPlace: openingPlaceList,
-                isCategoryRetrieve: isCategoryRetrieve,
+                categoryStream: presenter.categoryStream,
+                amSinker: presenter.amController,
               ),
               Padding(padding: const EdgeInsets.all(5),),
               Categories(
-                onDataRetrieved: (){
-                  if(mounted){
-                    setState(() {
-                      setCategoryRetrieve = true;
-                    });
-                  }
-                },
+                sinker: presenter.categorySinker,
               ),
               PlacesNearYou()
             ],
@@ -118,49 +71,8 @@ class _LandingPageState extends State<LandingPage> with SingleTickerProviderStat
   }
   
   @override
-  openingPlaceList(){
-    if(mounted){
-      setState(() {
-        setPlaceActive = true;
-        animationController.forward();
-      });
-    }
-  }
-
-  @override
-  closingPlaceList(){
-    if(mounted){
-      setState(() {
-        setPlaceActive = false;
-        animationController.reverse();
-        Navigator.of(context, rootNavigator: true).pop();
-      });
-    }
-  }
-
-  @override
-  closeSettingMenu(){
-    if(mounted){
-      setState(() {
-          setSettingActive = false;
-          animationController.reverse();
-          Navigator.of(context, rootNavigator: true).pop();
-      });
-    }
-  }
-
-  @override
-  void onAnimationListening() {
-    super.onAnimationListening();
-    if(mounted){
-      setState(() {
-        
-      });
-    }
-  }
-  @override
   void dispose() {
-    animationController?.dispose();
+    presenter.dispose();
     super.dispose();
   }
 }

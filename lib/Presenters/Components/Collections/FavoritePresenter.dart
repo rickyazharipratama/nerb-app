@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/rendering.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/ConstantCollections.dart';
 import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/Collections/PreferenceHelper.dart';
@@ -13,8 +14,17 @@ class FavoritePresenter extends BaseComponentPresenter{
 
   FavoriteView _view;
   List<PlaceModel> _favorites; 
-  VoidCallback _openingPlace;
-  VoidCallback _closingPlace;
+  bool _isCategoryRetrieved = false;
+  Stream<bool> _categoryStream;
+  StreamSink _amSink;
+
+  FavoritePresenter(Stream<bool> stream, StreamSink sinker){
+    _categoryStream = stream;
+    _categoryStream.listen(onRetrieveCategory);
+    _amSink = sinker;
+  }
+
+  bool get isCategoryRetrieved => _isCategoryRetrieved;
 
   FavoriteView get view => _view;
   set setView(FavoriteView vw){
@@ -29,16 +39,6 @@ class FavoritePresenter extends BaseComponentPresenter{
       _favorites.clear();
     }
     _favorites.addAll(fav);
-  }
-
-  VoidCallback get openingPlace => _openingPlace;
-  set setOpeningPlace(VoidCallback callback){
-    _openingPlace = callback;
-  }
-
-  VoidCallback get closingPlace => _closingPlace;
-  set setClosingPlace(VoidCallback callback){
-    _closingPlace = callback;
   }
 
   @override
@@ -68,7 +68,7 @@ class FavoritePresenter extends BaseComponentPresenter{
 
   updateFavorites({List<PlaceModel> items}){
     setFavorites = items;
-    debugPrint("before length : "+ favorites.length.toString());
+    CommonHelper.instance.showLog("before length : "+ favorites.length.toString());
     if(favorites.length < 7){
       for(int i = favorites.length; i < 8;i++){
         if(i == 7){
@@ -151,12 +151,11 @@ class FavoritePresenter extends BaseComponentPresenter{
 
   showPlaceList(trigger) async{
     if(!view.isEditMode){
-      openingPlace();
+      _amSink.add(1);
       view.showPlaceList(
         onSelectedPlace: onSelectedPlace,
         trigger: trigger
       );
-      
     }
   }
 
@@ -179,9 +178,18 @@ class FavoritePresenter extends BaseComponentPresenter{
             "section-name":(item[1] as PlaceModel).name
           }
         );
-        closingPlace();
+        _amSink.add(0);
         view.notifyState();
       }
     }
   }
+
+  onRetrieveCategory(bool isDone){
+    CommonHelper.instance.showLog("it'scalled");
+    if(isDone){
+      _isCategoryRetrieved = true;
+      view.notifyState();
+    }
+  }
+
 }

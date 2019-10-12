@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/rendering.dart';
 import 'package:location_permissions/location_permissions.dart';
+import 'package:nerb/Collections/CommonHelper.dart';
 import 'package:nerb/Collections/FirebaseAnalyticHelper.dart';
 import 'package:nerb/PresenterViews/NoLocationServiceView.dart';
 import 'package:nerb/Presenters/BasePresenter.dart';
@@ -22,7 +22,7 @@ class NoLocationServicePresenter extends BasePresenter{
       screen: "No Location Services"
     );
     timer = Timer.periodic(const Duration(seconds: 5), (timer) async{
-       debugPrint("location service");
+       CommonHelper.instance.showLog("location service");
        if(await LocationPermissions().checkServiceStatus() == ServiceStatus.enabled){
          if(await LocationPermissions().checkPermissionStatus() == PermissionStatus.granted){
            view.goToLandingPage();

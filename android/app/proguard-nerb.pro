@@ -63,8 +63,11 @@
     public static ** valueOf(java.lang.String);
 }
 
+-ignorewarnings
+
 -keep public class * {
     public protected *;
+    public private *;
 }
 
 -keep class io.flutter.app.** { *; }

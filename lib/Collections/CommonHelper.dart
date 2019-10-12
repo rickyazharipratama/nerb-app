@@ -338,18 +338,18 @@ class CommonHelper{
 
   Future<bool>checkMaintenance(BuildContext context) async{
     try{
-      debugPrint("maintenance request");
+      showLog("maintenance request");
       RemoteConfig rc = await fetchRemoteConfig();
       bool isMaintenance = rc.getBool(ConstantCollections.REMOTE_CONFIG_IS_MAINTENANCE);
       if(isMaintenance){
-        debugPrint("is maintenance");
+        showLog("is maintenance");
         NerbNavigator.instance.newClearRoute(context,
           child: Maintenance()
         );
       }
       return isMaintenance;
     }on Exception catch(e){
-      debugPrint("failed to fetch : "+ e.toString());
+      showLog("failed to fetch : "+ e.toString());
       return false;
     }
   }
@@ -357,7 +357,7 @@ class CommonHelper{
     try{
     RemoteConfig rc = await fetchRemoteConfig();
     String tmp = rc.getString(ConstantCollections.REMOTE_CONFIG_UPDATE_VERSION);
-    debugPrint(tmp);
+    showLog(tmp);
     if(tmp != null){
       AppVersion vrs = AppVersion.fromJson(jsonDecode(tmp));
       if(vrs.minVersion > ConstantCollections.VERSION_INT){
@@ -376,7 +376,7 @@ class CommonHelper{
     }
     return false;
     }on Exception catch(e){
-      debugPrint("failed to fetch major version : "+e.toString());
+      showLog("failed to fetch major version : "+e.toString());
       return false;
     }
   }
@@ -399,6 +399,12 @@ class CommonHelper{
         systemNavigationBarColor: Color(0xfffefefe),
         systemNavigationBarIconBrightness: Brightness.dark
       ));
+    }
+  }
+
+  showLog(String log){
+    if(ConstantCollections.ENVIRONMENT == ConstantCollections.DEV){
+      debugPrint(log);
     }
   }
 }

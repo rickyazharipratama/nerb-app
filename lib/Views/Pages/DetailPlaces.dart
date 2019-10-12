@@ -55,7 +55,7 @@ class _DetailPlacesState extends State<DetailPlaces> with TickerProviderStateMix
   @override
   void onAnimationListening() {
     super.onAnimationListening();
-    debugPrint(anim.value.toString());
+    CommonHelper.instance.showLog(anim.value.toString());
     setOffset = anim.value;
     setCurrentOffsetPercent = max(0, min(1,offset/((MediaQuery.of(context).size.height - 100)-35)));
     if(mounted){
